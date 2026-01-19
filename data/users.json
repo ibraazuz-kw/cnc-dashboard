@@ -1,0 +1,14 @@
+[
+  {
+    "username": "prodesign",
+    "password": "1234",
+    "role": "superadmin",
+    "company": "Pro Design"
+  },
+  {
+    "username": "alsayf",
+    "password": "1111",
+    "role": "clientadmin",
+    "company": "شركة السيف"
+  }
+]

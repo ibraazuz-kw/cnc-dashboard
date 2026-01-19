@@ -1,0 +1,284 @@
+[
+  {
+    "id": "1768821191603",
+    "createdAt": "2026-01-19T11:13:11.613Z",
+    "company": "باب السيف",
+    "phone": "96649676",
+    "orderMeasurements": "١٩٠ ف ٢٠٠",
+    "jobType": "قص + حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "10mm",
+    "notes": "بلغني لمن يخلص الشيت",
+    "sheets": [
+      {
+        "size": "122x244",
+        "thickness": "3mm",
+        "qty": "5"
+      },
+      {
+        "size": "122x244",
+        "thickness": "3mm",
+        "qty": "5"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 220,
+      "hasGlass": "نعم",
+      "glassSideRef": "طرف القفل",
+      "glassW": 20,
+      "glassH": 160,
+      "glassTop": 15,
+      "glassBottom": 15,
+      "glassSideGap": 30,
+      "handleType": "لا يوجد",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 20,
+      "handleSideGap": 20
+    },
+    "file": {
+      "filename": "1768821191603-6d7d3197c89048.jpg",
+      "originalName": "13a396e12e6f14218ab76922c04b7c00.jpg",
+      "url": "/uploads/1768821191603-6d7d3197c89048.jpg"
+    }
+  },
+  {
+    "id": "1768817676272",
+    "createdAt": "2026-01-19T10:14:36.272Z",
+    "company": "قراند هاوس",
+    "phone": "9649676",
+    "orderMeasurements": "100x200\n100x400",
+    "jobType": "قص + حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "6mm",
+    "notes": "اتصل علي لم يخلص الشيت",
+    "sheets": [
+      {
+        "size": "150x300",
+        "thickness": "2mm",
+        "qty": "5"
+      },
+      {
+        "size": "150x300",
+        "thickness": "2mm",
+        "qty": "5"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 220,
+      "hasGlass": "نعم",
+      "glassSideRef": "طرف المفصلات",
+      "glassW": 20,
+      "glassH": 180,
+      "glassTop": 15,
+      "glassBottom": 15,
+      "glassSideGap": 15,
+      "handleType": "لا يوجد",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 20,
+      "handleSideGap": 20
+    },
+    "file": null
+  },
+  {
+    "id": "1768817675833",
+    "createdAt": "2026-01-19T10:14:35.846Z",
+    "company": "قراند هاوس",
+    "phone": "9649676",
+    "orderMeasurements": "100x200\n100x400",
+    "jobType": "قص + حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "6mm",
+    "notes": "اتصل علي لم يخلص الشيت",
+    "sheets": [
+      {
+        "size": "150x300",
+        "thickness": "2mm",
+        "qty": "5"
+      },
+      {
+        "size": "150x300",
+        "thickness": "2mm",
+        "qty": "5"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 220,
+      "hasGlass": "نعم",
+      "glassSideRef": "طرف المفصلات",
+      "glassW": 20,
+      "glassH": 180,
+      "glassTop": 15,
+      "glassBottom": 15,
+      "glassSideGap": 15,
+      "handleType": "لا يوجد",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 20,
+      "handleSideGap": 20
+    },
+    "file": {
+      "filename": "1768817675833-bb667647d4bd.jpg",
+      "originalName": "13a396e12e6f14218ab76922c04b7c00.jpg",
+      "url": "/uploads/1768817675833-bb667647d4bd.jpg"
+    }
+  },
+  {
+    "id": "1768810855895",
+    "createdAt": "2026-01-19T08:20:55.916Z",
+    "company": "اطلس",
+    "phone": "96765576",
+    "orderMeasurements": "",
+    "jobType": "قص + حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "4mm",
+    "notes": "",
+    "sheets": [
+      {
+        "size": "122x244",
+        "thickness": "2mm",
+        "qty": "1"
+      },
+      {
+        "size": "122x244",
+        "thickness": "2mm",
+        "qty": "1"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 220,
+      "hasGlass": "نعم",
+      "glassSideRef": "طرف القفل",
+      "glassW": 20,
+      "glassH": 60,
+      "glassTop": 15,
+      "glassBottom": 15,
+      "glassSideGap": 10,
+      "handleType": "لا يوجد",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 20,
+      "handleSideGap": 20
+    },
+    "file": {
+      "filename": "1768810855895-2d44dc4461a83.jpg",
+      "originalName": "Snapchat-1769033841.jpg",
+      "url": "/uploads/1768810855895-2d44dc4461a83.jpg"
+    }
+  },
+  {
+    "id": "1768806105606",
+    "createdAt": "2026-01-19T07:01:45.618Z",
+    "company": "الدروازه",
+    "phone": "96649676",
+    "orderMeasurements": "70x240\n120x250\n120x244",
+    "jobType": "قص + حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "4mm",
+    "notes": "",
+    "sheets": [
+      {
+        "size": "122x300",
+        "thickness": "6mm",
+        "qty": "1"
+      },
+      {
+        "size": "122x300",
+        "thickness": "6mm",
+        "qty": "1"
+      },
+      {
+        "size": "100x200",
+        "thickness": "2mm",
+        "qty": "2"
+      },
+      {
+        "size": "100x200",
+        "thickness": "2mm",
+        "qty": "2"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 220,
+      "hasGlass": "لا",
+      "glassSideRef": "طرف القفل",
+      "glassW": 20,
+      "glassH": 60,
+      "glassTop": 15,
+      "glassBottom": 15,
+      "glassSideGap": 10,
+      "handleType": "مخفية",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 10,
+      "handleSideGap": 20
+    },
+    "file": {
+      "filename": "1768806105606-3a15275735dd88.jpg",
+      "originalName": "13a396e12e6f14218ab76922c04b7c00.jpg",
+      "url": "/uploads/1768806105606-3a15275735dd88.jpg"
+    }
+  },
+  {
+    "id": "1768804591607",
+    "createdAt": "2026-01-19T06:36:31.632Z",
+    "company": "شركة السيف",
+    "phone": "96649676",
+    "orderMeasurements": "100x230درفه \n120x240درفه \n60x230 نص درفه\n60x240 نص درفه",
+    "jobType": "حفر",
+    "materialType": "الألمنيوم",
+    "doorOpenDirection": "يمين",
+    "lineWidth": "4mm",
+    "notes": "قص فتحة جام فقط",
+    "sheets": [
+      {
+        "size": "122x244",
+        "thickness": "2mm",
+        "qty": "1"
+      },
+      {
+        "size": "122x244",
+        "thickness": "2mm",
+        "qty": "1"
+      }
+    ],
+    "diagram": {
+      "doorW": 100,
+      "doorH": 200,
+      "hasGlass": "نعم",
+      "glassSideRef": "طرف المفصلات",
+      "glassW": 20,
+      "glassH": 150,
+      "glassTop": 20,
+      "glassBottom": 20,
+      "glassSideGap": 20,
+      "handleType": "لا يوجد",
+      "handleSideRef": "طرف القفل",
+      "handleLen": 200,
+      "handleW": 10,
+      "handleTop": 20,
+      "handleSideGap": 20
+    },
+    "file": {
+      "filename": "1768804591607-1dfcf7e8633fa.jpg",
+      "originalName": "Screenshot_٢٠٢٦٠١١٩_٠٩٢٥٣٨_Drive.jpg",
+      "url": "/uploads/1768804591607-1dfcf7e8633fa.jpg"
+    }
+  }
+]
