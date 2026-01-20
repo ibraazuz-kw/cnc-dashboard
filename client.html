@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة العميل - CNC</title>
+  <style>
+    body{
+      font-family: Tahoma, Arial;
+      background:#f5f7fb;
+      margin:0;
+      padding:0;
+    }
+    .top{
+      background:#0d6efd;
+      color:#fff;
+      padding:18px;
+      text-align:center;
+      font-size:22px;
+      font-weight:bold;
+    }
+    .box{
+      max-width:500px;
+      margin:20px auto;
+      background:#fff;
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+    label{
+      display:block;
+      margin:10px 0 6px;
+      font-weight:bold;
+      color:#222;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:12px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      font-size:16px;
+      outline:none;
+    }
+    textarea{ min-height:90px; resize:vertical; }
+    .btn{
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      border:none;
+      border-radius:12px;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .send{
+      background:#198754;
+      color:#fff;
+    }
+    .back{
+      background:#6c757d;
+      color:#fff;
+    }
+    .note{
+      margin-top:10px;
+      font-size:13px;
+      color:#555;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">صفحة العميل (إرسال طلب)</div>
+
+  <div class="box">
+    <label>اسم العميل</label>
+    <input id="name" type="text" placeholder="مثال: أبو أحمد" />
+
+    <label>رقم الهاتف</label>
+    <input id="phone" type="text" placeholder="مثال: 9xxxxxxx" />
+
+    <label>نوع الطلب</label>
+    <select id="type">
+      <option value="قص ليزر">قص ليزر</option>
+      <option value="تفريز CNC">تفريز CNC</option>
+      <option value="حفر/نقش">حفر/نقش</option>
+      <option value="ألمنيوم شيت">ألمنيوم شيت</option>
+      <option value="أبواب/شبابيك">أبواب/شبابيك</option>
+      <option value="أخرى">أخرى</option>
+    </select>
+
+    <label>تفاصيل الطلب</label>
+    <textarea id="details" placeholder="اكتب المقاسات / العدد / اللون / أي ملاحظات..."></textarea>
+
+    <button class="btn send" onclick="sendOrder()">إرسال الطلب للأدمن</button>
+    <button class="btn back" onclick="location.href='/'">رجوع للبوابة</button>
+
+    <div class="note">
+      سيتم إرسال الطلب داخل النظام (محلياً).<br>
+      إذا تبي نضيف واتساب بعدين نقويه أكثر.
+    </div>
+  </div>
+
+  <script>
+    function sendOrder(){
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const type = document.getElementById("type").value;
+      const details = document.getElementById("details").value.trim();
+
+      if(!name || !phone || !details){
+        alert("⚠️ لازم تكتب الاسم + رقم الهاتف + تفاصيل الطلب");
+        return;
+      }
+
+      const order = {
+        name,
+        phone,
+        type,
+        details,
+        time: new Date().toLocaleString("ar-KW")
+      };
+
+      // تخزين الطلبات داخل المتصفح
+      let orders = JSON.parse(localStorage.getItem("cnc_orders") || "[]");
+      orders.push(order);
+      localStorage.setItem("cnc_orders", JSON.stringify(orders));
+
+      alert("✅ تم إرسال الطلب بنجاح!");
+
+      document.getElementById("details").value = "";
+    }
+  </script>
+</body>
+</html>
