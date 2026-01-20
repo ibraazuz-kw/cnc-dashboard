@@ -3,84 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>لوحة الأدمن - Pro Design</title>
+  <title>لوحة الأدمن</title>
 
   <style>
-    :root{
-      --bg:#f5f7fb;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --green:#16a34a;
-      --blue:#2563eb;
-      --red:#dc2626;
-      --black:#111111;
-      --border:#e5e7eb;
-      --shadow: 0 10px 25px rgba(0,0,0,.06);
-      --radius:16px;
+    body{
+      font-family: Arial, sans-serif;
+      background:#f6f7fb;
+      margin:0;
+      padding:0;
     }
-
-    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Tahoma,Arial;}
-    body{margin:0;background:var(--bg);color:var(--text);}
-    header{
-      background:linear-gradient(90deg,#0f172a,#111827);
+    .header{
+      background:#111;
       color:#fff;
-      padding:18px 16px;
+      padding:18px;
       text-align:center;
-      font-weight:800;
-      font-size:18px;
+      font-size:20px;
+      font-weight:bold;
     }
-
-    .container{max-width:980px;margin:18px auto;padding:0 12px;}
-
-    .topbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:12px;
+    .container{
+      max-width:1000px;
+      margin:20px auto;
+      padding:15px;
     }
-
-    .badge{
-      background:#fff;
-      border:1px solid var(--border);
-      padding:10px 12px;
-      border-radius:12px;
-      box-shadow:var(--shadow);
-      font-weight:700;
-    }
-
-    .btn{
-      border:none;
-      cursor:pointer;
-      padding:12px 14px;
-      border-radius:12px;
-      font-weight:800;
-      font-size:14px;
-      transition:.15s;
-    }
-    .btn:active{transform:scale(.98);}
-    .btn-blue{background:var(--blue);color:#fff;}
-    .btn-green{background:var(--green);color:#fff;}
-    .btn-red{background:var(--red);color:#fff;}
-    .btn-black{background:var(--black);color:#fff;}
-    .btn-ghost{background:#fff;border:1px solid var(--border);color:var(--text);}
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-
     .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
+      background:#fff;
+      border-radius:14px;
+      padding:16px;
+      margin-bottom:15px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.07);
     }
-
+    .clientCard{
+      border:1px solid #eee;
+      border-radius:14px;
+      padding:14px;
+      margin-top:12px;
+    }
     .row{
       display:flex;
       gap:10px;
@@ -88,391 +45,148 @@
       align-items:center;
       justify-content:space-between;
     }
-
-    .title{
-      font-weight:900;
-      font-size:16px;
+    select{
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #ddd;
+      font-size:15px;
+      outline:none;
+      min-width:200px;
+      background:#fff;
     }
-
-    .muted{color:var(--muted);font-size:13px;}
-
-    .status{
+    .badge{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:8px 10px;
+      padding:8px 12px;
       border-radius:999px;
-      font-weight:900;
+      font-weight:bold;
+      border:1px solid #ddd;
+    }
+    .btn{
+      border:none;
+      padding:12px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:15px;
+    }
+    .btn-blue{ background:#2d6cdf; color:#fff; }
+    .btn-red{ background:#e74c3c; color:#fff; }
+    .title{
+      font-weight:bold;
+      font-size:18px;
+      margin-bottom:8px;
+    }
+    .note{
+      color:#555;
       font-size:13px;
-      border:1px solid var(--border);
-      background:#fff;
+      line-height:1.6;
     }
-
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:#9ca3af;
-    }
-
-    .dot-run{background:#f59e0b;} /* قيد التشغيل */
-    .dot-ready{background:#22c55e;} /* جاهز */
-
-    .hr{height:1px;background:var(--border);margin:12px 0;}
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      overflow:hidden;
-      border-radius:14px;
-      border:1px solid var(--border);
-    }
-    th,td{
-      padding:10px;
-      border-bottom:1px solid var(--border);
-      text-align:center;
-      font-size:14px;
-    }
-    th{
-      background:#f3f4f6;
-      font-weight:900;
-    }
-    tr:last-child td{border-bottom:none;}
-
-    .files a{
-      display:block;
-      text-decoration:none;
-      color:var(--blue);
-      font-weight:800;
-      margin:6px 0;
-    }
-
-    .textarea{
-      width:100%;
-      min-height:90px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      padding:10px;
-      outline:none;
-      resize:vertical;
-      font-size:14px;
-    }
-
-    .small{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:6px;
-    }
-
-    .pill{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:12px;
-      background:#eef2ff;
-      color:#1e40af;
-      border:1px solid #c7d2fe;
-    }
-
-    .hidden{display:none;}
   </style>
 </head>
 
 <body>
-<header>لوحة الأدمن - Pro Design (طلبات CNC)</header>
+  <div class="header">لوحة الأدمن (إدارة حالات الطلبات)</div>
 
-<div class="container">
+  <div class="container">
 
-  <div class="topbar">
-    <div class="badge">📌 الحالة: <span class="pill">بدون قاعدة بيانات (تجريبي)</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-blue" onclick="refreshDemo()">تحديث</button>
-      <button class="btn btn-red" onclick="clearAll()">حذف كل الطلبات</button>
-      <button class="btn btn-ghost" onclick="goHome()">رجوع للبوابة</button>
+    <div class="card">
+      <div class="title">ملاحظة</div>
+      <div class="note">
+        ✅ هنا الأدمن فقط يغير حالة الطلب لكل عميل.<br/>
+        ❌ العميل ما يقدر يغير الحالة.
+      </div>
     </div>
+
+    <div class="card">
+      <div class="title">قائمة العملاء</div>
+
+      <div id="clientsList"></div>
+    </div>
+
   </div>
 
-  <!-- قائمة الطلبات -->
-  <div id="ordersList" class="grid"></div>
-
-  <!-- تفاصيل الطلب -->
-  <div id="orderDetails" class="card hidden"></div>
-
-</div>
-
 <script>
-  // =========================
-  // بيانات تجريبية (بدون قاعدة بيانات)
-  // =========================
-  let orders = [
-    {
-      id: "ORD-1001",
-      company: "شركة إبراهيم للألمنيوم",
-      createdAt: "2026-01-20 12:11",
-      status: "running", // running | ready
-      cncType: "قص + حفر",
-      material: "ألمنيوم",
-      lineWidth: "10",
-      cutEngraveDetails: "قص خارجي + حفر شعار + فتحات مسكة مخفية",
-      manualMeasures: "فتحة الباب 2200×1000 / مسافة الجام 60 فوق / 30 تحت",
-      notesInternal: "",
-      sheets: [
-        { size: "244×122", thickness: "3", qty: 5 },
-        { size: "300×150", thickness: "2", qty: 2 }
-      ],
-      files: [
-        { name: "DXF التصميم", url: "#" },
-        { name: "PDF مخطط المصمم", url: "#" }
-      ]
-    },
-    {
-      id: "ORD-1002",
-      company: "شركة الهاجري",
-      createdAt: "2026-01-20 12:25",
-      status: "ready",
-      cncType: "قص فقط",
-      material: "ألمنيوم",
-      lineWidth: "8",
-      cutEngraveDetails: "قص خارجي فقط بدون حفر",
-      manualMeasures: "مقاس اللوح 2000×1000 / فتحات مسامير 4",
-      notesInternal: "",
-      sheets: [
-        { size: "244×122", thickness: "2", qty: 3 }
-      ],
-      files: [
-        { name: "صورة المرجع", url: "#" }
-      ]
-    }
+  // ====== بيانات العملاء (تجريبية) ======
+  // لاحقاً نربطها بقاعدة بيانات
+  let clients = [
+    { username:"client1", companyName:"شركة إبراهيم للألمنيوم", status:"قيد التشغيل" },
+    { username:"client2", companyName:"شركة الدروازة", status:"جاهز الطلب" },
+    { username:"client3", companyName:"شركة الهاجري", status:"قيد التشغيل" }
   ];
 
-  // رقم المورد (واتساب) - غيره براحتك
-  const supplierPhone = "96500000000"; // مثال
+  const clientsList = document.getElementById("clientsList");
 
-  // =========================
-  // وظائف مساعدة
-  // =========================
-  function statusLabel(st){
-    if(st === "ready") return "جاهز ✅";
-    return "قيد التشغيل ⏳";
-  }
+  function statusBadge(status){
+    const span = document.createElement("span");
+    span.className = "badge";
 
-  function statusDotClass(st){
-    if(st === "ready") return "dot-ready";
-    return "dot-run";
-  }
-
-  function goHome(){
-    // يرجع للصفحة الرئيسية
-    window.location.href = "index.html";
-  }
-
-  function refreshDemo(){
-    renderOrders();
-    hideDetails();
-  }
-
-  function clearAll(){
-    if(confirm("متأكد تبي تحذف كل الطلبات؟")){
-      orders = [];
-      renderOrders();
-      hideDetails();
+    if(status === "جاهز الطلب"){
+      span.style.background = "#dff7e9";
+      span.style.border = "1px solid #82d9a8";
+      span.style.color = "#0b6b3b";
+      span.innerText = "جاهز الطلب ✅";
+    } else {
+      span.style.background = "#fff6cc";
+      span.style.border = "1px solid #f3d87a";
+      span.style.color = "#8a6d00";
+      span.innerText = "قيد التشغيل ⏳";
     }
+    return span;
   }
 
-  function deleteOrder(id){
-    if(confirm("حذف الطلب " + id + " ؟")){
-      orders = orders.filter(o => o.id !== id);
-      renderOrders();
-      hideDetails();
-    }
-  }
+  function renderClients(){
+    clientsList.innerHTML = "";
 
-  function toggleStatus(id){
-    const order = orders.find(o => o.id === id);
-    if(!order) return;
-    order.status = (order.status === "ready") ? "running" : "ready";
-    renderOrders();
-    openDetails(id);
-  }
+    clients.forEach((c, index)=>{
+      const box = document.createElement("div");
+      box.className = "clientCard";
 
-  function hideDetails(){
-    const box = document.getElementById("orderDetails");
-    box.classList.add("hidden");
-    box.innerHTML = "";
-  }
+      const top = document.createElement("div");
+      top.className = "row";
 
-  function openDetails(id){
-    const order = orders.find(o => o.id === id);
-    if(!order) return;
+      const info = document.createElement("div");
+      info.innerHTML = `<b>${c.companyName}</b><br><span style="color:#666;font-size:13px;">يوزر: ${c.username}</span>`;
 
-    const box = document.getElementById("orderDetails");
-    box.classList.remove("hidden");
+      const badge = statusBadge(c.status);
 
-    const sheetsRows = order.sheets.map((s, idx) => `
-      <tr>
-        <td>${idx+1}</td>
-        <td>${s.size}</td>
-        <td>${s.thickness} mm</td>
-        <td>${s.qty}</td>
-      </tr>
-    `).join("");
+      top.appendChild(info);
+      top.appendChild(badge);
 
-    const filesHtml = order.files.map(f => `
-      <a href="${f.url}" target="_blank">📎 ${f.name}</a>
-    `).join("");
+      const controls = document.createElement("div");
+      controls.className = "row";
+      controls.style.marginTop = "12px";
 
-    box.innerHTML = `
-      <div class="row">
-        <div>
-          <div class="title">تفاصيل الطلب: ${order.id}</div>
-          <div class="muted">العميل: <b>${order.company}</b> • التاريخ: ${order.createdAt}</div>
-        </div>
+      const select = document.createElement("select");
+      ["قيد التشغيل","جاهز الطلب"].forEach(s=>{
+        const op = document.createElement("option");
+        op.value = s;
+        op.textContent = s;
+        if(s === c.status) op.selected = true;
+        select.appendChild(op);
+      });
 
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <span class="status">
-            <span class="dot ${statusDotClass(order.status)}"></span>
-            ${statusLabel(order.status)}
-          </span>
-          <button class="btn btn-green" onclick="toggleStatus('${order.id}')">تغيير الحالة</button>
-          <button class="btn btn-red" onclick="deleteOrder('${order.id}')">حذف الطلب</button>
-          <button class="btn btn-ghost" onclick="hideDetails()">إغلاق</button>
-        </div>
-      </div>
+      const saveBtn = document.createElement("button");
+      saveBtn.className = "btn btn-blue";
+      saveBtn.innerText = "حفظ الحالة";
+      saveBtn.onclick = ()=>{
+        clients[index].status = select.value;
+        alert(`تم تحديث حالة ${c.companyName} إلى: ${select.value}`);
+        renderClients();
+      };
 
-      <div class="hr"></div>
+      controls.appendChild(select);
+      controls.appendChild(saveBtn);
 
-      <div class="card" style="padding:12px;margin-bottom:12px;">
-        <div class="title">🧾 بيانات الطلب</div>
-        <div class="muted" style="margin-top:8px;">
-          <b>نوع الطلب:</b> ${order.cncType}<br/>
-          <b>نوع المادة:</b> ${order.material}<br/>
-          <b>عرض الخط / السماكة المطلوبة:</b> ${order.lineWidth} mm
-        </div>
-      </div>
+      box.appendChild(top);
+      box.appendChild(controls);
 
-      <div class="card" style="padding:12px;margin-bottom:12px;">
-        <div class="title">📌 تفاصيل القص / الحفر</div>
-        <div class="muted" style="margin-top:8px;">${order.cutEngraveDetails || "—"}</div>
-      </div>
-
-      <div class="card" style="padding:12px;margin-bottom:12px;">
-        <div class="title">📏 قياسات يدوية (كتبها العميل)</div>
-        <div class="muted" style="margin-top:8px;">${order.manualMeasures || "—"}</div>
-      </div>
-
-      <div class="card" style="padding:12px;margin-bottom:12px;">
-        <div class="title">🧱 تفاصيل الشيت (للشراء من المورد)</div>
-        <div class="muted" style="margin-top:6px;">(قياس الشيت + السماكة + الكمية)</div>
-
-        <div style="margin-top:10px;">
-          <table>
-            <thead>
-              <tr>
-                <th>م</th>
-                <th>قياس الشيت</th>
-                <th>السماكة</th>
-                <th>الكمية</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${sheetsRows || `<tr><td colspan="4">لا يوجد شيت</td></tr>`}
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-green" onclick="sendToSupplierWhatsApp('${order.id}')">📩 إرسال طلب الشيت للمورد (واتساب)</button>
-          <div class="small">* يجهز لك رسالة فيها اسم العميل + تفاصيل الشيت فقط</div>
-        </div>
-      </div>
-
-      <div class="card" style="padding:12px;margin-bottom:12px;">
-        <div class="title">📁 ملفات العميل</div>
-        <div class="files" style="margin-top:8px;">
-          ${filesHtml || `<div class="muted">لا يوجد ملفات</div>`}
-        </div>
-        <div class="small">* الروابط تجريبية حالياً</div>
-      </div>
-
-      <div class="card" style="padding:12px;">
-        <div class="title">📝 ملاحظات داخلية (للأدمن فقط)</div>
-        <textarea class="textarea" placeholder="اكتب ملاحظة داخلية..." oninput="saveInternalNote('${order.id}', this.value)">${order.notesInternal || ""}</textarea>
-        <div class="small">هذه الملاحظات لا تظهر للعميل</div>
-      </div>
-    `;
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-  }
-
-  function saveInternalNote(id, val){
-    const order = orders.find(o => o.id === id);
-    if(order) order.notesInternal = val;
-  }
-
-  function sendToSupplierWhatsApp(orderId){
-    const order = orders.find(o => o.id === orderId);
-    if(!order) return;
-
-    if(order.sheets.length === 0){
-      alert("لا يوجد تفاصيل شيت لإرسالها للمورد.");
-      return;
-    }
-
-    let msg = `طلب شيت (CNC)\n`;
-    msg += `اسم العميل: ${order.company}\n\n`;
-    msg += `تفاصيل الشيت:\n`;
-
-    order.sheets.forEach((s, i) => {
-      msg += `${i+1}) قياس: ${s.size} | سماكة: ${s.thickness}mm | كمية: ${s.qty}\n`;
+      clientsList.appendChild(box);
     });
-
-    const url = `https://wa.me/${supplierPhone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
   }
 
-  function renderOrders(){
-    const list = document.getElementById("ordersList");
-    if(orders.length === 0){
-      list.innerHTML = `
-        <div class="card">
-          <div class="title">لا يوجد طلبات حالياً</div>
-          <div class="muted">جرّب بعدين لما نربطها بقاعدة بيانات.</div>
-        </div>
-      `;
-      return;
-    }
-
-    list.innerHTML = orders.map(o => `
-      <div class="card">
-        <div class="row">
-          <div>
-            <div class="title">${o.company}</div>
-            <div class="muted">رقم الطلب: <b>${o.id}</b> • ${o.createdAt}</div>
-          </div>
-
-          <span class="status">
-            <span class="dot ${statusDotClass(o.status)}"></span>
-            ${statusLabel(o.status)}
-          </span>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="muted">
-          <b>نوع الطلب:</b> ${o.cncType} •
-          <b>مادة:</b> ${o.material} •
-          <b>عرض الخط:</b> ${o.lineWidth}mm
-        </div>
-
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-black" onclick="openDetails('${o.id}')">فتح التفاصيل</button>
-          <button class="btn btn-green" onclick="toggleStatus('${o.id}')">تغيير الحالة</button>
-          <button class="btn btn-red" onclick="deleteOrder('${o.id}')">حذف</button>
-        </div>
-      </div>
-    `).join("");
-  }
-
-  // أول تشغيل
-  renderOrders();
+  renderClients();
 </script>
 
 </body>
