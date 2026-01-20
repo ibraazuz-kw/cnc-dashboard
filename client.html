@@ -1,484 +1,175 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحة العميل - CNC</title>
-  <style>
-    body{font-family:Arial;background:#f5f7fb;margin:0}
-    .top{background:#12b76a;color:#fff;padding:16px;text-align:center;font-size:18px;font-weight:900}
-    .wrap{max-width:950px;margin:20px auto;padding:12px}
-    .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .col{flex:1;min-width:220px}
-    label{display:block;margin:10px 0 6px;font-weight:800}
-    input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
-    textarea{min-height:90px}
-    .btn{padding:14px 14px;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer}
-    .btnRed{background:#e74c3c;color:#fff}
-    .btnBlue{background:#0b63f6;color:#fff}
-    .btnGreen{background:#12b76a;color:#fff}
-    .btnDark{background:#111;color:#fff}
-    .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .title{font-size:18px;font-weight:900}
-    .badge{display:inline-block;padding:8px 12px;border-radius:999px;font-weight:900}
-    .bWork{background:#fff3cd;color:#7a5b00;border:1px solid #ffeeba}
-    .bDone{background:#d1f7e3;color:#0b7a44;border:1px solid #a9e9c8}
-    .blueBar{background:#1f6fff;color:#fff;padding:12px;border-radius:14px;font-weight:900;margin:10px 0}
-    .tableRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px;border:1px solid #eee;border-radius:14px;margin:10px 0}
-    .mini{font-size:12px;color:#666;margin-top:6px}
-    .boxText{background:#f7f7f7;border-radius:14px;padding:12px;border:1px dashed #ddd;white-space:pre-wrap}
-    .divider{height:1px;background:#eee;margin:12px 0}
-    .pdfLink{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
-    a{color:#0b63f6;text-decoration:none;font-weight:900}
-  </style>
+  <title>صفحة العميل (إرسال طلب CNC)</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+  <div class="header">صفحة العميل (إرسال طلب CNC)</div>
 
-<div class="top">صفحة العميل (إرسال طلب CNC)</div>
+  <div class="container">
 
-<div class="wrap">
-
-  <!-- معلومات العميل + حالة الطلب -->
-  <div class="card">
-    <div class="head">
-      <div>
-        <div class="title" id="hello">مرحباً</div>
-        <div class="mini">هذه صفحة خاصة للعميل بعد تسجيل الدخول.</div>
-      </div>
-      <button class="btn btnRed" onclick="logout()">تسجيل خروج</button>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="row">
-      <div class="col">
-        <div class="title">حالة الطلب الحالي</div>
-        <div style="margin-top:10px">
-          <span id="statusBadge" class="badge bWork">⏳ قيد التشغيل</span>
+    <!-- معلومات العميل + حالة الطلب -->
+    <div class="card">
+      <div class="row" style="align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:900;font-size:18px" id="helloClient">مرحباً</div>
+          <div class="small">هذه صفحة خاصة للعميل بعد تسجيل الدخول.</div>
         </div>
-        <div class="mini">✅ العميل يشوف الحالة فقط (بدون تغيير).</div>
+        <div style="min-width:170px">
+          <button class="btn-red" onclick="logout()">تسجيل خروج</button>
+        </div>
       </div>
 
-      <div class="col">
-        <div class="title">نوع الطلب</div>
-        <select id="orderType">
-          <option value="">اختر نوع الطلب</option>
-          <option>باب</option>
-          <option>باب مفرد</option>
-          <option>باب مزدوج</option>
-          <option>باب ونص</option>
-          <option>شباك</option>
-          <option>قص شيت فقط</option>
-          <option>حفر شيت فقط</option>
-        </select>
-        <div class="mini">تقدر تغيرها حسب شغلك.</div>
+      <div class="hr"></div>
+
+      <div class="row" style="align-items:center;justify-content:space-between">
+        <div>
+          <div class="title" style="margin:0">حالة الطلب الحالي</div>
+          <div class="note">✅ العميل يشوف الحالة فقط (بدون تغيير).</div>
+        </div>
+        <div>
+          <span id="statusBadge" class="badge badge-yellow">🟡 قيد التشغيل</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- جدول القياسات (بالسنتيمتر) + اتجاه الفتحة بسهم -->
-  <div class="card">
-    <div class="title">📏 جدول القياسات (بالسنتيمتر)</div>
-    <div class="mini">⚠️ ملاحظة: الاتجاه محسوب من داخل البيت (يمين/يسار).</div>
-
-    <div class="blueBar">م | العرض (سم) | الارتفاع (سم) | العدد | اتجاه الفتحة</div>
-
-    <div id="measurements"></div>
-
-    <button class="btn btnBlue" onclick="addMeasurement()">+ إضافة قياس</button>
-
-    <div class="mini">مثال: 110×300 عدد 1 اتجاه الفتحة يمين</div>
-  </div>
-
-  <!-- تفاصيل الشيت -->
-  <div class="card">
-    <div class="title">🧾 تفاصيل الشيت (للشراء من المورد)</div>
-    <div class="mini">اختر قياس الشيت + السماكة + الكمية. وتقدر تضيف أكثر من شيت.</div>
-
-    <div class="blueBar">قياس الشيت | السماكة (mm) | الكمية | حذف</div>
-
-    <div id="sheets"></div>
-
-    <button class="btn btnBlue" onclick="addSheet()">+ إضافة شيت</button>
-
-    <div style="margin-top:12px">
-      <button class="btn btnGreen" onclick="downloadSheetsPDF()">📄 تحميل ملف PDF لطلب الشيت</button>
-      <div class="mini">يطلع لك PDF فيه اسم العميل + تفاصيل الشيتات.</div>
-    </div>
-  </div>
-
-  <!-- تفاصيل القص والحفر + رفع ملف -->
-  <div class="card">
-    <div class="title">✂️ تفاصيل القص / الحفر</div>
-
-    <label>تفاصيل القص / الحفر</label>
-    <textarea id="cutDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية ..."></textarea>
-
-    <label>رفع ملف (DXF / PDF / صورة)</label>
-    <input id="fileInput" type="file" />
-
-    <label>ملاحظات إضافية</label>
-    <textarea id="notes" placeholder="أي ملاحظات..."></textarea>
-  </div>
-
-  <!-- أمر تشغيل CNC -->
-  <div class="card">
-    <div class="title">📌 أمر تشغيل CNC</div>
-
-    <button class="btn btnGreen" onclick="sendCNCOrder()">📩 إرسال أمر تشغيل CNC للأدمن</button>
-
-    <div style="margin-top:12px" class="boxText" id="cncPreview">سيظهر هنا أمر التشغيل بعد الإرسال...</div>
-
-    <div class="pdfLink">
-      <button class="btn btnDark" onclick="copyText()">📋 نسخ أمر التشغيل</button>
-      <a href="/admin.html">فتح لوحة الأدمن</a>
+    <!-- نوع الطلب -->
+    <div class="card">
+      <div class="title">نوع الطلب</div>
+      <select id="orderType">
+        <option value="">اختر نوع الطلب</option>
+        <option>باب</option>
+        <option>باب مفرد</option>
+        <option>باب مزدوج</option>
+        <option>باب ونص</option>
+        <option>شباك</option>
+        <option>قص شيت فقط</option>
+        <option>حفر شيت فقط</option>
+      </select>
+      <div class="note">تقدر تغيرها حسب شغلك.</div>
     </div>
 
-    <div class="mini">⚠️ هذا الإصدار يحفظ الطلبات داخل نفس الجهاز (LocalStorage).</div>
-  </div>
+    <!-- جدول القياسات -->
+    <div class="card">
+      <div class="title">📏 جدول القياسات (بالسنتيمتر)</div>
+      <div class="note">⚠️ الاتجاه محسوب من داخل البيت (يمين/يسار).</div>
 
-  <!-- فاتورة العميل (إذا الأدمن أرسلها) -->
-  <div class="card">
-    <div class="title">🧾 الفاتورة</div>
-    <div class="mini">إذا الأدمن جهّز فاتورة وارسَلها لك، تظهر هنا.</div>
+      <div class="tableHead tableGrid grid-measure">
+        <div>م</div>
+        <div>الارتفاع (سم)</div>
+        <div>العرض (سم)</div>
+        <div>العدد</div>
+        <div>اتجاه الفتحة</div>
+      </div>
 
-    <div id="invoiceBox" class="boxText">لا توجد فاتورة حالياً.</div>
-    <div id="invoiceDownload" class="pdfLink" style="display:none;">
-      <button class="btn btnBlue" onclick="downloadInvoicePDF()">📄 تحميل الفاتورة PDF</button>
+      <div id="measureList"></div>
+
+      <button class="btn-blue" onclick="addMeasure()">+ إضافة قياس</button>
+
+      <div class="note" id="measureExample">✅ مثال: 300×110 عدد 1 / اتجاه الفتحة يمين</div>
     </div>
+
+    <!-- تفاصيل الشيت -->
+    <div class="card">
+      <div class="title">🧾 تفاصيل الشيت (للشراء من المورد)</div>
+      <div class="note">اختر قياس الشيت + السماكة + الكمية، وتقدر تضيف أكثر من شيت.</div>
+
+      <div class="tableHead tableGrid grid-sheet">
+        <div>قياس الشيت</div>
+        <div>السماكة (mm)</div>
+        <div>الكمية</div>
+        <div>حذف</div>
+      </div>
+
+      <div id="sheetList"></div>
+
+      <div class="row">
+        <div class="col"><button class="btn-blue" onclick="addSheet()">+ إضافة شيت</button></div>
+        <div class="col"><button class="btn-green" onclick="downloadSheetPDF()">📄 تحميل ملف PDF لطلب الشيت</button></div>
+      </div>
+
+      <div class="note">يطلع لك PDF فيه اسم العميل + تفاصيل الشيتات فقط.</div>
+    </div>
+
+    <!-- تفاصيل القص/الحفر + رفع ملف -->
+    <div class="card">
+      <div class="title">✂️ تفاصيل القص / الحفر</div>
+      <textarea id="cutDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
+
+      <div class="hr"></div>
+
+      <div class="title">رفع ملف (DXF / PDF / صورة)</div>
+      <input type="file" id="fileUpload" />
+      <div class="note">⚠️ النسخة التجريبية ما ترفع للسيرفر، بس نستخدم الاسم داخل أمر التشغيل.</div>
+
+      <div class="hr"></div>
+
+      <div class="title">ملاحظات إضافية</div>
+      <textarea id="notes" placeholder="أي ملاحظات..."></textarea>
+    </div>
+
+    <!-- إرسال أمر تشغيل CNC -->
+    <div class="card">
+      <div class="title">📌 أمر تشغيل CNC</div>
+      <button class="btn-green" onclick="sendToAdmin()">📩 إرسال أمر تشغيل CNC للأدمن</button>
+      <div class="note">سيظهر هنا أمر التشغيل بعد الإرسال...</div>
+
+      <div style="margin-top:10px" class="previewBox" id="orderPreview">...</div>
+
+      <div class="row" style="margin-top:10px">
+        <div class="col"><button class="btn-black" onclick="copyText()">📋 نسخ أمر التشغيل</button></div>
+        <div class="col"><a href="admin.html">فتح لوحة الأدمن</a></div>
+      </div>
+
+      <div class="note">⚠️ هذا الإصدار يحفظ الطلبات داخل نفس الجهاز (LocalStorage).</div>
+    </div>
+
+    <!-- الفاتورة (تظهر إذا الأدمن جهزها) -->
+    <div class="card">
+      <div class="title">🧾 الفاتورة</div>
+      <div class="note">إذا الأدمن جهز فاتورة وأرسلها لك، تظهر هنا.</div>
+
+      <div id="invoiceBox" class="previewBox">لا توجد فاتورة حالياً.</div>
+
+      <div style="margin-top:10px">
+        <button class="btn-blue" onclick="downloadInvoicePDF()">📄 تحميل الفاتورة PDF</button>
+      </div>
+    </div>
+
   </div>
 
-</div>
-
-<!-- مكتبة PDF -->
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
+<script src="app.js"></script>
 <script>
-  // ====== حماية الدخول ======
-  const user = localStorage.getItem("pd_current_user");
-  const company = localStorage.getItem("pd_current_company");
+  // تحميل بيانات العميل
+  const clientName = localStorage.getItem("pd_client_name") || "بدون اسم";
+  document.getElementById("helloClient").innerText = "مرحباً: " + clientName;
 
-  if(!user || !company){
-    window.location.href = "/index.html";
-  }
-
-  document.getElementById("hello").innerText = "مرحباً: " + company;
-
-  function logout(){
-    localStorage.removeItem("pd_current_user");
-    localStorage.removeItem("pd_current_company");
-    window.location.href = "/index.html";
-  }
-
-  // ====== حالة الطلب (تجي من الأدمن) ======
-  function loadStatus(){
-    const statuses = JSON.parse(localStorage.getItem("pd_statuses") || "{}");
-    const st = statuses[user] || "قيد التشغيل";
+  // حالة الطلب (عرض فقط)
+  function refreshStatus(){
+    const st = localStorage.getItem("pd_status_"+clientName) || "قيد التشغيل";
     const badge = document.getElementById("statusBadge");
     if(st === "جاهز"){
-      badge.className = "badge bDone";
+      badge.className = "badge badge-green";
       badge.innerText = "✅ جاهز";
     }else{
-      badge.className = "badge bWork";
-      badge.innerText = "⏳ " + st;
+      badge.className = "badge badge-yellow";
+      badge.innerText = "🟡 قيد التشغيل";
     }
   }
-  loadStatus();
+  refreshStatus();
 
-  // ====== قياسات ======
-  const measurementsDiv = document.getElementById("measurements");
+  // قياسات افتراضية
+  initMeasureUI();
+  initSheetUI();
+  loadInvoiceToClient();
 
-  function arrowSVG(direction){
-    // سهم مثل رسم العميل: خط + سهم يوضح اتجاه الفتحة
-    // يمين = السهم يروح يمين / يسار = السهم يروح يسار
-    const isRight = direction === "يمين";
-    const arrow = isRight ? "➡️" : "⬅️";
-    return `<div style="font-size:22px;font-weight:900">${arrow}</div>`;
-  }
-
-  function measurementRow(i){
-    const wrapper = document.createElement("div");
-    wrapper.className = "tableRow";
-
-    wrapper.innerHTML = `
-      <div style="width:30px;font-weight:900">${i+1}</div>
-
-      <div style="flex:1;min-width:120px">
-        <label>العرض (سم)</label>
-        <input type="number" class="w" placeholder="مثال: 110" />
-      </div>
-
-      <div style="flex:1;min-width:120px">
-        <label>الارتفاع (سم)</label>
-        <input type="number" class="h" placeholder="مثال: 300" />
-      </div>
-
-      <div style="flex:1;min-width:120px">
-        <label>العدد</label>
-        <input type="number" class="q" value="1" />
-      </div>
-
-      <div style="flex:1;min-width:170px">
-        <label>اتجاه الفتحة</label>
-        <select class="dir">
-          <option value="يمين">يمين (من داخل البيت)</option>
-          <option value="يسار">يسار (من داخل البيت)</option>
-        </select>
-      </div>
-
-      <div style="width:70px;text-align:center;margin-top:26px" class="arrowBox">${arrowSVG("يمين")}</div>
-
-      <div style="width:90px">
-        <button class="btn btnRed" style="width:100%" onclick="this.parentElement.parentElement.remove(); refreshMeasurementNumbers();">حذف</button>
-      </div>
-    `;
-
-    const dirSelect = wrapper.querySelector(".dir");
-    const arrowBox = wrapper.querySelector(".arrowBox");
-    dirSelect.addEventListener("change", () => {
-      arrowBox.innerHTML = arrowSVG(dirSelect.value);
-    });
-
-    return wrapper;
-  }
-
-  function refreshMeasurementNumbers(){
-    const rows = measurementsDiv.querySelectorAll(".tableRow");
-    rows.forEach((r, idx) => {
-      r.children[0].innerText = idx+1;
-    });
-  }
-
-  function addMeasurement(){
-    const rows = measurementsDiv.querySelectorAll(".tableRow").length;
-    measurementsDiv.appendChild(measurementRow(rows));
-    refreshMeasurementNumbers();
-  }
-
-  // أول صف افتراضي
-  addMeasurement();
-
-  // ====== الشيتات ======
-  const SHEET_SIZES = [
-    "122x244","122x300","150x300","100x300","100x200","122x350","122x400","150x400"
-  ];
-  const THICKNESSES = [2,3,4,5,6,7,8,9,10,11,12];
-
-  const sheetsDiv = document.getElementById("sheets");
-
-  function sheetRow(){
-    const div = document.createElement("div");
-    div.className = "tableRow";
-
-    const sizeOptions = SHEET_SIZES.map(s=>`<option>${s}</option>`).join("");
-    const thOptions = THICKNESSES.map(t=>`<option>${t}</option>`).join("");
-
-    div.innerHTML = `
-      <div style="flex:1;min-width:180px">
-        <label>قياس الشيت</label>
-        <select class="sheetSize">${sizeOptions}</select>
-      </div>
-
-      <div style="flex:1;min-width:150px">
-        <label>السماكة (mm)</label>
-        <select class="sheetTh">${thOptions}</select>
-      </div>
-
-      <div style="flex:1;min-width:140px">
-        <label>الكمية</label>
-        <input type="number" class="sheetQty" value="1" min="1" />
-      </div>
-
-      <div style="width:90px">
-        <button class="btn btnRed" style="width:100%" onclick="this.parentElement.parentElement.remove()">حذف</button>
-      </div>
-    `;
-    return div;
-  }
-
-  function addSheet(){
-    sheetsDiv.appendChild(sheetRow());
-  }
-
-  // أول شيت افتراضي
-  addSheet();
-
-  // ====== توليد أمر تشغيل CNC ======
-  function getMeasurementsData(){
-    const rows = measurementsDiv.querySelectorAll(".tableRow");
-    const arr = [];
-    rows.forEach((r, idx)=>{
-      const w = r.querySelector(".w").value;
-      const h = r.querySelector(".h").value;
-      const q = r.querySelector(".q").value || 1;
-      const dir = r.querySelector(".dir").value;
-
-      if(w && h){
-        arr.push({ no: idx+1, width:w, height:h, qty:q, dir });
-      }
-    });
-    return arr;
-  }
-
-  function getSheetsData(){
-    const rows = sheetsDiv.querySelectorAll(".tableRow");
-    const arr = [];
-    rows.forEach((r)=>{
-      const size = r.querySelector(".sheetSize").value;
-      const th = r.querySelector(".sheetTh").value;
-      const qty = r.querySelector(".sheetQty").value || 1;
-      arr.push({ size, th, qty });
-    });
-    return arr;
-  }
-
-  function buildCNCText(){
-    const type = document.getElementById("orderType").value || "غير محدد";
-    const measures = getMeasurementsData();
-    const cut = document.getElementById("cutDetails").value.trim();
-    const notes = document.getElementById("notes").value.trim();
-
-    let text = "";
-    text += "📌 أمر تشغيل CNC\n";
-    text += "--------------------------\n";
-    text += "العميل: " + company + "\n";
-    text += "نوع الطلب: " + type + "\n";
-    text += "--------------------------\n";
-    text += "📏 القياسات (سم):\n";
-
-    if(measures.length === 0){
-      text += "- لا توجد قياسات مدخلة\n";
-    }else{
-      measures.forEach(m=>{
-        const arrow = (m.dir === "يمين") ? "➡️" : "⬅️";
-        text += `${m.no}) ${m.width} × ${m.height} | العدد: ${m.qty} | الفتحة: ${m.dir} ${arrow}\n`;
-      });
-    }
-
-    text += "--------------------------\n";
-    text += "✂️ تفاصيل القص/الحفر:\n";
-    text += (cut ? cut : "لا يوجد") + "\n";
-    text += "--------------------------\n";
-    text += "📝 ملاحظات:\n";
-    text += (notes ? notes : "لا يوجد") + "\n";
-    text += "--------------------------\n";
-    text += "✅ يرجى التأكيد قبل التنفيذ.\n";
-
-    return text;
-  }
-
-  function sendCNCOrder(){
-    const cncText = buildCNCText();
-    document.getElementById("cncPreview").innerText = cncText;
-
-    const payload = {
-      id: "ORD-" + Date.now(),
-      user,
-      company,
-      type: document.getElementById("orderType").value || "غير محدد",
-      measurements: getMeasurementsData(),
-      sheets: getSheetsData(),
-      cutDetails: document.getElementById("cutDetails").value.trim(),
-      notes: document.getElementById("notes").value.trim(),
-      createdAt: new Date().toISOString(),
-      cncText
-    };
-
-    const orders = JSON.parse(localStorage.getItem("pd_orders") || "[]");
-    orders.unshift(payload);
-    localStorage.setItem("pd_orders", JSON.stringify(orders));
-
-    alert("✅ تم إرسال أمر تشغيل CNC للأدمن (تجريبي).");
-  }
-
-  function copyText(){
-    const t = document.getElementById("cncPreview").innerText.trim();
-    if(!t || t.includes("سيظهر هنا")){
-      return alert("أرسل أمر التشغيل أولاً");
-    }
-    navigator.clipboard.writeText(t);
-    alert("📋 تم نسخ أمر التشغيل");
-  }
-
-  // ====== PDF للشيت ======
-  async function downloadSheetsPDF(){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    const sheets = getSheetsData();
-
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(14);
-    doc.text("Sheet Order (Supplier)", 14, 15);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica","normal");
-    doc.text("Client: " + company, 14, 25);
-    doc.text("Date: " + new Date().toLocaleString(), 14, 32);
-
-    let y = 45;
-    doc.setFont("helvetica","bold");
-    doc.text("Size", 14, y);
-    doc.text("Thickness(mm)", 70, y);
-    doc.text("Qty", 140, y);
-
-    doc.setFont("helvetica","normal");
-    y += 8;
-
-    sheets.forEach((s)=>{
-      doc.text(String(s.size), 14, y);
-      doc.text(String(s.th), 80, y);
-      doc.text(String(s.qty), 140, y);
-      y += 8;
-      if(y > 280){
-        doc.addPage();
-        y = 20;
-      }
-    });
-
-    doc.save("Sheet-Order.pdf");
-  }
-
-  // ====== فاتورة العميل (تجي من الأدمن) ======
-  function loadInvoice(){
-    const invs = JSON.parse(localStorage.getItem("pd_invoices") || "{}");
-    const inv = invs[user];
-    const box = document.getElementById("invoiceBox");
-    const dl = document.getElementById("invoiceDownload");
-
-    if(!inv){
-      box.innerText = "لا توجد فاتورة حالياً.";
-      dl.style.display = "none";
-      return;
-    }
-
-    box.innerText = inv.text;
-    dl.style.display = "flex";
-  }
-  loadInvoice();
-
-  async function downloadInvoicePDF(){
-    const invs = JSON.parse(localStorage.getItem("pd_invoices") || "{}");
-    const inv = invs[user];
-    if(!inv) return alert("لا توجد فاتورة");
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(16);
-    doc.text("Pro Design - Invoice", 14, 16);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica","normal");
-    doc.text("Client: " + company, 14, 26);
-    doc.text("Date: " + new Date().toLocaleString(), 14, 33);
-
-    const lines = doc.splitTextToSize(inv.text, 180);
-    doc.text(lines, 14, 45);
-
-    doc.save("Invoice.pdf");
+  function logout(){
+    localStorage.removeItem("pd_client_username");
+    // لا نمسح الاسم حتى ما يضيع الطلب
+    window.location.href="index.html";
   }
 </script>
 </body>
