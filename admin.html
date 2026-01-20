@@ -1,208 +1,85 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>لوحة الأدمن</title>
-  <style>
-    body{font-family:Arial;background:#f5f7fb;margin:0}
-    .top{background:#111;color:#fff;padding:16px;text-align:center;font-size:18px;font-weight:900}
-    .wrap{max-width:1100px;margin:20px auto;padding:12px}
-    .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-    .title{font-size:18px;font-weight:900}
-    .mini{font-size:12px;color:#666;margin-top:6px}
-    .order{border:1px solid #eee;border-radius:16px;padding:14px;margin-top:12px}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .col{flex:1;min-width:220px}
-    label{display:block;margin:10px 0 6px;font-weight:900}
-    input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
-    textarea{min-height:90px}
-    .btn{padding:12px 14px;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer}
-    .btnBlue{background:#0b63f6;color:#fff}
-    .btnGreen{background:#12b76a;color:#fff}
-    .btnRed{background:#e74c3c;color:#fff}
-    .btnDark{background:#111;color:#fff}
-    .boxText{background:#f7f7f7;border-radius:14px;padding:12px;border:1px dashed #ddd;white-space:pre-wrap}
-    a{color:#0b63f6;text-decoration:none;font-weight:900}
-  </style>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+  <div class="header">لوحة الأدمن (Pro Design)</div>
 
-<div class="top">لوحة الأدمن (طلبات CNC)</div>
+  <div class="container">
 
-<div class="wrap">
-
-  <div class="card">
-    <div class="title">🧠 ملاحظة</div>
-    <div class="mini">
-      هذا إصدار تجريبي بدون قاعدة بيانات. الطلبات تنحفظ في نفس الجهاز (LocalStorage).
+    <div class="card">
+      <div class="title">📥 الطلبات المستلمة</div>
+      <div class="note">الطلبات هنا من LocalStorage (تجريبي).</div>
+      <div id="ordersList" class="previewBox">لا يوجد طلبات حالياً.</div>
+      <button class="btn-gray" onclick="renderOrders()">🔄 تحديث</button>
     </div>
-    <div style="margin-top:10px">
-      <a href="/index.html">رجوع للبوابة</a>
+
+    <div class="card">
+      <div class="title">⚙️ إدارة طلب عميل</div>
+
+      <div class="row">
+        <div class="col">
+          <label style="font-weight:900">اختر العميل</label>
+          <select id="adminClientSelect" onchange="loadAdminClient()"></select>
+        </div>
+        <div class="col">
+          <label style="font-weight:900">تغيير حالة الطلب</label>
+          <select id="adminStatus">
+            <option>قيد التشغيل</option>
+            <option>جاهز</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <button class="btn-blue" onclick="saveStatus()">💾 حفظ الحالة</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="title">💰 تسعير الطلب + خصم</div>
+      <div class="row">
+        <div class="col">
+          <label style="font-weight:900">سعر القص (KD)</label>
+          <input id="priceCut" type="number" step="0.001" value="0">
+        </div>
+        <div class="col">
+          <label style="font-weight:900">سعر الحفر (KD)</label>
+          <input id="priceEngrave" type="number" step="0.001" value="0">
+        </div>
+        <div class="col">
+          <label style="font-weight:900">سعر المادة/الشيت (KD)</label>
+          <input id="priceMaterial" type="number" step="0.001" value="0">
+        </div>
+        <div class="col">
+          <label style="font-weight:900">الخصم (KD)</label>
+          <input id="discount" type="number" step="0.001" value="0">
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <div class="col"><button class="btn-green" onclick="createInvoice()">🧾 إنشاء فاتورة</button></div>
+        <div class="col"><button class="btn-blue" onclick="sendInvoiceToClient()">📤 إرسال الفاتورة للعميل</button></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="title">معاينة الفاتورة</div>
+      <div id="invoicePreview" class="previewBox">لا توجد فاتورة.</div>
+      <button class="btn-black" onclick="downloadAdminInvoicePDF()">📄 تحميل PDF</button>
     </div>
+
   </div>
 
-  <div class="card">
-    <div class="title">📥 الطلبات المستلمة</div>
-    <div class="mini">تقدر تغير حالة الطلب + تسعير + خصم + إرسال فاتورة للعميل.</div>
-
-    <div style="margin-top:12px" class="row">
-      <button class="btn btnBlue" onclick="loadOrders()">🔄 تحديث</button>
-      <button class="btn btnRed" onclick="clearAll()">🗑️ مسح كل الطلبات (تجربة)</button>
-    </div>
-
-    <div id="ordersList"></div>
-  </div>
-
-</div>
-
+<script src="app.js"></script>
 <script>
-  const ordersList = document.getElementById("ordersList");
-
-  function loadOrders(){
-    const orders = JSON.parse(localStorage.getItem("pd_orders") || "[]");
-    ordersList.innerHTML = "";
-
-    if(orders.length === 0){
-      ordersList.innerHTML = `<div class="boxText">لا يوجد طلبات حالياً.</div>`;
-      return;
-    }
-
-    orders.forEach((o, idx)=>{
-      const div = document.createElement("div");
-      div.className = "order";
-
-      div.innerHTML = `
-        <div class="title">طلب رقم: ${o.id}</div>
-        <div class="mini">العميل: <b>${o.company}</b> | نوع الطلب: <b>${o.type}</b></div>
-
-        <div style="margin-top:10px" class="boxText">${o.cncText}</div>
-
-        <div class="row" style="margin-top:12px">
-          <div class="col">
-            <label>حالة الطلب (للعميل)</label>
-            <select id="st_${o.id}">
-              <option>قيد التشغيل</option>
-              <option>جاهز</option>
-              <option>تم التسليم</option>
-              <option>ملغي</option>
-            </select>
-            <button class="btn btnGreen" style="margin-top:10px;width:100%" onclick="saveStatus('${o.user}','${o.id}')">💾 حفظ الحالة</button>
-          </div>
-
-          <div class="col">
-            <label>التسعير</label>
-            <input id="cut_${o.id}" type="number" placeholder="سعر القص (KD)" />
-            <input id="engr_${o.id}" type="number" placeholder="سعر الحفر (KD)" style="margin-top:8px" />
-            <input id="mat_${o.id}" type="number" placeholder="سعر المادة/الشيت (KD)" style="margin-top:8px" />
-          </div>
-
-          <div class="col">
-            <label>خصم</label>
-            <input id="disc_${o.id}" type="number" placeholder="خصم (KD)" />
-            <label style="margin-top:10px">ملاحظة للفاتورة</label>
-            <input id="invNote_${o.id}" placeholder="مثال: شامل التركيب / تسليم خلال يومين" />
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:12px">
-          <button class="btn btnDark" onclick="makeInvoice('${o.id}','${o.user}','${o.company}','${o.type}')">🧾 إنشاء فاتورة (نص)</button>
-          <button class="btn btnBlue" onclick="sendInvoiceToClient('${o.id}','${o.user}')">📤 إرسال الفاتورة للعميل</button>
-          <button class="btn btnRed" onclick="deleteOrder('${o.id}')">حذف الطلب</button>
-        </div>
-
-        <div id="inv_${o.id}" class="boxText" style="margin-top:12px;display:none;"></div>
-      `;
-
-      ordersList.appendChild(div);
-
-      // تحميل الحالة الحالية إن وجدت
-      const statuses = JSON.parse(localStorage.getItem("pd_statuses") || "{}");
-      const st = statuses[o.user] || "قيد التشغيل";
-      div.querySelector("#st_"+o.id).value = st;
-    });
-  }
-
-  function saveStatus(user, orderId){
-    const st = document.getElementById("st_"+orderId).value;
-    const statuses = JSON.parse(localStorage.getItem("pd_statuses") || "{}");
-    statuses[user] = st;
-    localStorage.setItem("pd_statuses", JSON.stringify(statuses));
-    alert("✅ تم حفظ الحالة للعميل");
-  }
-
-  function makeInvoice(orderId, user, company, type){
-    const cut = Number(document.getElementById("cut_"+orderId).value || 0);
-    const engr = Number(document.getElementById("engr_"+orderId).value || 0);
-    const mat = Number(document.getElementById("mat_"+orderId).value || 0);
-    const disc = Number(document.getElementById("disc_"+orderId).value || 0);
-    const note = document.getElementById("invNote_"+orderId).value.trim();
-
-    const subtotal = cut + engr + mat;
-    const total = Math.max(0, subtotal - disc);
-
-    let text = "";
-    text += "🧾 فاتورة Pro Design\n";
-    text += "--------------------------\n";
-    text += "العميل: " + company + "\n";
-    text += "نوع الطلب: " + type + "\n";
-    text += "رقم الطلب: " + orderId + "\n";
-    text += "التاريخ: " + new Date().toLocaleString() + "\n";
-    text += "--------------------------\n";
-    text += "سعر القص: " + cut.toFixed(3) + " KD\n";
-    text += "سعر الحفر: " + engr.toFixed(3) + " KD\n";
-    text += "سعر المادة/الشيت: " + mat.toFixed(3) + " KD\n";
-    text += "--------------------------\n";
-    text += "الإجمالي قبل الخصم: " + subtotal.toFixed(3) + " KD\n";
-    text += "الخصم: " + disc.toFixed(3) + " KD\n";
-    text += "الإجمالي النهائي: " + total.toFixed(3) + " KD\n";
-    text += "--------------------------\n";
-    text += "ملاحظة: " + (note ? note : "لا يوجد") + "\n";
-    text += "✅ شكراً لتعاملكم معنا.\n";
-
-    const box = document.getElementById("inv_"+orderId);
-    box.style.display = "block";
-    box.innerText = text;
-
-    // نحفظها مؤقتاً داخل localStorage كفاتورة جاهزة
-    const invoicesDraft = JSON.parse(localStorage.getItem("pd_invoice_drafts") || "{}");
-    invoicesDraft[orderId] = { user, text };
-    localStorage.setItem("pd_invoice_drafts", JSON.stringify(invoicesDraft));
-
-    alert("✅ تم إنشاء الفاتورة (نص). اضغط إرسال للعميل.");
-  }
-
-  function sendInvoiceToClient(orderId, user){
-    const drafts = JSON.parse(localStorage.getItem("pd_invoice_drafts") || "{}");
-    const d = drafts[orderId];
-    if(!d){
-      return alert("⚠️ أنشئ الفاتورة أولاً");
-    }
-
-    const invs = JSON.parse(localStorage.getItem("pd_invoices") || "{}");
-    invs[user] = { text: d.text, orderId, sentAt: new Date().toISOString() };
-    localStorage.setItem("pd_invoices", JSON.stringify(invs));
-
-    alert("📤 تم إرسال الفاتورة للعميل. (تظهر في صفحة العميل)");
-  }
-
-  function deleteOrder(orderId){
-    let orders = JSON.parse(localStorage.getItem("pd_orders") || "[]");
-    orders = orders.filter(o => o.id !== orderId);
-    localStorage.setItem("pd_orders", JSON.stringify(orders));
-    loadOrders();
-  }
-
-  function clearAll(){
-    if(!confirm("متأكد تمسح كل الطلبات؟")) return;
-    localStorage.removeItem("pd_orders");
-    localStorage.removeItem("pd_invoice_drafts");
-    alert("تم المسح");
-    loadOrders();
-  }
-
-  loadOrders();
+  renderOrders();
+  fillClientsSelect();
+  loadAdminClient();
 </script>
-
 </body>
 </html>
