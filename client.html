@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحة العميل (إرسال طلب CNC)</title>
+  <title>صفحة العميل - طلب CNC</title>
 
   <style>
     body{
@@ -37,7 +37,37 @@
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
+      justify-content:space-between;
     }
+    .title{
+      font-weight:bold;
+      font-size:18px;
+      margin-bottom:10px;
+    }
+    .note{
+      color:#555;
+      margin-top:8px;
+      font-size:13px;
+      line-height:1.6;
+    }
+    label{
+      display:block;
+      font-weight:bold;
+      margin:10px 0 6px;
+      color:#222;
+    }
+    select, input, textarea{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #ddd;
+      font-size:15px;
+      outline:none;
+      background:#fff;
+      box-sizing:border-box;
+    }
+    textarea{ min-height:90px; resize:vertical; }
+
     .btn{
       border:none;
       padding:12px 14px;
@@ -67,12 +97,6 @@
       border-radius:14px;
       padding:14px;
     }
-    .note{
-      color:#555;
-      margin-top:8px;
-      font-size:13px;
-      line-height:1.6;
-    }
 
     /* جدول الشيتات */
     .tableHeader{
@@ -82,7 +106,7 @@
       border-radius:12px;
       font-weight:bold;
       display:grid;
-      grid-template-columns: 1.2fr 1fr 0.8fr 0.5fr;
+      grid-template-columns: 1.2fr 1fr 0.8fr 0.6fr;
       gap:10px;
       text-align:center;
     }
@@ -93,33 +117,15 @@
       border-radius:12px;
       padding:10px;
       display:grid;
-      grid-template-columns: 1.2fr 1fr 0.8fr 0.5fr;
+      grid-template-columns: 1.2fr 1fr 0.8fr 0.6fr;
       gap:10px;
       align-items:center;
     }
-    select, input{
-      width:100%;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #ddd;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
     input[type="number"]{ text-align:center; }
-    .center{ text-align:center; }
-
-    .footerBtns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .title{
-      font-weight:bold;
-      font-size:18px;
-      margin-bottom:10px;
+    .sectionLine{
+      height:1px;
+      background:#eee;
+      margin:12px 0;
     }
   </style>
 </head>
@@ -131,7 +137,7 @@
 
     <!-- كرت الترحيب + حالة الطلب -->
     <div class="card">
-      <div class="row" style="justify-content:space-between;">
+      <div class="row">
         <div>
           <div style="font-weight:bold;font-size:18px;">
             مرحباً: <span id="clientName">شركة العميل</span>
@@ -142,16 +148,66 @@
       </div>
 
       <div style="margin-top:12px;" class="statusBox">
-        <div class="row" style="justify-content:space-between;">
-          <div class="title">حالة الطلب الحالي</div>
+        <div class="row">
+          <div class="title" style="margin:0;">حالة الطلب الحالي</div>
           <div class="badge" id="statusBadge">قيد التشغيل ⏳</div>
         </div>
 
-        <!-- مهم: العميل يشوف الحالة فقط، ما يغير -->
         <div class="note">
           ✅ العميل يشوف الحالة فقط (بدون تغيير).<br/>
           📌 تغيير الحالة يكون من لوحة الأدمن فقط.
         </div>
+      </div>
+    </div>
+
+    <!-- تفاصيل طلب CNC -->
+    <div class="card">
+      <div class="title">تفاصيل طلب CNC</div>
+
+      <label>نوع الطلب</label>
+      <select id="orderType">
+        <option value="قص فقط">قص فقط</option>
+        <option value="حفر فقط">حفر فقط</option>
+        <option value="قص + حفر">قص + حفر</option>
+      </select>
+
+      <label>نوع المادة</label>
+      <select id="materialType">
+        <option value="ألمنيوم">ألمنيوم</option>
+        <option value="ستانلس">ستانلس</option>
+        <option value="حديد">حديد</option>
+        <option value="ألكوبوند">ألكوبوند</option>
+      </select>
+
+      <label>عرض الخط / السماكة (mm)</label>
+      <select id="lineWidth">
+        <option value="2">2 mm</option>
+        <option value="3">3 mm</option>
+        <option value="4">4 mm</option>
+        <option value="5">5 mm</option>
+        <option value="6">6 mm</option>
+        <option value="8">8 mm</option>
+        <option value="10">10 mm</option>
+        <option value="12">12 mm</option>
+      </select>
+
+      <label>تفاصيل القص / الحفر</label>
+      <textarea id="cutEngraveDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
+
+      <label>قياسات الشغل (يدوي - يكتبها العميل)</label>
+      <textarea id="manualSizes" placeholder="مثال: فتحة الباب 2200×1000 / مسافة الجام فوق 30 تحت 20..."></textarea>
+
+      <label>رفع ملف (DXF / PDF / صورة)</label>
+      <input id="uploadFile" type="file" accept=".dxf,.pdf,image/*" />
+
+      <label>ملاحظات إضافية</label>
+      <textarea id="notes" placeholder="أي ملاحظات إضافية..."></textarea>
+
+      <button class="btn btn-green" onclick="sendCNCRequest()">📩 إرسال الطلب للأدمن (واتساب)</button>
+
+      <div class="note">
+        🔔 حاليا الإرسال واتساب كنص جاهز (بدون قاعدة بيانات).<br/>
+        بعدين نربطه بالنظام الكامل.
       </div>
     </div>
 
@@ -169,43 +225,27 @@
 
       <div id="sheetsContainer"></div>
 
-      <div class="footerBtns">
+      <div style="margin-top:10px;">
         <button class="btn btn-blue" onclick="addSheetRow()">+ إضافة شيت</button>
       </div>
 
       <button class="btn btn-green" onclick="sendToSupplierWhatsApp()">📩 إرسال طلب الشيت للمورد (واتساب)</button>
 
       <div class="note">
-        🔔 يطلع لك نص جاهز للواتساب فيه: اسم العميل + تفاصيل الشيتات فقط.
+        يطلع لك نص جاهز للواتساب فيه: اسم العميل + تفاصيل الشيتات فقط.
       </div>
     </div>
 
   </div>
 
 <script>
-  // ====== بيانات جاهزة ======
-  const SHEET_SIZES = [
-    "122x244",
-    "122x300",
-    "150x300",
-    "100x300",
-    "100x200",
-    "122x350",
-    "122x400",
-    "150x400"
-  ];
-
-  const THICKNESSES = Array.from({length: 11}, (_,i)=> (i+2).toString()); // 2 إلى 12
-
   // ====== بيانات العميل (تجريبية) ======
-  // لاحقاً راح نخليها من اليوزر/باسورد
   const currentClient = {
     username: "client1",
     companyName: "شركة إبراهيم للألمنيوم",
     status: "قيد التشغيل" // أو "جاهز الطلب"
   };
 
-  // ====== عرض بيانات العميل ======
   document.getElementById("clientName").innerText = currentClient.companyName;
   updateStatusBadge(currentClient.status);
 
@@ -225,6 +265,19 @@
   }
 
   // ====== جدول الشيتات ======
+  const SHEET_SIZES = [
+    "122x244",
+    "122x300",
+    "150x300",
+    "100x300",
+    "100x200",
+    "122x350",
+    "122x400",
+    "150x400"
+  ];
+
+  const THICKNESSES = Array.from({length: 11}, (_,i)=> (i+2).toString()); // 2 إلى 12
+
   const sheetsContainer = document.getElementById("sheetsContainer");
 
   function createSelect(options){
@@ -242,19 +295,14 @@
     const row = document.createElement("div");
     row.className = "sheetRow";
 
-    // قياس الشيت
     const sizeSelect = createSelect(SHEET_SIZES);
-
-    // السماكة
     const thickSelect = createSelect(THICKNESSES);
 
-    // الكمية
     const qtyInput = document.createElement("input");
     qtyInput.type = "number";
     qtyInput.min = "1";
     qtyInput.placeholder = "مثال: 5";
 
-    // حذف
     const delBtn = document.createElement("button");
     delBtn.className = "btn btn-red";
     delBtn.innerText = "حذف";
@@ -268,7 +316,7 @@
     sheetsContainer.appendChild(row);
   }
 
-  // صف أول تلقائي
+  // أول صف تلقائي
   addSheetRow();
 
   function collectSheets(){
@@ -291,7 +339,7 @@
     return result;
   }
 
-  // ====== إرسال للمورد واتساب (نص جاهز) ======
+  // ====== إرسال طلب الشيت للمورد ======
   function sendToSupplierWhatsApp(){
     const sheets = collectSheets();
 
@@ -308,15 +356,41 @@
       msg += `${idx+1}) قياس: ${s.size} | سماكة: ${s.thickness}mm | كمية: ${s.qty}\\n`;
     });
 
-    // حط رقم المورد هنا (بدون +) مثال: 965xxxxxxxx
+    // رقم المورد (بدون +)
     const supplierNumber = "96500000000";
 
     const url = `https://wa.me/${supplierNumber}?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank");
   }
 
+  // ====== إرسال طلب CNC للأدمن ======
+  function sendCNCRequest(){
+    const orderType = document.getElementById("orderType").value;
+    const materialType = document.getElementById("materialType").value;
+    const lineWidth = document.getElementById("lineWidth").value;
+    const cutEngraveDetails = document.getElementById("cutEngraveDetails").value.trim();
+    const manualSizes = document.getElementById("manualSizes").value.trim();
+    const notes = document.getElementById("notes").value.trim();
+
+    let msg = `طلب CNC جديد\\n`;
+    msg += `العميل: ${currentClient.companyName}\\n\\n`;
+    msg += `نوع الطلب: ${orderType}\\n`;
+    msg += `نوع المادة: ${materialType}\\n`;
+    msg += `عرض الخط/السماكة: ${lineWidth} mm\\n\\n`;
+    msg += `تفاصيل القص/الحفر:\\n${cutEngraveDetails || "-"}\\n\\n`;
+    msg += `قياسات يدوية:\\n${manualSizes || "-"}\\n\\n`;
+    msg += `ملاحظات إضافية:\\n${notes || "-"}\\n`;
+
+    // رقم الأدمن (بدون +)
+    const adminNumber = "96500000000";
+
+    const url = `https://wa.me/${adminNumber}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+
+    alert("✅ تم تجهيز رسالة الطلب للأدمن على واتساب.");
+  }
+
   function logout(){
-    // لاحقاً نربطها بنظام تسجيل خروج حقيقي
     alert("تم تسجيل الخروج (تجريبي)");
     window.location.href = "index.html";
   }
