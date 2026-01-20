@@ -1,196 +1,106 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>لوحة الأدمن</title>
   <style>
-    body{font-family:Arial;background:#f5f5f5;margin:0}
-    header{background:#198754;color:#fff;padding:16px}
-    .wrap{max-width:1100px;margin:18px auto;padding:0 12px}
-    .card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 25px rgba(0,0,0,.06);margin-bottom:12px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:800px){.row{grid-template-columns:1fr}}
-    label{display:block;margin:10px 0 6px;font-weight:bold}
-    input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;box-sizing:border-box}
-    button{padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer}
-    .refresh{background:#111;color:#fff;width:100%}
-    .danger{background:#d32f2f;color:#fff;width:100%;margin-top:8px}
-    .order{background:#fafafa;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:10px}
-    .small{color:#555;font-size:14px;margin:3px 0}
-    .pill{display:inline-block;background:#f1f2f6;padding:6px 10px;border-radius:999px;font-size:13px;margin-top:6px}
-    .wa{background:#25D366;color:#111;width:100%;margin-top:8px}
-    .blue{background:#0d6efd;color:#fff;width:100%;margin-top:8px}
+    body{font-family:Arial;background:#f4f6f9;margin:0}
+    .top{background:#1e8e5a;color:#fff;padding:18px;text-align:center;font-size:20px;font-weight:bold}
+    .wrap{max-width:900px;margin:18px auto;padding:12px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .btn{padding:12px 14px;border:none;border-radius:12px;font-size:16px;cursor:pointer}
+    .refresh{background:#1677ff;color:#fff}
+    .delall{background:#e53935;color:#fff}
+    .back{background:#666;color:#fff}
+    .card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);margin-bottom:14px}
+    .title{font-size:18px;font-weight:bold;margin-bottom:8px}
+    .meta{color:#444;line-height:1.8}
+    .status{margin-top:10px;padding:10px;border-radius:12px;background:#f0f0f0;font-weight:bold}
+    .ok{background:#e8fff1;color:#1e8e5a}
+    .work{background:#fff8e1;color:#7a5a00}
+    .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .smallbtn{flex:1;min-width:140px;padding:12px;border:none;border-radius:12px;font-size:16px;cursor:pointer}
+    .ready{background:#1e8e5a;color:#fff}
+    .delete{background:#e53935;color:#fff}
   </style>
 </head>
 <body>
+  <div class="top">لوحة الأدمن (استقبال الطلبات)</div>
 
-<header>
-  <div class="wrap" style="font-size:18px;font-weight:bold">لوحة الأدمن - Pro Design</div>
-</header>
+  <div class="wrap">
+    <div class="btns">
+      <button class="btn refresh" onclick="loadOrders()">تحديث الطلبات</button>
+      <button class="btn delall" onclick="deleteAll()">حذف كل الطلبات</button>
+      <button class="btn back" onclick="location.href='index.html'">رجوع للبوابة</button>
+    </div>
 
-<div class="wrap">
-
-  <div class="card">
-    <h3 style="margin:0 0 10px">🔎 فلترة الطلبات</h3>
-    <label>اختر شركة العميل</label>
-    <select id="filterCompany" onchange="render()">
-      <option value="all">كل العملاء</option>
-    </select>
-
-    <button class="refresh" onclick="render()">تحديث</button>
-    <button class="danger" onclick="resetAll()">حذف كل الطلبات (تجربة)</button>
+    <div id="ordersBox"></div>
   </div>
-
-  <div class="card">
-    <h3 style="margin:0 0 10px">📦 الطلبات</h3>
-    <div id="orders"></div>
-  </div>
-
-</div>
 
 <script>
-  function getOrders(){
-    return JSON.parse(localStorage.getItem("CNC_ORDERS") || "[]");
-  }
-  function saveOrders(data){
-    localStorage.setItem("CNC_ORDERS", JSON.stringify(data));
-  }
-  function getUsers(){
-    return JSON.parse(localStorage.getItem("CNC_USERS") || "[]");
-  }
+  function loadOrders(){
+    const box = document.getElementById("ordersBox");
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
-  function resetAll(){
-    if(!confirm("أكيد تبي حذف كل الطلبات؟")) return;
-    localStorage.removeItem("CNC_ORDERS");
-    render();
-  }
-
-  function badge(status){
-    if(status === "جاهز") return "✅ جاهز";
-    if(status === "قيد التشغيل") return "⏳ قيد التشغيل";
-    return "🆕 جديد";
-  }
-
-  function setStatus(orderId, status){
-    const orders = getOrders();
-    const o = orders.find(x => x.id === orderId);
-    if(!o) return;
-    o.status = status;
-    saveOrders(orders);
-    render();
-  }
-
-  function openWhatsApp(company){
-    const users = getUsers();
-    const u = users.find(x => x.company === company);
-    const phone = u?.phone ? u.phone.replace(/\s/g,"") : "";
-    if(!phone){
-      alert("رقم واتساب العميل غير موجود داخل حسابه في الأدمن");
-      return;
-    }
-    const msg = encodeURIComponent("السلام عليكم، بخصوص طلبكم في Pro Design CNC.");
-    window.open("https://wa.me/" + phone + "?text=" + msg, "_blank");
-  }
-
-  function fileToBase64(file){
-    return new Promise((resolve) => {
-      if(!file) return resolve(null);
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.readAsDataURL(file);
-    });
-  }
-
-  async function uploadDesignerPdf(orderId, inputId){
-    const file = document.getElementById(inputId).files[0];
-    if(!file){
-      alert("اختر ملف PDF أولاً");
-      return;
-    }
-    if(!file.name.toLowerCase().endsWith(".pdf")){
-      alert("لازم يكون الملف PDF");
+    if(orders.length === 0){
+      box.innerHTML = `<div class="card"><div class="title">لا يوجد طلبات حالياً</div></div>`;
       return;
     }
 
-    const data = await fileToBase64(file);
+    box.innerHTML = orders.map(o => `
+      <div class="card">
+        <div class="title">📌 ${o.type}</div>
 
-    const orders = getOrders();
-    const o = orders.find(x => x.id === orderId);
-    if(!o) return;
-
-    o.designerPdf = { name: file.name, data };
-    saveOrders(orders);
-
-    alert("تم رفع PDF للمصمم ✅");
-    render();
-  }
-
-  function render(){
-    const orders = getOrders();
-    const users = getUsers();
-
-    // تعبئة الفلتر
-    const filter = document.getElementById("filterCompany");
-    const companies = [...new Set(orders.map(o => o.company))];
-
-    // حفظ الخيار الحالي
-    const current = filter.value || "all";
-    filter.innerHTML = `<option value="all">كل العملاء</option>` +
-      companies.map(c => `<option value="${c}">${c}</option>`).join("");
-    filter.value = current;
-
-    // فلترة
-    const selected = filter.value;
-    const filtered = selected === "all" ? orders : orders.filter(o => o.company === selected);
-
-    const ordersDiv = document.getElementById("orders");
-    if(filtered.length === 0){
-      ordersDiv.innerHTML = "<div class='small'>لا يوجد طلبات.</div>";
-      return;
-    }
-
-    ordersDiv.innerHTML = filtered.map((o, idx) => {
-      const inputId = "pdf_" + o.id;
-
-      return `
-        <div class="order">
-          <div><b>${o.company}</b> - ${o.orderType}</div>
-          <div class="small">🕒 ${o.createdAt}</div>
-          <div class="small">📌 الحالة: <b>${badge(o.status || "جديد")}</b></div>
-          <div class="small">📏 شيت: ${o.sheet.size} | سماكة: ${o.sheet.thickness}mm | مادة: ${o.sheet.material} | عدد: ${o.sheet.qty}</div>
-          <div class="small">🛠 عرض الخط: ${o.cutting.lineWidth}</div>
-          <div class="small">📝 تفاصيل: ${o.cutting.jobDetails || "-"}</div>
-          <div class="small">✍️ يدوي: ${o.manual ? o.manual.replace(/\n/g," / ") : "-"}</div>
-          <div class="small">📝 ملاحظات: ${o.notes ? o.notes.replace(/\n/g," / ") : "-"}</div>
-
-          <div class="small" style="margin-top:8px"><b>تغيير الحالة:</b></div>
-          <div class="row">
-            <button class="blue" onclick="setStatus('${o.id}','جديد')">🆕 جديد</button>
-            <button class="blue" onclick="setStatus('${o.id}','قيد التشغيل')">⏳ قيد التشغيل</button>
-            <button class="blue" onclick="setStatus('${o.id}','جاهز')">✅ جاهز</button>
-          </div>
-
-          <button class="wa" onclick="openWhatsApp('${o.company}')">📲 واتساب العميل</button>
-
-          <div class="small" style="margin-top:8px"><b>📄 رفع PDF للمصمم (يظهر للعميل):</b></div>
-          <input id="${inputId}" type="file" accept="application/pdf" />
-          <button class="blue" onclick="uploadDesignerPdf('${o.id}','${inputId}')">رفع PDF</button>
-
-          <button class="danger" onclick="deleteOrder('${o.id}')">حذف الطلب</button>
+        <div class="meta">
+          <div>العميل: <b>${o.name}</b></div>
+          <div>الهاتف: <b>${o.phone}</b></div>
+          <div>نوع المادة: <b>${o.material || "-"}</b></div>
+          <div>قياس الشيت: <b>${o.sheetL || "-"} × ${o.sheetW || "-"}</b></div>
+          <div>عرض الخط: <b>${o.lineW || "-"}</b></div>
+          <div>تفاصيل القص/الحفر: <b>${o.details || "-"}</b></div>
+          <div>قياسات يدوية: <b>${o.manual || "-"}</b></div>
+          <div>ملاحظات: <b>${o.notes || "-"}</b></div>
+          <div>وقت الإرسال: <b>${o.createdAt}</b></div>
         </div>
-      `;
-    }).join("");
+
+        <div class="status ${o.status === "جاهز" ? "ok" : "work"}">
+          الحالة: ${o.status === "جاهز" ? "جاهز ✅" : "قيد التشغيل ⏳"}
+        </div>
+
+        <div class="actions">
+          <button class="smallbtn ready" onclick="markReady(${o.id})">تحديد: جاهز ✅</button>
+          <button class="smallbtn delete" onclick="deleteOrder(${o.id})">حذف الطلب</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function markReady(id){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders = orders.map(o => {
+      if(o.id === id) o.status = "جاهز";
+      return o;
+    });
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
   }
 
   function deleteOrder(id){
-    const orders = getOrders().filter(x => x.id !== id);
-    saveOrders(orders);
-    render();
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders = orders.filter(o => o.id !== id);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
   }
 
-  render();
-</script>
+  function deleteAll(){
+    if(confirm("متأكد تحذف كل الطلبات؟")){
+      localStorage.removeItem("orders");
+      loadOrders();
+    }
+  }
 
+  loadOrders();
+</script>
 </body>
 </html>
