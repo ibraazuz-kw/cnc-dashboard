@@ -1,192 +1,207 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>لوحة الأدمن</title>
-
   <style>
-    body{
-      font-family: Arial, sans-serif;
-      background:#f6f7fb;
-      margin:0;
-      padding:0;
-    }
-    .header{
-      background:#111;
-      color:#fff;
-      padding:18px;
-      text-align:center;
-      font-size:20px;
-      font-weight:bold;
-    }
-    .container{
-      max-width:1000px;
-      margin:20px auto;
-      padding:15px;
-    }
-    .card{
-      background:#fff;
-      border-radius:14px;
-      padding:16px;
-      margin-bottom:15px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.07);
-    }
-    .clientCard{
-      border:1px solid #eee;
-      border-radius:14px;
-      padding:14px;
-      margin-top:12px;
-    }
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-    select{
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #ddd;
-      font-size:15px;
-      outline:none;
-      min-width:200px;
-      background:#fff;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:bold;
-      border:1px solid #ddd;
-    }
-    .btn{
-      border:none;
-      padding:12px 14px;
-      border-radius:10px;
-      cursor:pointer;
-      font-weight:bold;
-      font-size:15px;
-    }
-    .btn-blue{ background:#2d6cdf; color:#fff; }
-    .btn-red{ background:#e74c3c; color:#fff; }
-    .title{
-      font-weight:bold;
-      font-size:18px;
-      margin-bottom:8px;
-    }
-    .note{
-      color:#555;
-      font-size:13px;
-      line-height:1.6;
-    }
+    body{font-family:Arial;background:#f5f7fb;margin:0}
+    .top{background:#111;color:#fff;padding:16px;text-align:center;font-size:18px;font-weight:900}
+    .wrap{max-width:1100px;margin:20px auto;padding:12px}
+    .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    .title{font-size:18px;font-weight:900}
+    .mini{font-size:12px;color:#666;margin-top:6px}
+    .order{border:1px solid #eee;border-radius:16px;padding:14px;margin-top:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .col{flex:1;min-width:220px}
+    label{display:block;margin:10px 0 6px;font-weight:900}
+    input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
+    textarea{min-height:90px}
+    .btn{padding:12px 14px;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer}
+    .btnBlue{background:#0b63f6;color:#fff}
+    .btnGreen{background:#12b76a;color:#fff}
+    .btnRed{background:#e74c3c;color:#fff}
+    .btnDark{background:#111;color:#fff}
+    .boxText{background:#f7f7f7;border-radius:14px;padding:12px;border:1px dashed #ddd;white-space:pre-wrap}
+    a{color:#0b63f6;text-decoration:none;font-weight:900}
   </style>
 </head>
-
 <body>
-  <div class="header">لوحة الأدمن (إدارة حالات الطلبات)</div>
 
-  <div class="container">
+<div class="top">لوحة الأدمن (طلبات CNC)</div>
 
-    <div class="card">
-      <div class="title">ملاحظة</div>
-      <div class="note">
-        ✅ هنا الأدمن فقط يغير حالة الطلب لكل عميل.<br/>
-        ❌ العميل ما يقدر يغير الحالة.
-      </div>
+<div class="wrap">
+
+  <div class="card">
+    <div class="title">🧠 ملاحظة</div>
+    <div class="mini">
+      هذا إصدار تجريبي بدون قاعدة بيانات. الطلبات تنحفظ في نفس الجهاز (LocalStorage).
     </div>
-
-    <div class="card">
-      <div class="title">قائمة العملاء</div>
-
-      <div id="clientsList"></div>
+    <div style="margin-top:10px">
+      <a href="/index.html">رجوع للبوابة</a>
     </div>
-
   </div>
 
+  <div class="card">
+    <div class="title">📥 الطلبات المستلمة</div>
+    <div class="mini">تقدر تغير حالة الطلب + تسعير + خصم + إرسال فاتورة للعميل.</div>
+
+    <div style="margin-top:12px" class="row">
+      <button class="btn btnBlue" onclick="loadOrders()">🔄 تحديث</button>
+      <button class="btn btnRed" onclick="clearAll()">🗑️ مسح كل الطلبات (تجربة)</button>
+    </div>
+
+    <div id="ordersList"></div>
+  </div>
+
+</div>
+
 <script>
-  // ====== بيانات العملاء (تجريبية) ======
-  // لاحقاً نربطها بقاعدة بيانات
-  let clients = [
-    { username:"client1", companyName:"شركة إبراهيم للألمنيوم", status:"قيد التشغيل" },
-    { username:"client2", companyName:"شركة الدروازة", status:"جاهز الطلب" },
-    { username:"client3", companyName:"شركة الهاجري", status:"قيد التشغيل" }
-  ];
+  const ordersList = document.getElementById("ordersList");
 
-  const clientsList = document.getElementById("clientsList");
+  function loadOrders(){
+    const orders = JSON.parse(localStorage.getItem("pd_orders") || "[]");
+    ordersList.innerHTML = "";
 
-  function statusBadge(status){
-    const span = document.createElement("span");
-    span.className = "badge";
-
-    if(status === "جاهز الطلب"){
-      span.style.background = "#dff7e9";
-      span.style.border = "1px solid #82d9a8";
-      span.style.color = "#0b6b3b";
-      span.innerText = "جاهز الطلب ✅";
-    } else {
-      span.style.background = "#fff6cc";
-      span.style.border = "1px solid #f3d87a";
-      span.style.color = "#8a6d00";
-      span.innerText = "قيد التشغيل ⏳";
+    if(orders.length === 0){
+      ordersList.innerHTML = `<div class="boxText">لا يوجد طلبات حالياً.</div>`;
+      return;
     }
-    return span;
-  }
 
-  function renderClients(){
-    clientsList.innerHTML = "";
+    orders.forEach((o, idx)=>{
+      const div = document.createElement("div");
+      div.className = "order";
 
-    clients.forEach((c, index)=>{
-      const box = document.createElement("div");
-      box.className = "clientCard";
+      div.innerHTML = `
+        <div class="title">طلب رقم: ${o.id}</div>
+        <div class="mini">العميل: <b>${o.company}</b> | نوع الطلب: <b>${o.type}</b></div>
 
-      const top = document.createElement("div");
-      top.className = "row";
+        <div style="margin-top:10px" class="boxText">${o.cncText}</div>
 
-      const info = document.createElement("div");
-      info.innerHTML = `<b>${c.companyName}</b><br><span style="color:#666;font-size:13px;">يوزر: ${c.username}</span>`;
+        <div class="row" style="margin-top:12px">
+          <div class="col">
+            <label>حالة الطلب (للعميل)</label>
+            <select id="st_${o.id}">
+              <option>قيد التشغيل</option>
+              <option>جاهز</option>
+              <option>تم التسليم</option>
+              <option>ملغي</option>
+            </select>
+            <button class="btn btnGreen" style="margin-top:10px;width:100%" onclick="saveStatus('${o.user}','${o.id}')">💾 حفظ الحالة</button>
+          </div>
 
-      const badge = statusBadge(c.status);
+          <div class="col">
+            <label>التسعير</label>
+            <input id="cut_${o.id}" type="number" placeholder="سعر القص (KD)" />
+            <input id="engr_${o.id}" type="number" placeholder="سعر الحفر (KD)" style="margin-top:8px" />
+            <input id="mat_${o.id}" type="number" placeholder="سعر المادة/الشيت (KD)" style="margin-top:8px" />
+          </div>
 
-      top.appendChild(info);
-      top.appendChild(badge);
+          <div class="col">
+            <label>خصم</label>
+            <input id="disc_${o.id}" type="number" placeholder="خصم (KD)" />
+            <label style="margin-top:10px">ملاحظة للفاتورة</label>
+            <input id="invNote_${o.id}" placeholder="مثال: شامل التركيب / تسليم خلال يومين" />
+          </div>
+        </div>
 
-      const controls = document.createElement("div");
-      controls.className = "row";
-      controls.style.marginTop = "12px";
+        <div class="row" style="margin-top:12px">
+          <button class="btn btnDark" onclick="makeInvoice('${o.id}','${o.user}','${o.company}','${o.type}')">🧾 إنشاء فاتورة (نص)</button>
+          <button class="btn btnBlue" onclick="sendInvoiceToClient('${o.id}','${o.user}')">📤 إرسال الفاتورة للعميل</button>
+          <button class="btn btnRed" onclick="deleteOrder('${o.id}')">حذف الطلب</button>
+        </div>
 
-      const select = document.createElement("select");
-      ["قيد التشغيل","جاهز الطلب"].forEach(s=>{
-        const op = document.createElement("option");
-        op.value = s;
-        op.textContent = s;
-        if(s === c.status) op.selected = true;
-        select.appendChild(op);
-      });
+        <div id="inv_${o.id}" class="boxText" style="margin-top:12px;display:none;"></div>
+      `;
 
-      const saveBtn = document.createElement("button");
-      saveBtn.className = "btn btn-blue";
-      saveBtn.innerText = "حفظ الحالة";
-      saveBtn.onclick = ()=>{
-        clients[index].status = select.value;
-        alert(`تم تحديث حالة ${c.companyName} إلى: ${select.value}`);
-        renderClients();
-      };
+      ordersList.appendChild(div);
 
-      controls.appendChild(select);
-      controls.appendChild(saveBtn);
-
-      box.appendChild(top);
-      box.appendChild(controls);
-
-      clientsList.appendChild(box);
+      // تحميل الحالة الحالية إن وجدت
+      const statuses = JSON.parse(localStorage.getItem("pd_statuses") || "{}");
+      const st = statuses[o.user] || "قيد التشغيل";
+      div.querySelector("#st_"+o.id).value = st;
     });
   }
 
-  renderClients();
+  function saveStatus(user, orderId){
+    const st = document.getElementById("st_"+orderId).value;
+    const statuses = JSON.parse(localStorage.getItem("pd_statuses") || "{}");
+    statuses[user] = st;
+    localStorage.setItem("pd_statuses", JSON.stringify(statuses));
+    alert("✅ تم حفظ الحالة للعميل");
+  }
+
+  function makeInvoice(orderId, user, company, type){
+    const cut = Number(document.getElementById("cut_"+orderId).value || 0);
+    const engr = Number(document.getElementById("engr_"+orderId).value || 0);
+    const mat = Number(document.getElementById("mat_"+orderId).value || 0);
+    const disc = Number(document.getElementById("disc_"+orderId).value || 0);
+    const note = document.getElementById("invNote_"+orderId).value.trim();
+
+    const subtotal = cut + engr + mat;
+    const total = Math.max(0, subtotal - disc);
+
+    let text = "";
+    text += "🧾 فاتورة Pro Design\n";
+    text += "--------------------------\n";
+    text += "العميل: " + company + "\n";
+    text += "نوع الطلب: " + type + "\n";
+    text += "رقم الطلب: " + orderId + "\n";
+    text += "التاريخ: " + new Date().toLocaleString() + "\n";
+    text += "--------------------------\n";
+    text += "سعر القص: " + cut.toFixed(3) + " KD\n";
+    text += "سعر الحفر: " + engr.toFixed(3) + " KD\n";
+    text += "سعر المادة/الشيت: " + mat.toFixed(3) + " KD\n";
+    text += "--------------------------\n";
+    text += "الإجمالي قبل الخصم: " + subtotal.toFixed(3) + " KD\n";
+    text += "الخصم: " + disc.toFixed(3) + " KD\n";
+    text += "الإجمالي النهائي: " + total.toFixed(3) + " KD\n";
+    text += "--------------------------\n";
+    text += "ملاحظة: " + (note ? note : "لا يوجد") + "\n";
+    text += "✅ شكراً لتعاملكم معنا.\n";
+
+    const box = document.getElementById("inv_"+orderId);
+    box.style.display = "block";
+    box.innerText = text;
+
+    // نحفظها مؤقتاً داخل localStorage كفاتورة جاهزة
+    const invoicesDraft = JSON.parse(localStorage.getItem("pd_invoice_drafts") || "{}");
+    invoicesDraft[orderId] = { user, text };
+    localStorage.setItem("pd_invoice_drafts", JSON.stringify(invoicesDraft));
+
+    alert("✅ تم إنشاء الفاتورة (نص). اضغط إرسال للعميل.");
+  }
+
+  function sendInvoiceToClient(orderId, user){
+    const drafts = JSON.parse(localStorage.getItem("pd_invoice_drafts") || "{}");
+    const d = drafts[orderId];
+    if(!d){
+      return alert("⚠️ أنشئ الفاتورة أولاً");
+    }
+
+    const invs = JSON.parse(localStorage.getItem("pd_invoices") || "{}");
+    invs[user] = { text: d.text, orderId, sentAt: new Date().toISOString() };
+    localStorage.setItem("pd_invoices", JSON.stringify(invs));
+
+    alert("📤 تم إرسال الفاتورة للعميل. (تظهر في صفحة العميل)");
+  }
+
+  function deleteOrder(orderId){
+    let orders = JSON.parse(localStorage.getItem("pd_orders") || "[]");
+    orders = orders.filter(o => o.id !== orderId);
+    localStorage.setItem("pd_orders", JSON.stringify(orders));
+    loadOrders();
+  }
+
+  function clearAll(){
+    if(!confirm("متأكد تمسح كل الطلبات؟")) return;
+    localStorage.removeItem("pd_orders");
+    localStorage.removeItem("pd_invoice_drafts");
+    alert("تم المسح");
+    loadOrders();
+  }
+
+  loadOrders();
 </script>
 
 </body>
