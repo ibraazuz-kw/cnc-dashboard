@@ -1,315 +1,139 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>صفحة العميل</title>
   <style>
-    body{font-family:Arial;background:#f5f5f5;margin:0}
-    header{background:#111;color:#fff;padding:16px}
-    .wrap{max-width:980px;margin:18px auto;padding:0 12px}
-    .card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 25px rgba(0,0,0,.06);margin-bottom:12px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:700px){.row{grid-template-columns:1fr}}
-    label{display:block;margin:10px 0 6px;font-weight:bold}
-    input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;box-sizing:border-box}
+    body{font-family:Arial;background:#f4f6f9;margin:0}
+    .top{background:#1677ff;color:#fff;padding:18px;text-align:center;font-size:20px;font-weight:bold}
+    .wrap{max-width:900px;margin:18px auto;padding:12px}
+    .card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.06);margin-bottom:14px}
+    label{display:block;margin:10px 0 6px;color:#333;font-weight:bold}
+    input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;font-size:16px;box-sizing:border-box}
     textarea{min-height:90px;resize:vertical}
-    .secHead{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-    .plus{font-weight:bold;font-size:20px;background:#f1f2f6;border-radius:10px;padding:6px 10px}
-    .hidden{display:none}
-    .btn{padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer}
-    .send{background:#198754;color:#fff;width:100%}
-    .out{background:#6c757d;color:#fff;width:100%;margin-top:8px}
-    .ok{display:none;margin-top:10px;background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20;padding:10px;border-radius:12px;text-align:center;font-weight:bold}
-
-    .tag{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:bold;
-    }
-    .st-new{background:#e3f2fd;color:#0d47a1}
-    .st-run{background:#fff3cd;color:#7a5b00}
-    .st-done{background:#e8f5e9;color:#1b5e20}
-    .check{font-size:18px;margin-right:6px}
-    .orderBox{border:1px solid #eee;border-radius:12px;padding:12px;background:#fafafa;margin-top:10px}
-    .small{color:#555;font-size:14px;margin:3px 0}
-    .pdfBtn{
-      display:inline-block;
-      margin-top:8px;
-      background:#0d6efd;
-      color:#fff;
-      padding:10px 12px;
-      border-radius:10px;
-      text-decoration:none;
-      font-weight:bold;
-    }
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:18px;cursor:pointer;margin-top:10px}
+    .send{background:#1e8e5a;color:#fff}
+    .back{background:#666;color:#fff}
+    .status{padding:10px;border-radius:12px;background:#f0f3ff;color:#222;font-weight:bold}
+    .ok{color:#1e8e5a;font-weight:bold}
+    .small{font-size:13px;color:#666;margin-top:6px}
+    .divider{height:1px;background:#eee;margin:12px 0}
   </style>
 </head>
 <body>
+  <div class="top">صفحة العميل (إرسال طلب)</div>
 
-<header>
   <div class="wrap">
-    <div style="font-size:18px;font-weight:bold">Pro Design | صفحة العميل</div>
-    <div id="company" style="opacity:.85;margin-top:6px"></div>
-  </div>
-</header>
 
-<div class="wrap">
+    <div class="card">
+      <div class="status">
+        حالة الطلب: <span id="orderStatus">لم يتم الإرسال</span>
+      </div>
+      <div class="small">بعد الإرسال راح يظهر لك "قيد التشغيل" وبعدها الأدمن يغيرها إلى "جاهز ✅".</div>
+    </div>
 
-  <div class="card">
-    <div class="secHead" onclick="toggle('track')">
-      <div><b>📦 متابعة الطلبات</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="track" class="hidden">
-      <div id="ordersArea" class="small">⏳ جاري التحميل...</div>
-    </div>
-  </div>
+    <div class="card">
+      <label>اسم العميل</label>
+      <input id="name" placeholder="مثال: إبراهيم" />
 
-  <div class="card">
-    <div class="secHead" onclick="toggle('s1')">
-      <div><b>📌 نوع الطلب</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s1" class="hidden">
+      <label>رقم الهاتف</label>
+      <input id="phone" placeholder="مثال: 96649676" />
+
       <label>نوع الطلب</label>
-      <select id="orderType">
-        <option>قص CNC</option>
-        <option>تفريز CNC</option>
-        <option>حفر / نقش</option>
-        <option>قص ليزر</option>
-        <option>أبواب ألمنيوم</option>
-        <option>شبابيك ألمنيوم</option>
-        <option>أخرى</option>
+      <select id="type">
+        <option value="ألمنيوم شيت">ألمنيوم شيت</option>
+        <option value="قص ليزر">قص ليزر</option>
+        <option value="حفر CNC">حفر CNC</option>
+        <option value="قص + حفر">قص + حفر</option>
       </select>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="secHead" onclick="toggle('s2')">
-      <div><b>📏 قياسات الشيت</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s2" class="hidden">
+      <div class="divider"></div>
+
       <div class="row">
         <div>
-          <label>مقاس الشيت</label>
-          <select id="sheetSize">
-            <option value="122x244">122×244</option>
-            <option value="122x300">122×300</option>
-            <option value="150x300">150×300</option>
-            <option value="122x350">122×350</option>
-            <option value="122x400">122×400</option>
-            <option value="150x400">150×400</option>
-            <option value="custom">مقاس خاص</option>
-          </select>
+          <label>قياس الشيت (الطول mm)</label>
+          <input id="sheetL" type="number" placeholder="مثال: 3000" />
         </div>
         <div>
-          <label>سماكة الشيت (mm)</label>
-          <select id="sheetThk">
-            <option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>8</option><option>10</option><option>12</option>
-          </select>
+          <label>قياس الشيت (العرض mm)</label>
+          <input id="sheetW" type="number" placeholder="مثال: 1500" />
         </div>
       </div>
 
       <div class="row">
+        <div>
+          <label>عرض الخط / السماكة (mm)</label>
+          <input id="lineW" type="number" placeholder="مثال: 10" />
+        </div>
         <div>
           <label>نوع المادة</label>
           <select id="material">
-            <option>ألمنيوم</option>
-            <option>ألكوبوند</option>
-            <option>أكريلك</option>
-            <option>حديد</option>
-            <option>ستانلس</option>
+            <option value="ألمنيوم">ألمنيوم</option>
+            <option value="ستانلس">ستانلس</option>
+            <option value="حديد">حديد</option>
+            <option value="Alucobond">Alucobond</option>
           </select>
-        </div>
-        <div>
-          <label>عدد الشيتات</label>
-          <input id="sheetQty" type="number" value="1" min="1"/>
         </div>
       </div>
 
-      <label>مقاس خاص (إذا اخترت مقاس خاص)</label>
-      <input id="customSize" placeholder="مثال: 100×200" />
+      <label>تفاصيل القص / الحفر</label>
+      <textarea id="details" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
+
+      <label>قياسات يدوية (يكتبها العميل)</label>
+      <textarea id="manual" placeholder="مثال: فتحة الباب 1000×2200 / مسافة الجام 60 / فوق 30 / تحت 20 ..."></textarea>
+
+      <label>رفع ملف (DXF / PDF / صورة)</label>
+      <input id="file" type="file" />
+
+      <label>ملاحظات إضافية</label>
+      <textarea id="notes" placeholder="أي ملاحظات..."></textarea>
+
+      <button class="btn send" onclick="sendOrder()">إرسال الطلب للأدمن</button>
+      <button class="btn back" onclick="location.href='index.html'">رجوع للبوابة</button>
+
+      <div class="small">⚠️ حالياً التخزين محلي (تجربة). بعدين نخليه أونلاين بقاعدة بيانات.</div>
     </div>
+
   </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s3')">
-      <div><b>🛠 تفاصيل قص / حفر</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s3" class="hidden">
-      <div class="row">
-        <div>
-          <label>عرض الخط (mm)</label>
-          <select id="lineWidth">
-            <option>4</option><option>6</option><option>8</option><option>10</option>
-            <option>12</option><option>15</option><option>20</option><option>25</option>
-            <option>30</option><option>40</option>
-            <option value="other">أخرى</option>
-          </select>
-        </div>
-        <div>
-          <label>عرض خط آخر (إذا أخرى)</label>
-          <input id="lineOther" placeholder="مثال: 18" />
-        </div>
-      </div>
-
-      <label>تفاصيل القص/الحفر</label>
-      <textarea id="jobDetails" placeholder="مثال: فتحات جام / مسكة مخفية / مسار حفر..."></textarea>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s5')">
-      <div><b>✍️ قياسات الشغل (يدوي)</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s5" class="hidden">
-      <textarea id="manual" placeholder="اكتب القياسات المطلوبة يدوي..."></textarea>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s6')">
-      <div><b>📝 ملاحظات وإرسال</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s6" class="hidden">
-      <label>ملاحظات</label>
-      <textarea id="notes" placeholder="أي ملاحظات إضافية..."></textarea>
-
-      <button class="btn send" onclick="sendOrder()">إرسال الطلب</button>
-      <button class="btn out" onclick="logout()">تسجيل خروج</button>
-
-      <div id="ok" class="ok">✅ تم إرسال الطلب بنجاح</div>
-    </div>
-  </div>
-
-</div>
 
 <script>
-  function toggle(id){
-    document.getElementById(id).classList.toggle("hidden");
-  }
-
-  function getSession(){
-    return JSON.parse(localStorage.getItem("CNC_SESSION") || "null");
-  }
-
-  function getOrders(){
-    return JSON.parse(localStorage.getItem("CNC_ORDERS") || "[]");
-  }
-
-  function saveOrders(data){
-    localStorage.setItem("CNC_ORDERS", JSON.stringify(data));
-  }
-
-  function logout(){
-    localStorage.removeItem("CNC_SESSION");
-    location.href = "/login";
-  }
-
-  function badge(status){
-    if(status === "جاهز") return `<span class="tag st-done"><span class="check">✅</span>جاهز</span>`;
-    if(status === "قيد التشغيل") return `<span class="tag st-run">⏳ قيد التشغيل</span>`;
-    return `<span class="tag st-new">🆕 جديد</span>`;
-  }
-
-  function renderMyOrders(){
-    const session = getSession();
-    const area = document.getElementById("ordersArea");
-    if(!session){
-      area.innerHTML = "لا يوجد جلسة دخول.";
-      return;
-    }
-
-    const orders = getOrders().filter(o => o.clientId === session.clientId);
-
-    if(orders.length === 0){
-      area.innerHTML = "لا يوجد طلبات لك حالياً.";
-      return;
-    }
-
-    area.innerHTML = orders.map(o => {
-      const pdfBtn = o.designerPdf
-        ? `<a class="pdfBtn" href="${o.designerPdf.data}" target="_blank">📄 مشاهدة مخطط المصمم (PDF)</a>`
-        : `<div class="small">📄 مخطط المصمم: غير متوفر</div>`;
-
-      return `
-        <div class="orderBox">
-          <div><b>طلب:</b> ${o.orderType} ${badge(o.status || "جديد")}</div>
-          <div class="small">🕒 ${o.createdAt}</div>
-          <div class="small">📏 شيت: ${o.sheet.size} | سماكة: ${o.sheet.thickness}mm | مادة: ${o.sheet.material} | عدد: ${o.sheet.qty}</div>
-          ${pdfBtn}
-        </div>
-      `;
-    }).join("");
-  }
-
-  const session = getSession();
-  if(!session){
-    location.href = "/login";
-  }else{
-    document.getElementById("company").innerText = "الشركة: " + session.company + " | المستخدم: " + session.username;
-    renderMyOrders();
-  }
-
   function sendOrder(){
-    const session = getSession();
-    if(!session){
-      alert("لا يوجد جلسة دخول");
-      return;
-    }
-
-    const orderType = document.getElementById("orderType").value;
-    const sheetSize = document.getElementById("sheetSize").value;
-    const customSize = document.getElementById("customSize").value.trim();
-    const sheetThk = document.getElementById("sheetThk").value;
-    const material = document.getElementById("material").value;
-    const sheetQty = document.getElementById("sheetQty").value;
-
-    let lineWidth = document.getElementById("lineWidth").value;
-    const lineOther = document.getElementById("lineOther").value.trim();
-    if(lineWidth === "other") lineWidth = lineOther || "أخرى";
-
-    const jobDetails = document.getElementById("jobDetails").value.trim();
-    const manual = document.getElementById("manual").value.trim();
-    const notes = document.getElementById("notes").value.trim();
-
     const order = {
-      id: "O" + Date.now(),
-      clientId: session.clientId,
-      company: session.company,
-      createdAt: new Date().toLocaleString("ar-KW"),
-      status: "جديد",
-      orderType,
-      sheet: {
-        size: sheetSize === "custom" ? (customSize || "مقاس خاص") : sheetSize,
-        thickness: sheetThk,
-        material,
-        qty: sheetQty
-      },
-      cutting: { lineWidth, jobDetails },
-      manual,
-      notes,
-      designerPdf: null
+      id: Date.now(),
+      name: document.getElementById("name").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      type: document.getElementById("type").value,
+      sheetL: document.getElementById("sheetL").value,
+      sheetW: document.getElementById("sheetW").value,
+      lineW: document.getElementById("lineW").value,
+      material: document.getElementById("material").value,
+      details: document.getElementById("details").value.trim(),
+      manual: document.getElementById("manual").value.trim(),
+      notes: document.getElementById("notes").value.trim(),
+      status: "قيد التشغيل",
+      createdAt: new Date().toLocaleString("ar-KW")
     };
 
-    const orders = getOrders();
+    if(!order.name || !order.phone){
+      alert("اكتب اسم العميل ورقم الهاتف أولاً");
+      return;
+    }
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
     orders.unshift(order);
-    saveOrders(orders);
+    localStorage.setItem("orders", JSON.stringify(orders));
 
-    document.getElementById("ok").style.display = "block";
-    setTimeout(()=> document.getElementById("ok").style.display = "none", 2000);
+    document.getElementById("orderStatus").innerHTML = "قيد التشغيل ⏳";
+    alert("تم إرسال الطلب ✅");
 
-    renderMyOrders();
+    // تنظيف بسيط
+    document.getElementById("details").value = "";
+    document.getElementById("manual").value = "";
+    document.getElementById("notes").value = "";
+    document.getElementById("file").value = "";
   }
 </script>
-
 </body>
 </html>
