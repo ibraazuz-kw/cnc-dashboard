@@ -3,312 +3,193 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحة العميل</title>
+  <title>لوحة الأدمن</title>
   <style>
     body{font-family:Arial;background:#f5f5f5;margin:0}
-    header{background:#111;color:#fff;padding:16px}
-    .wrap{max-width:980px;margin:18px auto;padding:0 12px}
+    header{background:#198754;color:#fff;padding:16px}
+    .wrap{max-width:1100px;margin:18px auto;padding:0 12px}
     .card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 25px rgba(0,0,0,.06);margin-bottom:12px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:700px){.row{grid-template-columns:1fr}}
+    @media(max-width:800px){.row{grid-template-columns:1fr}}
     label{display:block;margin:10px 0 6px;font-weight:bold}
-    input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;box-sizing:border-box}
-    textarea{min-height:90px;resize:vertical}
-    .secHead{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-    .plus{font-weight:bold;font-size:20px;background:#f1f2f6;border-radius:10px;padding:6px 10px}
-    .hidden{display:none}
-    .btn{padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer}
-    .send{background:#198754;color:#fff;width:100%}
-    .out{background:#6c757d;color:#fff;width:100%;margin-top:8px}
-    .ok{display:none;margin-top:10px;background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20;padding:10px;border-radius:12px;text-align:center;font-weight:bold}
-
-    .tag{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:bold;
-    }
-    .st-new{background:#e3f2fd;color:#0d47a1}
-    .st-run{background:#fff3cd;color:#7a5b00}
-    .st-done{background:#e8f5e9;color:#1b5e20}
-    .check{font-size:18px;margin-right:6px}
-    .orderBox{border:1px solid #eee;border-radius:12px;padding:12px;background:#fafafa;margin-top:10px}
+    input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px;box-sizing:border-box}
+    button{padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer}
+    .refresh{background:#111;color:#fff;width:100%}
+    .danger{background:#d32f2f;color:#fff;width:100%;margin-top:8px}
+    .order{background:#fafafa;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:10px}
     .small{color:#555;font-size:14px;margin:3px 0}
-    .pdfBtn{
-      display:inline-block;
-      margin-top:8px;
-      background:#0d6efd;
-      color:#fff;
-      padding:10px 12px;
-      border-radius:10px;
-      text-decoration:none;
-      font-weight:bold;
-    }
+    .pill{display:inline-block;background:#f1f2f6;padding:6px 10px;border-radius:999px;font-size:13px;margin-top:6px}
+    .wa{background:#25D366;color:#111;width:100%;margin-top:8px}
+    .blue{background:#0d6efd;color:#fff;width:100%;margin-top:8px}
   </style>
 </head>
 <body>
 
 <header>
-  <div class="wrap">
-    <div style="font-size:18px;font-weight:bold">Pro Design | صفحة العميل</div>
-    <div id="company" style="opacity:.85;margin-top:6px"></div>
-  </div>
+  <div class="wrap" style="font-size:18px;font-weight:bold">لوحة الأدمن - Pro Design</div>
 </header>
 
 <div class="wrap">
 
   <div class="card">
-    <div class="secHead" onclick="toggle('track')">
-      <div><b>📦 متابعة الطلبات</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="track" class="hidden">
-      <div id="ordersArea" class="small">⏳ جاري التحميل...</div>
-    </div>
+    <h3 style="margin:0 0 10px">🔎 فلترة الطلبات</h3>
+    <label>اختر شركة العميل</label>
+    <select id="filterCompany" onchange="render()">
+      <option value="all">كل العملاء</option>
+    </select>
+
+    <button class="refresh" onclick="render()">تحديث</button>
+    <button class="danger" onclick="resetAll()">حذف كل الطلبات (تجربة)</button>
   </div>
 
   <div class="card">
-    <div class="secHead" onclick="toggle('s1')">
-      <div><b>📌 نوع الطلب</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s1" class="hidden">
-      <label>نوع الطلب</label>
-      <select id="orderType">
-        <option>قص CNC</option>
-        <option>تفريز CNC</option>
-        <option>حفر / نقش</option>
-        <option>قص ليزر</option>
-        <option>أبواب ألمنيوم</option>
-        <option>شبابيك ألمنيوم</option>
-        <option>أخرى</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s2')">
-      <div><b>📏 قياسات الشيت</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s2" class="hidden">
-      <div class="row">
-        <div>
-          <label>مقاس الشيت</label>
-          <select id="sheetSize">
-            <option value="122x244">122×244</option>
-            <option value="122x300">122×300</option>
-            <option value="150x300">150×300</option>
-            <option value="122x350">122×350</option>
-            <option value="122x400">122×400</option>
-            <option value="150x400">150×400</option>
-            <option value="custom">مقاس خاص</option>
-          </select>
-        </div>
-        <div>
-          <label>سماكة الشيت (mm)</label>
-          <select id="sheetThk">
-            <option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>8</option><option>10</option><option>12</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>نوع المادة</label>
-          <select id="material">
-            <option>ألمنيوم</option>
-            <option>ألكوبوند</option>
-            <option>أكريلك</option>
-            <option>حديد</option>
-            <option>ستانلس</option>
-          </select>
-        </div>
-        <div>
-          <label>عدد الشيتات</label>
-          <input id="sheetQty" type="number" value="1" min="1"/>
-        </div>
-      </div>
-
-      <label>مقاس خاص (إذا اخترت مقاس خاص)</label>
-      <input id="customSize" placeholder="مثال: 100×200" />
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s3')">
-      <div><b>🛠 تفاصيل قص / حفر</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s3" class="hidden">
-      <div class="row">
-        <div>
-          <label>عرض الخط (mm)</label>
-          <select id="lineWidth">
-            <option>4</option><option>6</option><option>8</option><option>10</option>
-            <option>12</option><option>15</option><option>20</option><option>25</option>
-            <option>30</option><option>40</option>
-            <option value="other">أخرى</option>
-          </select>
-        </div>
-        <div>
-          <label>عرض خط آخر (إذا أخرى)</label>
-          <input id="lineOther" placeholder="مثال: 18" />
-        </div>
-      </div>
-
-      <label>تفاصيل القص/الحفر</label>
-      <textarea id="jobDetails" placeholder="مثال: فتحات جام / مسكة مخفية / مسار حفر..."></textarea>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s5')">
-      <div><b>✍️ قياسات الشغل (يدوي)</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s5" class="hidden">
-      <textarea id="manual" placeholder="اكتب القياسات المطلوبة يدوي..."></textarea>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="secHead" onclick="toggle('s6')">
-      <div><b>📝 ملاحظات وإرسال</b></div>
-      <div class="plus">+</div>
-    </div>
-    <div id="s6" class="hidden">
-      <label>ملاحظات</label>
-      <textarea id="notes" placeholder="أي ملاحظات إضافية..."></textarea>
-
-      <button class="btn send" onclick="sendOrder()">إرسال الطلب</button>
-      <button class="btn out" onclick="logout()">تسجيل خروج</button>
-
-      <div id="ok" class="ok">✅ تم إرسال الطلب بنجاح</div>
-    </div>
+    <h3 style="margin:0 0 10px">📦 الطلبات</h3>
+    <div id="orders"></div>
   </div>
 
 </div>
 
 <script>
-  function toggle(id){
-    document.getElementById(id).classList.toggle("hidden");
-  }
-
-  function getSession(){
-    return JSON.parse(localStorage.getItem("CNC_SESSION") || "null");
-  }
-
   function getOrders(){
     return JSON.parse(localStorage.getItem("CNC_ORDERS") || "[]");
   }
-
   function saveOrders(data){
     localStorage.setItem("CNC_ORDERS", JSON.stringify(data));
   }
+  function getUsers(){
+    return JSON.parse(localStorage.getItem("CNC_USERS") || "[]");
+  }
 
-  function logout(){
-    localStorage.removeItem("CNC_SESSION");
-    location.href = "/login";
+  function resetAll(){
+    if(!confirm("أكيد تبي حذف كل الطلبات؟")) return;
+    localStorage.removeItem("CNC_ORDERS");
+    render();
   }
 
   function badge(status){
-    if(status === "جاهز") return `<span class="tag st-done"><span class="check">✅</span>جاهز</span>`;
-    if(status === "قيد التشغيل") return `<span class="tag st-run">⏳ قيد التشغيل</span>`;
-    return `<span class="tag st-new">🆕 جديد</span>`;
+    if(status === "جاهز") return "✅ جاهز";
+    if(status === "قيد التشغيل") return "⏳ قيد التشغيل";
+    return "🆕 جديد";
   }
 
-  function renderMyOrders(){
-    const session = getSession();
-    const area = document.getElementById("ordersArea");
-    if(!session){
-      area.innerHTML = "لا يوجد جلسة دخول.";
+  function setStatus(orderId, status){
+    const orders = getOrders();
+    const o = orders.find(x => x.id === orderId);
+    if(!o) return;
+    o.status = status;
+    saveOrders(orders);
+    render();
+  }
+
+  function openWhatsApp(company){
+    const users = getUsers();
+    const u = users.find(x => x.company === company);
+    const phone = u?.phone ? u.phone.replace(/\s/g,"") : "";
+    if(!phone){
+      alert("رقم واتساب العميل غير موجود داخل حسابه في الأدمن");
+      return;
+    }
+    const msg = encodeURIComponent("السلام عليكم، بخصوص طلبكم في Pro Design CNC.");
+    window.open("https://wa.me/" + phone + "?text=" + msg, "_blank");
+  }
+
+  function fileToBase64(file){
+    return new Promise((resolve) => {
+      if(!file) return resolve(null);
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.readAsDataURL(file);
+    });
+  }
+
+  async function uploadDesignerPdf(orderId, inputId){
+    const file = document.getElementById(inputId).files[0];
+    if(!file){
+      alert("اختر ملف PDF أولاً");
+      return;
+    }
+    if(!file.name.toLowerCase().endsWith(".pdf")){
+      alert("لازم يكون الملف PDF");
       return;
     }
 
-    const orders = getOrders().filter(o => o.clientId === session.clientId);
+    const data = await fileToBase64(file);
 
-    if(orders.length === 0){
-      area.innerHTML = "لا يوجد طلبات لك حالياً.";
+    const orders = getOrders();
+    const o = orders.find(x => x.id === orderId);
+    if(!o) return;
+
+    o.designerPdf = { name: file.name, data };
+    saveOrders(orders);
+
+    alert("تم رفع PDF للمصمم ✅");
+    render();
+  }
+
+  function render(){
+    const orders = getOrders();
+    const users = getUsers();
+
+    // تعبئة الفلتر
+    const filter = document.getElementById("filterCompany");
+    const companies = [...new Set(orders.map(o => o.company))];
+
+    // حفظ الخيار الحالي
+    const current = filter.value || "all";
+    filter.innerHTML = `<option value="all">كل العملاء</option>` +
+      companies.map(c => `<option value="${c}">${c}</option>`).join("");
+    filter.value = current;
+
+    // فلترة
+    const selected = filter.value;
+    const filtered = selected === "all" ? orders : orders.filter(o => o.company === selected);
+
+    const ordersDiv = document.getElementById("orders");
+    if(filtered.length === 0){
+      ordersDiv.innerHTML = "<div class='small'>لا يوجد طلبات.</div>";
       return;
     }
 
-    area.innerHTML = orders.map(o => {
-      const pdfBtn = o.designerPdf
-        ? `<a class="pdfBtn" href="${o.designerPdf.data}" target="_blank">📄 مشاهدة مخطط المصمم (PDF)</a>`
-        : `<div class="small">📄 مخطط المصمم: غير متوفر</div>`;
+    ordersDiv.innerHTML = filtered.map((o, idx) => {
+      const inputId = "pdf_" + o.id;
 
       return `
-        <div class="orderBox">
-          <div><b>طلب:</b> ${o.orderType} ${badge(o.status || "جديد")}</div>
+        <div class="order">
+          <div><b>${o.company}</b> - ${o.orderType}</div>
           <div class="small">🕒 ${o.createdAt}</div>
+          <div class="small">📌 الحالة: <b>${badge(o.status || "جديد")}</b></div>
           <div class="small">📏 شيت: ${o.sheet.size} | سماكة: ${o.sheet.thickness}mm | مادة: ${o.sheet.material} | عدد: ${o.sheet.qty}</div>
-          ${pdfBtn}
+          <div class="small">🛠 عرض الخط: ${o.cutting.lineWidth}</div>
+          <div class="small">📝 تفاصيل: ${o.cutting.jobDetails || "-"}</div>
+          <div class="small">✍️ يدوي: ${o.manual ? o.manual.replace(/\n/g," / ") : "-"}</div>
+          <div class="small">📝 ملاحظات: ${o.notes ? o.notes.replace(/\n/g," / ") : "-"}</div>
+
+          <div class="small" style="margin-top:8px"><b>تغيير الحالة:</b></div>
+          <div class="row">
+            <button class="blue" onclick="setStatus('${o.id}','جديد')">🆕 جديد</button>
+            <button class="blue" onclick="setStatus('${o.id}','قيد التشغيل')">⏳ قيد التشغيل</button>
+            <button class="blue" onclick="setStatus('${o.id}','جاهز')">✅ جاهز</button>
+          </div>
+
+          <button class="wa" onclick="openWhatsApp('${o.company}')">📲 واتساب العميل</button>
+
+          <div class="small" style="margin-top:8px"><b>📄 رفع PDF للمصمم (يظهر للعميل):</b></div>
+          <input id="${inputId}" type="file" accept="application/pdf" />
+          <button class="blue" onclick="uploadDesignerPdf('${o.id}','${inputId}')">رفع PDF</button>
+
+          <button class="danger" onclick="deleteOrder('${o.id}')">حذف الطلب</button>
         </div>
       `;
     }).join("");
   }
 
-  const session = getSession();
-  if(!session){
-    location.href = "/login";
-  }else{
-    document.getElementById("company").innerText = "الشركة: " + session.company + " | المستخدم: " + session.username;
-    renderMyOrders();
-  }
-
-  function sendOrder(){
-    const session = getSession();
-    if(!session){
-      alert("لا يوجد جلسة دخول");
-      return;
-    }
-
-    const orderType = document.getElementById("orderType").value;
-    const sheetSize = document.getElementById("sheetSize").value;
-    const customSize = document.getElementById("customSize").value.trim();
-    const sheetThk = document.getElementById("sheetThk").value;
-    const material = document.getElementById("material").value;
-    const sheetQty = document.getElementById("sheetQty").value;
-
-    let lineWidth = document.getElementById("lineWidth").value;
-    const lineOther = document.getElementById("lineOther").value.trim();
-    if(lineWidth === "other") lineWidth = lineOther || "أخرى";
-
-    const jobDetails = document.getElementById("jobDetails").value.trim();
-    const manual = document.getElementById("manual").value.trim();
-    const notes = document.getElementById("notes").value.trim();
-
-    const order = {
-      id: "O" + Date.now(),
-      clientId: session.clientId,
-      company: session.company,
-      createdAt: new Date().toLocaleString("ar-KW"),
-      status: "جديد",
-      orderType,
-      sheet: {
-        size: sheetSize === "custom" ? (customSize || "مقاس خاص") : sheetSize,
-        thickness: sheetThk,
-        material,
-        qty: sheetQty
-      },
-      cutting: { lineWidth, jobDetails },
-      manual,
-      notes,
-      designerPdf: null
-    };
-
-    const orders = getOrders();
-    orders.unshift(order);
+  function deleteOrder(id){
+    const orders = getOrders().filter(x => x.id !== id);
     saveOrders(orders);
-
-    document.getElementById("ok").style.display = "block";
-    setTimeout(()=> document.getElementById("ok").style.display = "none", 2000);
-
-    renderMyOrders();
+    render();
   }
+
+  render();
 </script>
 
 </body>
