@@ -4,64 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>بوابة العملاء - نظام CNC</title>
-  <style>
-    body{font-family:Arial;background:#f5f7fb;margin:0}
-    .top{background:#111;color:#fff;padding:16px;text-align:center;font-size:18px;font-weight:700}
-    .box{max-width:420px;margin:40px auto;background:#fff;border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    h2{text-align:center;margin:0 0 10px}
-    .brand{text-align:center;font-size:26px;font-weight:900;margin:10px 0}
-    label{display:block;margin:12px 0 6px;font-weight:700}
-    input{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:16px}
-    button{width:100%;padding:14px;border:none;border-radius:12px;font-size:18px;font-weight:800;cursor:pointer}
-    .btn{background:#12b76a;color:#fff;margin-top:14px}
-    .hint{color:#666;text-align:center;margin-top:10px;font-size:13px}
-    .small{color:#777;font-size:12px;text-align:center;margin-top:8px}
-    .adminLink{margin-top:16px;text-align:center}
-    .adminLink a{color:#0b63f6;text-decoration:none;font-weight:700}
-  </style>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="top">بوابة العملاء - نظام CNC</div>
+  <div class="header">بوابة العملاء - نظام CNC</div>
 
-  <div class="box">
-    <div class="brand">Pro Design</div>
-    <h2>تسجيل دخول العميل</h2>
+  <div class="container">
+    <div class="card" style="text-align:center">
+      <h2 style="margin:0;font-weight:900">Pro Design</h2>
+      <h1 style="margin:8px 0 18px 0;font-weight:900">تسجيل دخول العميل</h1>
 
-    <label>اسم المستخدم</label>
-    <input id="username" placeholder="مثال: client1" />
+      <div class="row">
+        <div class="col">
+          <label style="font-weight:900">اسم المستخدم</label>
+          <input id="username" placeholder="مثال: client1" />
+        </div>
+        <div class="col">
+          <label style="font-weight:900">كلمة المرور</label>
+          <input id="password" type="password" placeholder="••••••••" />
+        </div>
+      </div>
 
-    <label>كلمة المرور</label>
-    <input id="password" type="password" placeholder="••••••••" />
+      <div style="margin-top:14px">
+        <button class="btn-green" onclick="login()">دخول</button>
+      </div>
 
-    <button class="btn" onclick="login()">دخول</button>
+      <div class="note">بعد الدخول تفتح صفحة العميل الخاصة فيه تلقائياً.</div>
+      <div class="note">⚠️ هذا إصدار تجريبي بدون قاعدة بيانات.</div>
 
-    <div class="hint">بعد الدخول تفتح صفحة العميل الخاصة فيه تلقائياً.</div>
-    <div class="small">⚠️ هذا إصدار تجريبي بدون قاعدة بيانات.</div>
-
-    <div class="adminLink">
-      <a href="/admin.html">دخول الأدمن</a>
+      <div style="margin-top:12px">
+        <a href="admin.html">دخول الأدمن</a>
+      </div>
     </div>
   </div>
 
 <script>
-  // عملاء تجريبيين (تقدر تغيرهم)
-  const CLIENTS = {
-    client1: { password: "1234", company: "شركة إبراهيم للألمنيوم" },
-    client2: { password: "1234", company: "شركة الهاجري" },
-    client3: { password: "1234", company: "شركة الدروازة" }
-  };
-
+  // تجريبي: أي يوزر يدخل
   function login(){
     const u = document.getElementById("username").value.trim();
     const p = document.getElementById("password").value.trim();
+    if(!u || !p){ alert("اكتب اسم المستخدم وكلمة المرور"); return; }
 
-    if(!CLIENTS[u]) return alert("اسم المستخدم غير صحيح");
-    if(CLIENTS[u].password !== p) return alert("كلمة المرور غير صحيحة");
+    localStorage.setItem("pd_client_username", u);
+    // اسم العميل (تقدر تربطه لاحقاً)
+    localStorage.setItem("pd_client_name", u === "client1" ? "شركة إبراهيم للألمنيوم" : u);
 
-    localStorage.setItem("pd_current_user", u);
-    localStorage.setItem("pd_current_company", CLIENTS[u].company);
-
-    window.location.href = "/client.html";
+    window.location.href = "client.html";
   }
 </script>
 </body>
