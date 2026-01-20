@@ -3,397 +3,360 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحة العميل - طلب CNC</title>
+  <title>صفحة العميل (إرسال طلب CNC)</title>
 
   <style>
     body{
       font-family: Arial, sans-serif;
-      background:#f6f7fb;
+      background:#f5f7fb;
       margin:0;
       padding:0;
+      color:#111;
     }
     .header{
-      background:#11a86b;
+      background:#10b981;
       color:#fff;
-      padding:18px;
+      padding:16px;
       text-align:center;
       font-size:20px;
-      font-weight:bold;
+      font-weight:700;
     }
     .container{
       max-width:900px;
-      margin:20px auto;
-      padding:15px;
+      margin:18px auto;
+      padding:14px;
     }
     .card{
       background:#fff;
       border-radius:14px;
       padding:16px;
-      margin-bottom:15px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.07);
+      box-shadow:0 8px 20px rgba(0,0,0,.06);
+      margin-bottom:14px;
     }
     .row{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-      justify-content:space-between;
     }
-    .title{
-      font-weight:bold;
-      font-size:18px;
-      margin-bottom:10px;
-    }
-    .note{
-      color:#555;
-      margin-top:8px;
-      font-size:13px;
-      line-height:1.6;
-    }
-    label{
-      display:block;
-      font-weight:bold;
-      margin:10px 0 6px;
-      color:#222;
-    }
-    select, input, textarea{
-      width:100%;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #ddd;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-      box-sizing:border-box;
-    }
-    textarea{ min-height:90px; resize:vertical; }
-
     .btn{
       border:none;
       padding:12px 14px;
-      border-radius:10px;
+      border-radius:12px;
       cursor:pointer;
-      font-weight:bold;
+      font-weight:700;
       font-size:15px;
     }
-    .btn-blue{ background:#2d6cdf; color:#fff; }
-    .btn-red{ background:#e74c3c; color:#fff; }
-    .btn-green{ background:#11a86b; color:#fff; width:100%; margin-top:12px; }
+    .btn-blue{ background:#2563eb; color:#fff; }
+    .btn-red{ background:#ef4444; color:#fff; }
+    .btn-dark{ background:#111827; color:#fff; }
+    .btn-green{ background:#10b981; color:#fff; width:100%; font-size:16px; }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:#fff6cc;
-      color:#8a6d00;
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:bold;
-      border:1px solid #f3d87a;
-    }
-    .statusBox{
-      background:#f1f5ff;
-      border:1px solid #d9e3ff;
+    .muted{ color:#6b7280; font-size:13px; margin-top:6px; }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
       border-radius:14px;
-      padding:14px;
     }
-
-    /* جدول الشيتات */
-    .tableHeader{
-      background:#1e66ff;
+    thead th{
+      background:#2563eb;
       color:#fff;
       padding:12px;
-      border-radius:12px;
-      font-weight:bold;
-      display:grid;
-      grid-template-columns: 1.2fr 1fr 0.8fr 0.6fr;
-      gap:10px;
+      font-size:14px;
       text-align:center;
     }
-    .sheetRow{
-      margin-top:10px;
+    tbody td{
       background:#fff;
-      border:1px solid #e9e9e9;
-      border-radius:12px;
       padding:10px;
-      display:grid;
-      grid-template-columns: 1.2fr 1fr 0.8fr 0.6fr;
-      gap:10px;
-      align-items:center;
+      border-bottom:1px solid #eef2ff;
+      text-align:center;
     }
-    input[type="number"]{ text-align:center; }
-    .sectionLine{
-      height:1px;
-      background:#eee;
-      margin:12px 0;
+
+    input, select, textarea{
+      width:100%;
+      padding:10px;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    textarea{
+      min-height:80px;
+      resize:vertical;
+    }
+
+    .mini{
+      font-size:12px;
+      color:#374151;
+      margin-top:6px;
+    }
+
+    .door-preview{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+      margin-top:8px;
+      padding:10px;
+      background:#f9fafb;
+      border-radius:12px;
+      border:1px dashed #e5e7eb;
+    }
+    .door-box{
+      width:70px;
+      height:90px;
+      border:2px solid #111;
+      border-radius:8px;
+      position:relative;
+      background:#fff;
+    }
+    .hinge{
+      position:absolute;
+      top:10px;
+      bottom:10px;
+      width:4px;
+      background:#111;
+      border-radius:6px;
+    }
+    .swing{
+      position:absolute;
+      top:10px;
+      bottom:10px;
+      width:2px;
+      background:#111;
+      transform-origin:bottom;
+      opacity:.7;
+    }
+    .label{
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .copyBox{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      font-size:14px;
+      white-space:pre-wrap;
+      line-height:1.7;
     }
   </style>
 </head>
 
 <body>
-  <div class="header">صفحة العميل (إرسال طلب CNC)</div>
+
+  <div class="header">صفحة العميل (إرسال أمر تشغيل CNC)</div>
 
   <div class="container">
 
-    <!-- كرت الترحيب + حالة الطلب -->
+    <!-- بيانات العميل -->
     <div class="card">
       <div class="row">
-        <div>
-          <div style="font-weight:bold;font-size:18px;">
-            مرحباً: <span id="clientName">شركة العميل</span>
-          </div>
-          <div class="note">هذه صفحة خاصة بالعميل بعد تسجيل الدخول.</div>
-        </div>
-        <button class="btn btn-red" onclick="logout()">تسجيل خروج</button>
-      </div>
-
-      <div style="margin-top:12px;" class="statusBox">
-        <div class="row">
-          <div class="title" style="margin:0;">حالة الطلب الحالي</div>
-          <div class="badge" id="statusBadge">قيد التشغيل ⏳</div>
+        <div style="flex:1; min-width:220px;">
+          <label class="label">اسم الشركة / العميل</label>
+          <input id="clientName" placeholder="مثال: شركة إبراهيم للألمنيوم" />
         </div>
 
-        <div class="note">
-          ✅ العميل يشوف الحالة فقط (بدون تغيير).<br/>
-          📌 تغيير الحالة يكون من لوحة الأدمن فقط.
+        <div style="flex:1; min-width:220px;">
+          <label class="label">نوع الطلب</label>
+          <select id="orderType">
+            <option value="أبواب ألمنيوم">أبواب ألمنيوم</option>
+            <option value="شبابيك ألمنيوم">شبابيك ألمنيوم</option>
+            <option value="قص شيت ألمنيوم">قص شيت ألمنيوم</option>
+            <option value="قص + حفر CNC">قص + حفر CNC</option>
+          </select>
         </div>
       </div>
+
+      <div class="mini">📌 الاتجاه محسوب <b>من داخل البيت</b> (يمين / يسار).</div>
     </div>
 
-    <!-- تفاصيل طلب CNC -->
+    <!-- جدول القياسات -->
     <div class="card">
-      <div class="title">تفاصيل طلب CNC</div>
+      <h3 style="margin:0 0 10px 0;">📏 جدول القياسات (بالسنتيمتر)</h3>
 
-      <label>نوع الطلب</label>
-      <select id="orderType">
-        <option value="قص فقط">قص فقط</option>
-        <option value="حفر فقط">حفر فقط</option>
-        <option value="قص + حفر">قص + حفر</option>
-      </select>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:60px;">م</th>
+            <th>العرض (سم)</th>
+            <th>الارتفاع (سم)</th>
+            <th style="width:110px;">العدد</th>
+            <th style="width:170px;">اتجاه الفتحة</th>
+            <th style="width:110px;">حذف</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
 
-      <label>نوع المادة</label>
-      <select id="materialType">
-        <option value="ألمنيوم">ألمنيوم</option>
-        <option value="ستانلس">ستانلس</option>
-        <option value="حديد">حديد</option>
-        <option value="ألكوبوند">ألكوبوند</option>
-      </select>
-
-      <label>عرض الخط / السماكة (mm)</label>
-      <select id="lineWidth">
-        <option value="2">2 mm</option>
-        <option value="3">3 mm</option>
-        <option value="4">4 mm</option>
-        <option value="5">5 mm</option>
-        <option value="6">6 mm</option>
-        <option value="8">8 mm</option>
-        <option value="10">10 mm</option>
-        <option value="12">12 mm</option>
-      </select>
-
-      <label>تفاصيل القص / الحفر</label>
-      <textarea id="cutEngraveDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
-
-      <label>قياسات الشغل (يدوي - يكتبها العميل)</label>
-      <textarea id="manualSizes" placeholder="مثال: فتحة الباب 2200×1000 / مسافة الجام فوق 30 تحت 20..."></textarea>
-
-      <label>رفع ملف (DXF / PDF / صورة)</label>
-      <input id="uploadFile" type="file" accept=".dxf,.pdf,image/*" />
-
-      <label>ملاحظات إضافية</label>
-      <textarea id="notes" placeholder="أي ملاحظات إضافية..."></textarea>
-
-      <button class="btn btn-green" onclick="sendCNCRequest()">📩 إرسال الطلب للأدمن (واتساب)</button>
-
-      <div class="note">
-        🔔 حاليا الإرسال واتساب كنص جاهز (بدون قاعدة بيانات).<br/>
-        بعدين نربطه بالنظام الكامل.
+      <div style="margin-top:12px;">
+        <button class="btn btn-blue" onclick="addRow()">+ إضافة قياس</button>
       </div>
+
+      <div class="muted">✅ مثال العميل: 110×300 عدد 1 / اتجاه الفتحة يمين</div>
     </div>
 
-    <!-- تفاصيل الشيت (للشراء من المورد) -->
+    <!-- ملاحظات -->
     <div class="card">
-      <div class="title">تفاصيل الشيت (للشراء من المورد)</div>
-      <div class="note">اختر قياس الشيت + السماكة + الكمية، وتقدر تضيف أكثر من شيت.</div>
+      <h3 style="margin:0 0 10px 0;">📝 ملاحظات إضافية (اختياري)</h3>
+      <textarea id="notes" placeholder="مثال: فتحة للداخل + مكان القفل + مسكة خارجية..."></textarea>
+    </div>
 
-      <div class="tableHeader">
-        <div>قياس الشيت</div>
-        <div>السماكة (mm)</div>
-        <div>الكمية</div>
-        <div>حذف</div>
-      </div>
+    <!-- إرسال أمر تشغيل CNC -->
+    <div class="card">
+      <button class="btn btn-green" onclick="generateCNCOrder()">📩 إرسال أمر تشغيل CNC</button>
+      <div class="muted">سيتم توليد نص مرتب جاهز للنسخ والإرسال.</div>
 
-      <div id="sheetsContainer"></div>
-
-      <div style="margin-top:10px;">
-        <button class="btn btn-blue" onclick="addSheetRow()">+ إضافة شيت</button>
-      </div>
-
-      <button class="btn btn-green" onclick="sendToSupplierWhatsApp()">📩 إرسال طلب الشيت للمورد (واتساب)</button>
-
-      <div class="note">
-        يطلع لك نص جاهز للواتساب فيه: اسم العميل + تفاصيل الشيتات فقط.
+      <div style="margin-top:12px; display:none;" id="resultBoxWrap">
+        <div class="copyBox" id="resultBox"></div>
+        <div style="margin-top:10px;">
+          <button class="btn btn-dark" onclick="copyText()">📋 نسخ النص</button>
+        </div>
       </div>
     </div>
 
   </div>
 
 <script>
-  // ====== بيانات العميل (تجريبية) ======
-  const currentClient = {
-    username: "client1",
-    companyName: "شركة إبراهيم للألمنيوم",
-    status: "قيد التشغيل" // أو "جاهز الطلب"
-  };
+  let counter = 0;
 
-  document.getElementById("clientName").innerText = currentClient.companyName;
-  updateStatusBadge(currentClient.status);
+  function addRow() {
+    counter++;
+    const tbody = document.getElementById("rows");
 
-  function updateStatusBadge(status){
-    const badge = document.getElementById("statusBadge");
-    if(status === "جاهز الطلب"){
-      badge.style.background = "#dff7e9";
-      badge.style.border = "1px solid #82d9a8";
-      badge.style.color = "#0b6b3b";
-      badge.innerText = "جاهز الطلب ✅";
-    } else {
-      badge.style.background = "#fff6cc";
-      badge.style.border = "1px solid #f3d87a";
-      badge.style.color = "#8a6d00";
-      badge.innerText = "قيد التشغيل ⏳";
+    const tr = document.createElement("tr");
+    tr.setAttribute("data-id", counter);
+
+    tr.innerHTML = `
+      <td>${counter}</td>
+
+      <td>
+        <input type="number" min="1" step="0.1" placeholder="مثال: 110" class="wCm" />
+      </td>
+
+      <td>
+        <input type="number" min="1" step="0.1" placeholder="مثال: 300" class="hCm" />
+      </td>
+
+      <td>
+        <input type="number" min="1" step="1" placeholder="1" class="qty" value="1" />
+      </td>
+
+      <td>
+        <select class="swingDir" onchange="updatePreview(${counter})">
+          <option value="يمين">يمين (من داخل البيت)</option>
+          <option value="يسار">يسار (من داخل البيت)</option>
+        </select>
+
+        <div class="door-preview" id="preview-${counter}">
+          ${renderDoorPreview("يمين")}
+          <div style="font-size:12px; color:#6b7280;">يمين</div>
+        </div>
+      </td>
+
+      <td>
+        <button class="btn btn-red" onclick="removeRow(${counter})">حذف</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  }
+
+  function removeRow(id){
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if(row) row.remove();
+  }
+
+  function renderDoorPreview(dir){
+    // مفصلات يمين/يسار (من داخل البيت)
+    if(dir === "يمين"){
+      return `
+        <div class="door-box">
+          <div class="hinge" style="right:6px;"></div>
+          <div class="swing" style="left:18px; transform:rotate(20deg);"></div>
+        </div>
+      `;
+    }else{
+      return `
+        <div class="door-box">
+          <div class="hinge" style="left:6px;"></div>
+          <div class="swing" style="right:18px; transform:rotate(-20deg);"></div>
+        </div>
+      `;
     }
   }
 
-  // ====== جدول الشيتات ======
-  const SHEET_SIZES = [
-    "122x244",
-    "122x300",
-    "150x300",
-    "100x300",
-    "100x200",
-    "122x350",
-    "122x400",
-    "150x400"
-  ];
+  function updatePreview(id){
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if(!row) return;
 
-  const THICKNESSES = Array.from({length: 11}, (_,i)=> (i+2).toString()); // 2 إلى 12
-
-  const sheetsContainer = document.getElementById("sheetsContainer");
-
-  function createSelect(options){
-    const sel = document.createElement("select");
-    options.forEach(v=>{
-      const op = document.createElement("option");
-      op.value = v;
-      op.textContent = v;
-      sel.appendChild(op);
-    });
-    return sel;
+    const dir = row.querySelector(".swingDir").value;
+    const preview = document.getElementById(`preview-${id}`);
+    preview.innerHTML = `${renderDoorPreview(dir)} <div style="font-size:12px; color:#6b7280;">${dir}</div>`;
   }
 
-  function addSheetRow(){
-    const row = document.createElement("div");
-    row.className = "sheetRow";
+  function generateCNCOrder(){
+    const clientName = document.getElementById("clientName").value.trim() || "بدون اسم";
+    const orderType = document.getElementById("orderType").value;
+    const notes = document.getElementById("notes").value.trim();
 
-    const sizeSelect = createSelect(SHEET_SIZES);
-    const thickSelect = createSelect(THICKNESSES);
-
-    const qtyInput = document.createElement("input");
-    qtyInput.type = "number";
-    qtyInput.min = "1";
-    qtyInput.placeholder = "مثال: 5";
-
-    const delBtn = document.createElement("button");
-    delBtn.className = "btn btn-red";
-    delBtn.innerText = "حذف";
-    delBtn.onclick = ()=> row.remove();
-
-    row.appendChild(sizeSelect);
-    row.appendChild(thickSelect);
-    row.appendChild(qtyInput);
-    row.appendChild(delBtn);
-
-    sheetsContainer.appendChild(row);
-  }
-
-  // أول صف تلقائي
-  addSheetRow();
-
-  function collectSheets(){
-    const rows = Array.from(document.querySelectorAll(".sheetRow"));
-    const result = [];
-
-    rows.forEach(r=>{
-      const selects = r.querySelectorAll("select");
-      const inputs = r.querySelectorAll("input");
-
-      const size = selects[0].value;
-      const thickness = selects[1].value;
-      const qty = inputs[0].value;
-
-      if(qty && Number(qty) > 0){
-        result.push({ size, thickness, qty });
-      }
-    });
-
-    return result;
-  }
-
-  // ====== إرسال طلب الشيت للمورد ======
-  function sendToSupplierWhatsApp(){
-    const sheets = collectSheets();
-
-    if(sheets.length === 0){
-      alert("⚠️ لازم تدخل كمية على الأقل في شيت واحد.");
+    const rows = document.querySelectorAll("#rows tr");
+    if(rows.length === 0){
+      alert("لازم تضيف على الأقل قياس واحد.");
       return;
     }
 
-    let msg = `طلب شراء شيتات ألمنيوم\\n`;
-    msg += `اسم العميل: ${currentClient.companyName}\\n\\n`;
-    msg += `تفاصيل الشيتات:\\n`;
+    let text = "";
+    text += `📌 أمر تشغيل CNC\n`;
+    text += `العميل: ${clientName}\n`;
+    text += `نوع الطلب: ${orderType}\n`;
+    text += `--------------------------\n`;
+    text += `📏 القياسات (سم):\n`;
 
-    sheets.forEach((s, idx)=>{
-      msg += `${idx+1}) قياس: ${s.size} | سماكة: ${s.thickness}mm | كمية: ${s.qty}\\n`;
+    let idx = 1;
+    for(const r of rows){
+      const w = r.querySelector(".wCm").value.trim();
+      const h = r.querySelector(".hCm").value.trim();
+      const q = r.querySelector(".qty").value.trim();
+      const dir = r.querySelector(".swingDir").value;
+
+      if(!w || !h || !q){
+        alert("في قياس ناقص! تأكد تعبّي العرض والارتفاع والعدد لكل سطر.");
+        return;
+      }
+
+      text += `${idx}) ${w} × ${h}  | العدد: ${q} | الفتحة: ${dir} (من داخل البيت)\n`;
+      idx++;
+    }
+
+    if(notes){
+      text += `--------------------------\n`;
+      text += `📝 ملاحظات:\n${notes}\n`;
+    }
+
+    text += `--------------------------\n`;
+    text += `✅ يرجى التأكيد قبل التنفيذ.\n`;
+
+    document.getElementById("resultBox").textContent = text;
+    document.getElementById("resultBoxWrap").style.display = "block";
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+
+  function copyText(){
+    const txt = document.getElementById("resultBox").textContent;
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert("تم نسخ أمر التشغيل ✅");
     });
-
-    // رقم المورد (بدون +)
-    const supplierNumber = "96500000000";
-
-    const url = `https://wa.me/${supplierNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
   }
 
-  // ====== إرسال طلب CNC للأدمن ======
-  function sendCNCRequest(){
-    const orderType = document.getElementById("orderType").value;
-    const materialType = document.getElementById("materialType").value;
-    const lineWidth = document.getElementById("lineWidth").value;
-    const cutEngraveDetails = document.getElementById("cutEngraveDetails").value.trim();
-    const manualSizes = document.getElementById("manualSizes").value.trim();
-    const notes = document.getElementById("notes").value.trim();
-
-    let msg = `طلب CNC جديد\\n`;
-    msg += `العميل: ${currentClient.companyName}\\n\\n`;
-    msg += `نوع الطلب: ${orderType}\\n`;
-    msg += `نوع المادة: ${materialType}\\n`;
-    msg += `عرض الخط/السماكة: ${lineWidth} mm\\n\\n`;
-    msg += `تفاصيل القص/الحفر:\\n${cutEngraveDetails || "-"}\\n\\n`;
-    msg += `قياسات يدوية:\\n${manualSizes || "-"}\\n\\n`;
-    msg += `ملاحظات إضافية:\\n${notes || "-"}\\n`;
-
-    // رقم الأدمن (بدون +)
-    const adminNumber = "96500000000";
-
-    const url = `https://wa.me/${adminNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
-
-    alert("✅ تم تجهيز رسالة الطلب للأدمن على واتساب.");
-  }
-
-  function logout(){
-    alert("تم تسجيل الخروج (تجريبي)");
-    window.location.href = "index.html";
-  }
+  // ابدأ بسطر واحد جاهز
+  addRow();
 </script>
 
 </body>
