@@ -1,19 +1,10 @@
-/**
- * server.js (كامل)
- * يشغل الموقع على Render
- * صفحات:
- * /        = بوابة الدخول
- * /client  = صفحة العميل
- * /admin   = صفحة الأدمن
- */
-
 const express = require("express");
 const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// يخدم ملفات ثابتة (css/js/images)
+// يخدم الملفات الثابتة
 app.use(express.static(__dirname));
 
 // الصفحة الرئيسية
@@ -31,9 +22,9 @@ app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "admin.html"));
 });
 
-// لو الرابط غلط
+// أي رابط غلط يرجع للصفحة الرئيسية
 app.get("*", (req, res) => {
-  res.status(404).send("Not Found");
+  res.redirect("/");
 });
 
 app.listen(PORT, () => {
