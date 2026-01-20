@@ -2,18 +2,18 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>صفحة العميل - طلب CNC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>صفحة العميل (إرسال طلب CNC)</title>
 
   <style>
     body{
       font-family: Arial, sans-serif;
-      background:#f4f6f8;
+      background:#f6f7fb;
       margin:0;
       padding:0;
     }
-    header{
-      background:#0aa06e;
+    .header{
+      background:#11a86b;
       color:#fff;
       padding:18px;
       text-align:center;
@@ -22,431 +22,305 @@
     }
     .container{
       max-width:900px;
-      margin:auto;
+      margin:20px auto;
       padding:15px;
     }
     .card{
       background:#fff;
       border-radius:14px;
-      padding:15px;
+      padding:16px;
       margin-bottom:15px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      box-shadow:0 6px 20px rgba(0,0,0,0.07);
     }
     .row{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
+      align-items:center;
     }
-    .col{
-      flex:1;
-      min-width:150px;
-    }
-    label{
-      display:block;
-      margin:10px 0 6px;
+    .btn{
+      border:none;
+      padding:12px 14px;
+      border-radius:10px;
+      cursor:pointer;
       font-weight:bold;
-      color:#333;
+      font-size:15px;
     }
-    input, select, textarea{
+    .btn-blue{ background:#2d6cdf; color:#fff; }
+    .btn-red{ background:#e74c3c; color:#fff; }
+    .btn-green{ background:#11a86b; color:#fff; width:100%; margin-top:12px; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#fff6cc;
+      color:#8a6d00;
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:bold;
+      border:1px solid #f3d87a;
+    }
+    .statusBox{
+      background:#f1f5ff;
+      border:1px solid #d9e3ff;
+      border-radius:14px;
+      padding:14px;
+    }
+    .note{
+      color:#555;
+      margin-top:8px;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    /* جدول الشيتات */
+    .tableHeader{
+      background:#1e66ff;
+      color:#fff;
+      padding:12px;
+      border-radius:12px;
+      font-weight:bold;
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 0.8fr 0.5fr;
+      gap:10px;
+      text-align:center;
+    }
+    .sheetRow{
+      margin-top:10px;
+      background:#fff;
+      border:1px solid #e9e9e9;
+      border-radius:12px;
+      padding:10px;
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 0.8fr 0.5fr;
+      gap:10px;
+      align-items:center;
+    }
+    select, input{
       width:100%;
       padding:12px;
       border-radius:10px;
       border:1px solid #ddd;
-      outline:none;
       font-size:15px;
-      background:#fafafa;
+      outline:none;
+      background:#fff;
     }
-    textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-    .btn{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      font-size:17px;
-      cursor:pointer;
-      font-weight:bold;
+    input[type="number"]{ text-align:center; }
+    .center{ text-align:center; }
+
+    .footerBtns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
       margin-top:10px;
     }
-    .btn-green{ background:#0aa06e; color:#fff; }
-    .btn-blue{ background:#1e88e5; color:#fff; }
-    .btn-gray{ background:#444; color:#fff; }
-    .btn-red{ background:#e53935; color:#fff; }
-    .small-btn{
-      padding:10px 12px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:bold;
-      font-size:14px;
-    }
-    .small-red{ background:#e53935; color:#fff; }
-    .small-blue{ background:#1e88e5; color:#fff; }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .welcome{
-      font-size:16px;
-      color:#222;
+    .title{
       font-weight:bold;
-    }
-    .statusBox{
-      padding:10px 12px;
-      border-radius:12px;
-      background:#f1f5f9;
-      border:1px solid #e2e8f0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .badge{
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:bold;
-      font-size:14px;
-      display:inline-block;
-    }
-    .badge-wip{ background:#fff3cd; color:#856404; border:1px solid #ffeeba; }
-    .badge-done{ background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
-
-    .sheetRow{
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      padding:10px;
-      margin-top:10px;
-      background:#fcfcfc;
-    }
-    .sheetRowHeader{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:8px;
-    }
-    .hint{
-      color:#666;
-      font-size:13px;
-      margin-top:8px;
-      line-height:1.6;
-    }
-    .divider{
-      height:1px;
-      background:#eee;
-      margin:15px 0;
+      font-size:18px;
+      margin-bottom:10px;
     }
   </style>
 </head>
 
 <body>
-
-  <header>صفحة العميل (إرسال طلب CNC)</header>
+  <div class="header">صفحة العميل (إرسال طلب CNC)</div>
 
   <div class="container">
 
-    <!-- أعلى الصفحة -->
+    <!-- كرت الترحيب + حالة الطلب -->
     <div class="card">
-      <div class="topbar">
-        <div class="welcome" id="welcomeText">مرحباً 👋</div>
-        <button class="small-btn btn-gray" onclick="logout()">تسجيل خروج</button>
-      </div>
-
-      <div style="margin-top:12px" class="statusBox">
+      <div class="row" style="justify-content:space-between;">
         <div>
-          <div style="font-weight:bold; margin-bottom:4px;">حالة الطلب الحالي</div>
-          <span class="badge badge-wip" id="orderStatusBadge">⏳ قيد التشغيل</span>
+          <div style="font-weight:bold;font-size:18px;">
+            مرحباً: <span id="clientName">شركة العميل</span>
+          </div>
+          <div class="note">هذه صفحة خاصة بالعميل بعد تسجيل الدخول.</div>
         </div>
-
-        <div style="min-width:220px;">
-          <label style="margin:0 0 6px;">تغيير الحالة (تجريبي)</label>
-          <select id="statusSelect" onchange="changeStatus()">
-            <option value="wip">قيد التشغيل</option>
-            <option value="done">جاهز الطلب ✅</option>
-          </select>
-        </div>
+        <button class="btn btn-red" onclick="logout()">تسجيل خروج</button>
       </div>
 
-      <div class="hint">
-        ✅ هذه صفحة خاصة بالعميل بعد تسجيل الدخول.<br>
-        📌 لا نحتاج اسم العميل ورقم الهاتف لأن الحساب محفوظ.
+      <div style="margin-top:12px;" class="statusBox">
+        <div class="row" style="justify-content:space-between;">
+          <div class="title">حالة الطلب الحالي</div>
+          <div class="badge" id="statusBadge">قيد التشغيل ⏳</div>
+        </div>
+
+        <!-- مهم: العميل يشوف الحالة فقط، ما يغير -->
+        <div class="note">
+          ✅ العميل يشوف الحالة فقط (بدون تغيير).<br/>
+          📌 تغيير الحالة يكون من لوحة الأدمن فقط.
+        </div>
       </div>
     </div>
 
-    <!-- قسم 1: طلب الشيت للمورد -->
+    <!-- تفاصيل الشيت (للشراء من المورد) -->
     <div class="card">
-      <h3 style="margin:0 0 10px;">تفاصيل الشيت (للشراء من المورد)</h3>
-      <div class="hint">اكتب قياس الشيت + السماكة + الكمية، وتقدر تضيف أكثر من شيت.</div>
+      <div class="title">تفاصيل الشيت (للشراء من المورد)</div>
+      <div class="note">اختر قياس الشيت + السماكة + الكمية، وتقدر تضيف أكثر من شيت.</div>
 
-      <label>اختيار المورد</label>
-      <select id="supplierSelect">
-        <option value="">اختر المورد</option>
-        <option value="96590000000">مورد 1 (مثال)</option>
-        <option value="96591111111">مورد 2 (مثال)</option>
-        <option value="96592222222">مورد 3 (مثال)</option>
-      </select>
+      <div class="tableHeader">
+        <div>قياس الشيت</div>
+        <div>السماكة (mm)</div>
+        <div>الكمية</div>
+        <div>حذف</div>
+      </div>
 
       <div id="sheetsContainer"></div>
 
-      <button class="btn btn-blue" onclick="addSheetRow()">+ إضافة شيت</button>
-
-      <button class="btn btn-green" onclick="sendSheetsToSupplier()">
-        📩 إرسال طلب الشيت للمورد (واتساب)
-      </button>
-
-      <div class="hint">
-        🔹 سيطلع لك نص جاهز للواتساب فيه اسم العميل + تفاصيل الشيت فقط.
-      </div>
-    </div>
-
-    <!-- قسم 2: طلب CNC للمصنع -->
-    <div class="card">
-      <h3 style="margin:0 0 10px;">طلب CNC للمصنع</h3>
-
-      <label>نوع الطلب</label>
-      <select id="orderType">
-        <option value="قص فقط">قص فقط</option>
-        <option value="حفر فقط">حفر فقط</option>
-        <option value="قص + حفر">قص + حفر</option>
-      </select>
-
-      <div class="row">
-        <div class="col">
-          <label>عرض الخط / السماكة (mm)</label>
-          <select id="lineWidth">
-            <option value="">اختر</option>
-            <option value="1">1</option>
-            <option value="1.5">1.5</option>
-            <option value="2">2</option>
-            <option value="2.5">2.5</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="8">8</option>
-            <option value="10">10</option>
-          </select>
-        </div>
-
-        <div class="col">
-          <label>نوع المادة</label>
-          <select id="materialType">
-            <option value="ألمنيوم">ألمنيوم</option>
-            <option value="ستانلس">ستانلس</option>
-            <option value="حديد">حديد</option>
-            <option value="ألكوبوند">ألكوبوند</option>
-          </select>
-        </div>
+      <div class="footerBtns">
+        <button class="btn btn-blue" onclick="addSheetRow()">+ إضافة شيت</button>
       </div>
 
-      <label>تفاصيل القص / الحفر</label>
-      <textarea id="cutDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
+      <button class="btn btn-green" onclick="sendToSupplierWhatsApp()">📩 إرسال طلب الشيت للمورد (واتساب)</button>
 
-      <label>قياسات يدوية (يكتبها العميل)</label>
-      <textarea id="manualMeasurements" placeholder="مثال: فتحة الباب 2200×1000 / مسافة الجام 60 / فوق 30 / تحت 20 ..."></textarea>
-
-      <label>رفع ملف (DXF / PDF / صورة)</label>
-      <input type="file" id="uploadFile" accept=".dxf,.pdf,image/*" />
-
-      <label>ملاحظات إضافية</label>
-      <textarea id="notes" placeholder="أي ملاحظات..."></textarea>
-
-      <button class="btn btn-green" onclick="sendOrderToAdmin()">
-        إرسال الطلب للأدمن
-      </button>
-
-      <div class="hint">
-        ⚠️ حالياً الإرسال تجريبي (بدون قاعدة بيانات).<br>
-        بعدين نربطه بنظام إدارة الطلبات.
+      <div class="note">
+        🔔 يطلع لك نص جاهز للواتساب فيه: اسم العميل + تفاصيل الشيتات فقط.
       </div>
     </div>
 
   </div>
 
-  <script>
-    // =========================
-    // بيانات العميل (تجريبية)
-    // =========================
-    const clientData = JSON.parse(localStorage.getItem("loggedClient") || "{}");
+<script>
+  // ====== بيانات جاهزة ======
+  const SHEET_SIZES = [
+    "122x244",
+    "122x300",
+    "150x300",
+    "100x300",
+    "100x200",
+    "122x350",
+    "122x400",
+    "150x400"
+  ];
 
-    // اسم الشركة يظهر تلقائي
-    const companyName = clientData.company || "اسم الشركة غير معروف";
+  const THICKNESSES = Array.from({length: 11}, (_,i)=> (i+2).toString()); // 2 إلى 12
 
-    document.getElementById("welcomeText").innerText = "مرحباً: " + companyName;
+  // ====== بيانات العميل (تجريبية) ======
+  // لاحقاً راح نخليها من اليوزر/باسورد
+  const currentClient = {
+    username: "client1",
+    companyName: "شركة إبراهيم للألمنيوم",
+    status: "قيد التشغيل" // أو "جاهز الطلب"
+  };
 
-    // =========================
-    // تسجيل خروج
-    // =========================
-    function logout(){
-      localStorage.removeItem("loggedClient");
-      window.location.href = "index.html";
+  // ====== عرض بيانات العميل ======
+  document.getElementById("clientName").innerText = currentClient.companyName;
+  updateStatusBadge(currentClient.status);
+
+  function updateStatusBadge(status){
+    const badge = document.getElementById("statusBadge");
+    if(status === "جاهز الطلب"){
+      badge.style.background = "#dff7e9";
+      badge.style.border = "1px solid #82d9a8";
+      badge.style.color = "#0b6b3b";
+      badge.innerText = "جاهز الطلب ✅";
+    } else {
+      badge.style.background = "#fff6cc";
+      badge.style.border = "1px solid #f3d87a";
+      badge.style.color = "#8a6d00";
+      badge.innerText = "قيد التشغيل ⏳";
+    }
+  }
+
+  // ====== جدول الشيتات ======
+  const sheetsContainer = document.getElementById("sheetsContainer");
+
+  function createSelect(options){
+    const sel = document.createElement("select");
+    options.forEach(v=>{
+      const op = document.createElement("option");
+      op.value = v;
+      op.textContent = v;
+      sel.appendChild(op);
+    });
+    return sel;
+  }
+
+  function addSheetRow(){
+    const row = document.createElement("div");
+    row.className = "sheetRow";
+
+    // قياس الشيت
+    const sizeSelect = createSelect(SHEET_SIZES);
+
+    // السماكة
+    const thickSelect = createSelect(THICKNESSES);
+
+    // الكمية
+    const qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.min = "1";
+    qtyInput.placeholder = "مثال: 5";
+
+    // حذف
+    const delBtn = document.createElement("button");
+    delBtn.className = "btn btn-red";
+    delBtn.innerText = "حذف";
+    delBtn.onclick = ()=> row.remove();
+
+    row.appendChild(sizeSelect);
+    row.appendChild(thickSelect);
+    row.appendChild(qtyInput);
+    row.appendChild(delBtn);
+
+    sheetsContainer.appendChild(row);
+  }
+
+  // صف أول تلقائي
+  addSheetRow();
+
+  function collectSheets(){
+    const rows = Array.from(document.querySelectorAll(".sheetRow"));
+    const result = [];
+
+    rows.forEach(r=>{
+      const selects = r.querySelectorAll("select");
+      const inputs = r.querySelectorAll("input");
+
+      const size = selects[0].value;
+      const thickness = selects[1].value;
+      const qty = inputs[0].value;
+
+      if(qty && Number(qty) > 0){
+        result.push({ size, thickness, qty });
+      }
+    });
+
+    return result;
+  }
+
+  // ====== إرسال للمورد واتساب (نص جاهز) ======
+  function sendToSupplierWhatsApp(){
+    const sheets = collectSheets();
+
+    if(sheets.length === 0){
+      alert("⚠️ لازم تدخل كمية على الأقل في شيت واحد.");
+      return;
     }
 
-    // =========================
-    // حالة الطلب (تجريبي)
-    // =========================
-    function changeStatus(){
-      const val = document.getElementById("statusSelect").value;
-      const badge = document.getElementById("orderStatusBadge");
+    let msg = `طلب شراء شيتات ألمنيوم\\n`;
+    msg += `اسم العميل: ${currentClient.companyName}\\n\\n`;
+    msg += `تفاصيل الشيتات:\\n`;
 
-      if(val === "done"){
-        badge.className = "badge badge-done";
-        badge.innerText = "✅ جاهز الطلب";
-      }else{
-        badge.className = "badge badge-wip";
-        badge.innerText = "⏳ قيد التشغيل";
-      }
-    }
+    sheets.forEach((s, idx)=>{
+      msg += `${idx+1}) قياس: ${s.size} | سماكة: ${s.thickness}mm | كمية: ${s.qty}\\n`;
+    });
 
-    // =========================
-    // شيتات المورد (متعددة)
-    // =========================
-    function addSheetRow(){
-      const container = document.getElementById("sheetsContainer");
+    // حط رقم المورد هنا (بدون +) مثال: 965xxxxxxxx
+    const supplierNumber = "96500000000";
 
-      const row = document.createElement("div");
-      row.className = "sheetRow";
+    const url = `https://wa.me/${supplierNumber}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+  }
 
-      row.innerHTML = `
-        <div class="sheetRowHeader">
-          <div style="font-weight:bold;">تفاصيل شيت جديد</div>
-          <button class="small-btn small-red" onclick="this.closest('.sheetRow').remove()">🗑 حذف</button>
-        </div>
-
-        <label>قياس الشيت</label>
-        <select class="sheetSizeSelect" onchange="toggleCustomSize(this)">
-          <option value="">اختر قياس جاهز</option>
-          <option value="244×122">244×122</option>
-          <option value="300×150">300×150</option>
-          <option value="400×200">400×200</option>
-          <option value="custom">قياس خاص (يدوي)</option>
-        </select>
-
-        <input class="customSizeInput" type="text" placeholder="اكتب القياس الخاص مثال: 250×125" style="display:none; margin-top:8px;" />
-
-        <div class="row">
-          <div class="col">
-            <label>السماكة (mm)</label>
-            <select class="sheetThickness">
-              <option value="">اختر</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="6">6</option>
-              <option value="8">8</option>
-              <option value="10">10</option>
-            </select>
-          </div>
-
-          <div class="col">
-            <label>الكمية</label>
-            <input class="sheetQty" type="number" min="1" placeholder="مثال: 5" />
-          </div>
-        </div>
-      `;
-
-      container.appendChild(row);
-    }
-
-    function toggleCustomSize(selectEl){
-      const row = selectEl.closest(".sheetRow");
-      const customInput = row.querySelector(".customSizeInput");
-      if(selectEl.value === "custom"){
-        customInput.style.display = "block";
-      }else{
-        customInput.style.display = "none";
-      }
-    }
-
-    function sendSheetsToSupplier(){
-      const supplier = document.getElementById("supplierSelect").value;
-      if(!supplier){
-        alert("اختر المورد أولاً");
-        return;
-      }
-
-      const rows = document.querySelectorAll(".sheetRow");
-      if(rows.length === 0){
-        alert("أضف شيت واحد على الأقل");
-        return;
-      }
-
-      let text = `طلب شراء شيتات - ${companyName}\n\n`;
-
-      let valid = true;
-      rows.forEach((row, idx) => {
-        const sizeSelect = row.querySelector(".sheetSizeSelect").value;
-        const customSize = row.querySelector(".customSizeInput").value.trim();
-        const thickness = row.querySelector(".sheetThickness").value;
-        const qty = row.querySelector(".sheetQty").value;
-
-        let sizeFinal = sizeSelect;
-        if(sizeSelect === "custom"){
-          sizeFinal = customSize;
-        }
-
-        if(!sizeFinal || !thickness || !qty){
-          valid = false;
-          return;
-        }
-
-        text += `(${idx+1}) قياس: ${sizeFinal} | سماكة: ${thickness}mm | كمية: ${qty}\n`;
-      });
-
-      if(!valid){
-        alert("تأكد من تعبئة قياس الشيت + السماكة + الكمية لكل شيت");
-        return;
-      }
-
-      const wa = `https://wa.me/${supplier}?text=${encodeURIComponent(text)}`;
-      window.open(wa, "_blank");
-    }
-
-    // =========================
-    // إرسال طلب CNC للأدمن (تجريبي)
-    // =========================
-    function sendOrderToAdmin(){
-      const orderType = document.getElementById("orderType").value;
-      const lineWidth = document.getElementById("lineWidth").value;
-      const materialType = document.getElementById("materialType").value;
-      const cutDetails = document.getElementById("cutDetails").value.trim();
-      const manualMeasurements = document.getElementById("manualMeasurements").value.trim();
-      const notes = document.getElementById("notes").value.trim();
-
-      if(!orderType || !materialType){
-        alert("تأكد من اختيار نوع الطلب ونوع المادة");
-        return;
-      }
-
-      if(!cutDetails && !manualMeasurements){
-        alert("اكتب تفاصيل القص/الحفر أو القياسات اليدوية على الأقل");
-        return;
-      }
-
-      // حاليا بدون قاعدة بيانات - مجرد تأكيد
-      alert(
-        "تم إرسال الطلب (تجريبي) ✅\n\n" +
-        "العميل: " + companyName + "\n" +
-        "نوع الطلب: " + orderType + "\n" +
-        "المادة: " + materialType + "\n" +
-        "عرض الخط: " + (lineWidth || "غير محدد")
-      );
-
-      // تقدر بعدين تربطه بواتساب للأدمن أو قاعدة بيانات
-    }
-
-    // أول ما تفتح الصفحة نضيف شيت واحد تلقائي
-    addSheetRow();
-  </script>
+  function logout(){
+    // لاحقاً نربطها بنظام تسجيل خروج حقيقي
+    alert("تم تسجيل الخروج (تجريبي)");
+    window.location.href = "index.html";
+  }
+</script>
 
 </body>
 </html>
