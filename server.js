@@ -1,28 +1,39 @@
 /**
- * server.js (مبسط)
+ * server.js (كامل)
  * يشغل الموقع على Render
- * ويفتح index.html تلقائي على الرابط الرئيسي /
+ * صفحات:
+ * /        = بوابة الدخول
+ * /client  = صفحة العميل
+ * /admin   = صفحة الأدمن
  */
 
 const express = require("express");
 const path = require("path");
 
 const app = express();
-
-// Render يحدد PORT تلقائي
 const PORT = process.env.PORT || 3000;
 
-// يخدم الملفات الثابتة (مثل index.html و css و js)
+// يخدم ملفات ثابتة (css/js/images)
 app.use(express.static(__dirname));
 
-// الصفحة الرئيسية تفتح تلقائي
+// الصفحة الرئيسية
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// أي رابط ثاني يرجعه للصفحة الرئيسية (عشان ما يعطي Not Found)
+// صفحة العميل
+app.get("/client", (req, res) => {
+  res.sendFile(path.join(__dirname, "client.html"));
+});
+
+// صفحة الأدمن
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+// لو الرابط غلط
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.status(404).send("Not Found");
 });
 
 app.listen(PORT, () => {
