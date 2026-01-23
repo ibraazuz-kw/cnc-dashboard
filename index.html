@@ -1,56 +1,45 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>بوابة العملاء - نظام CNC</title>
+  <title>Pro Design CNC | تسجيل الدخول</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="header">بوابة العملاء - نظام CNC</div>
 
-  <div class="container">
-    <div class="card" style="text-align:center">
-      <h2 style="margin:0;font-weight:900">Pro Design</h2>
-      <h1 style="margin:8px 0 18px 0;font-weight:900">تسجيل دخول العميل</h1>
-
-      <div class="row">
-        <div class="col">
-          <label style="font-weight:900">اسم المستخدم</label>
-          <input id="username" placeholder="مثال: client1" />
-        </div>
-        <div class="col">
-          <label style="font-weight:900">كلمة المرور</label>
-          <input id="password" type="password" placeholder="••••••••" />
-        </div>
-      </div>
-
-      <div style="margin-top:14px">
-        <button class="btn-green" onclick="login()">دخول</button>
-      </div>
-
-      <div class="note">بعد الدخول تفتح صفحة العميل الخاصة فيه تلقائياً.</div>
-      <div class="note">⚠️ هذا إصدار تجريبي بدون قاعدة بيانات.</div>
-
-      <div style="margin-top:12px">
-        <a href="admin.html">دخول الأدمن</a>
+  <div class="topbar">
+    <div class="brand">
+      <img src="logo.png" class="logo" alt="Pro Design Logo" />
+      <div>
+        <div class="brandTitle">Pro Design CNC</div>
+        <div class="brandSub">نظام واحد يرتّب لك الورشة ويختصر وقتك</div>
       </div>
     </div>
   </div>
 
-<script>
-  // تجريبي: أي يوزر يدخل
-  function login(){
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    if(!u || !p){ alert("اكتب اسم المستخدم وكلمة المرور"); return; }
+  <div class="wrap">
+    <div class="card loginCard">
+      <h1 class="h1">تسجيل الدخول</h1>
+      <p class="muted">ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن</p>
 
-    localStorage.setItem("pd_client_username", u);
-    // اسم العميل (تقدر تربطه لاحقاً)
-    localStorage.setItem("pd_client_name", u === "client1" ? "شركة إبراهيم للألمنيوم" : u);
+      <form id="loginForm" class="form">
+        <label>اسم المستخدم</label>
+        <input id="username" placeholder="مثال: client1 أو admin" required />
 
-    window.location.href = "client.html";
-  }
-</script>
+        <label>كلمة المرور</label>
+        <input id="password" type="password" placeholder="••••••••" required />
+
+        <button class="btn btnPrimary" type="submit">دخول</button>
+      </form>
+
+      <div class="hint">
+        <div>عميل تجريبي: <b>client1</b> / <b>1234</b></div>
+        <div>أدمن: <b>admin</b> / <b>admin123</b></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
