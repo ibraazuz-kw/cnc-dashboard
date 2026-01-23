@@ -1,133 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة الأدمن - Pro Design CNC</title>
-
-  <!-- نفس ستايل برو ديزاين -->
-  <link rel="stylesheet" href="style.css" />
-
-  <style>
-    /* تحسينات بسيطة خاصة بالأدمن بدون تخريب ستايلك */
-    .orders-list{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:10px;
-    }
-    .order-item{
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .order-item:hover{
-      border-color: rgba(47,123,255,.35);
-      transform: translateY(-1px);
-    }
-    .order-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:6px;
-    }
-    .order-name{
-      font-weight:800;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 70%;
-    }
-    .order-meta{
-      color: var(--muted);
-      font-size: 12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .split{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 12px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .split{ grid-template-columns: 1fr; }
-    }
-
-    .empty{
-      color: var(--muted);
-      text-align:center;
-      padding: 14px;
-      border: 1px dashed rgba(255,255,255,.12);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.02);
-      margin-top: 10px;
-    }
-
-    .mini-btns{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    @media (max-width: 520px){
-      .mini-btns{ grid-template-columns: 1fr; }
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      font-size: 12px;
-      color: var(--muted);
-      gap:6px;
-    }
-
-    .file-link{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      margin-top: 8px;
-    }
-    .file-link a{
-      color: var(--text);
-      text-decoration:none;
-      font-weight:700;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      max-width: 70%;
-    }
-
-    .status-row{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .sticky-actions{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      margin-top: 12px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pro Design CNC - تسجيل الدخول</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -139,432 +16,128 @@
         <div class="logo"></div>
         <div style="min-width:0">
           <h1>Pro Design CNC</h1>
-          <p>لوحة الأدمن - إدارة الطلبات والفواتير</p>
+          <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
         </div>
       </div>
-
-      <button class="btn btn-ghost" style="width:auto; padding:10px 14px" onclick="logout()">
-        تسجيل خروج
-      </button>
     </div>
   </div>
 
   <div class="container">
 
-    <div class="split">
-
-      <!-- Left: Orders -->
-      <div class="card">
-        <div class="card-title">
-          <h2>📌 الطلبات</h2>
-          <span class="pill">بحث + اختيار الطلب</span>
-        </div>
-
-        <label>بحث باسم العميل أو رقم الطلب</label>
-        <input id="searchInput" type="text" placeholder="مثال: شركة العميل أو ORD-..." oninput="renderOrders()" />
-
-        <div class="orders-list" id="ordersList"></div>
-
-        <div class="empty" id="ordersEmpty" style="display:none">
-          لا توجد طلبات حالياً
-        </div>
+    <div class="card" style="margin-top:14px;">
+      <div class="card-title">
+        <h2 style="font-size:28px;margin:0;">تسجيل الدخول</h2>
       </div>
 
-      <!-- Right: Order Details -->
-      <div class="card">
-        <div class="card-title">
-          <h2>📌 تفاصيل الطلب (الأدمن)</h2>
-          <span id="statusBadge" class="badge working">قيد التشغيل</span>
-        </div>
+      <p class="help" style="font-size:14px;margin-top:0;">
+        ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن
+      </p>
 
-        <div id="noSelection" class="empty">
-          👉 اختر طلب من القائمة
-        </div>
+      <label>اسم المستخدم</label>
+      <input id="username" placeholder="مثال: client1 أو admin" autocomplete="username"/>
 
-        <div id="detailsWrap" style="display:none">
+      <label>كلمة المرور</label>
+      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
 
-          <div class="row">
-            <div>
-              <label>العميل</label>
-              <input id="clientName" type="text" disabled />
-            </div>
-            <div>
-              <label>رقم الطلب</label>
-              <input id="orderId" type="text" disabled />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>التاريخ</label>
-              <input id="orderDate" type="text" disabled />
-            </div>
-            <div>
-              <label>الحالة الحالية</label>
-              <input id="orderStatusText" type="text" disabled />
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <!-- Status Update -->
-          <div class="status-row">
-            <label>تغيير الحالة</label>
-            <select id="statusSelect" onchange="updateBadgePreview()">
-              <option value="قيد التشغيل">قيد التشغيل</option>
-              <option value="تم الاستلام">تم الاستلام</option>
-              <option value="قيد التنفيذ">قيد التنفيذ</option>
-              <option value="تم التنفيذ">تم التنفيذ</option>
-              <option value="تم التسليم">تم التسليم</option>
-              <option value="مؤجل">مؤجل</option>
-              <option value="ملغي">ملغي</option>
-            </select>
-
-            <button class="btn btn-orange" onclick="saveStatus()">
-              حفظ الحالة
-            </button>
-          </div>
-
-          <div class="hr"></div>
-
-          <!-- Invoice -->
-          <div class="card" style="margin:0; padding:14px; background: rgba(255,255,255,.02)">
-            <div class="card-title">
-              <h2>🧾 الفاتورة (Pro Design Style)</h2>
-              <span class="pill">KD</span>
-            </div>
-
-            <div class="row-3">
-              <div>
-                <label>سعر القص (KD)</label>
-                <input id="cutPrice" type="number" value="0" min="0" step="0.1" />
-              </div>
-              <div>
-                <label>سعر الحفر (KD)</label>
-                <input id="engravePrice" type="number" value="0" min="0" step="0.1" />
-              </div>
-              <div>
-                <label>سعر الشيت/المادة (KD)</label>
-                <input id="sheetPrice" type="number" value="0" min="0" step="0.1" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>الخصم (KD)</label>
-                <input id="discount" type="number" value="0" min="0" step="0.1" />
-              </div>
-              <div>
-                <label>ملاحظة</label>
-                <input id="invoiceNote" type="text" placeholder="مثال: شامل التركيب" />
-              </div>
-            </div>
-
-            <div class="help" id="totalText">الإجمالي: 0 KD</div>
-
-            <div class="mini-btns sticky-actions">
-              <button class="btn btn-green" onclick="saveInvoice()">
-                إنشاء / تحديث فاتورة
-              </button>
-              <button class="btn btn-blue" onclick="sendInvoiceToClient()">
-                إرسال الفاتورة للعميل
-              </button>
-            </div>
-
-            <div class="empty" id="invoiceEmpty" style="display:none; margin-top:10px">
-              لا توجد فاتورة
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <!-- Files -->
-          <div>
-            <div class="card-title">
-              <h2>📎 ملفات العميل</h2>
-              <span class="pill">DXF / PDF / صورة</span>
-            </div>
-
-            <div id="filesBox"></div>
-            <div class="empty" id="filesEmpty" style="display:none">
-              لا يوجد ملفات مرفوعة
-            </div>
-          </div>
-
-        </div>
+      <div style="margin-top:14px;">
+        <button class="btn btn-ghost" id="loginBtn">دخول</button>
       </div>
 
+      <div class="hr"></div>
+
+      <div class="help" style="font-size:14px;line-height:1.9">
+        <div><b>عميل تجريبي:</b> client1 / 1234</div>
+        <div><b>أدمن:</b> admin / admin123</div>
+      </div>
     </div>
 
   </div>
 
 <script>
 /* =========================
-   Admin Page Logic
-   - Local demo storage
-   - Later connect to backend
+   Pro Design CNC - Login
+   Fix redirect issue (client -> admin)
 ========================= */
 
-const LS_KEY = "prodesign_orders_v1";
+const LS = {
+  SESSION:"pd_session"
+};
 
-let selectedOrderId = null;
-
-function getOrders(){
+function loadSession(){
   try{
-    const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return [];
-    const arr = JSON.parse(raw);
-    if(!Array.isArray(arr)) return [];
-    return arr;
+    return JSON.parse(localStorage.getItem(LS.SESSION) || "null");
   }catch(e){
-    return [];
+    return null;
   }
 }
 
-function setOrders(arr){
-  localStorage.setItem(LS_KEY, JSON.stringify(arr));
+function saveSession(obj){
+  localStorage.setItem(LS.SESSION, JSON.stringify(obj));
 }
 
-function seedDemoIfEmpty(){
-  const orders = getOrders();
-  if(orders.length > 0) return;
+function goByRole(session){
+  if(!session) return;
 
-  const demo = [
-    {
-      id: "ORD-1769157412912",
-      clientName: "شركة العميل 1",
-      createdAt: new Date().toISOString(),
-      status: "قيد التشغيل",
-      files: [],
-      invoice: null
-    },
-    {
-      id: "ORD-1768951223099",
-      clientName: "شركة العميل 2",
-      createdAt: new Date().toISOString(),
-      status: "قيد التشغيل",
-      files: [],
-      invoice: null
-    }
-  ];
-  setOrders(demo);
-}
-
-function formatDate(iso){
-  try{
-    const d = new Date(iso);
-    return d.toLocaleString("ar-KW");
-  }catch(e){
-    return iso || "-";
-  }
-}
-
-function renderOrders(){
-  const orders = getOrders();
-  const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-
-  const list = document.getElementById("ordersList");
-  const empty = document.getElementById("ordersEmpty");
-  list.innerHTML = "";
-
-  const filtered = orders.filter(o=>{
-    const a = (o.clientName || "").toLowerCase();
-    const b = (o.id || "").toLowerCase();
-    return !q || a.includes(q) || b.includes(q);
-  });
-
-  if(filtered.length === 0){
-    empty.style.display = "block";
-    return;
-  }else{
-    empty.style.display = "none";
-  }
-
-  filtered.sort((a,b)=> (b.createdAt || "").localeCompare(a.createdAt || ""));
-
-  filtered.forEach(order=>{
-    const div = document.createElement("div");
-    div.className = "order-item";
-    div.onclick = ()=> selectOrder(order.id);
-
-    const badgeClass = order.status === "تم التسليم" ? "ready" : "working";
-
-    div.innerHTML = `
-      <div class="order-top">
-        <div class="order-name">${order.clientName || "بدون اسم"}</div>
-        <span class="badge ${badgeClass}">${order.status || "قيد التشغيل"}</span>
-      </div>
-      <div class="order-meta">
-        <span>📌 ${order.id}</span>
-        <span>🕒 ${formatDate(order.createdAt)}</span>
-      </div>
-    `;
-
-    list.appendChild(div);
-  });
-}
-
-function selectOrder(orderId){
-  const orders = getOrders();
-  const order = orders.find(o=>o.id === orderId);
-  if(!order) return;
-
-  selectedOrderId = orderId;
-
-  document.getElementById("noSelection").style.display = "none";
-  document.getElementById("detailsWrap").style.display = "block";
-
-  document.getElementById("clientName").value = order.clientName || "";
-  document.getElementById("orderId").value = order.id || "";
-  document.getElementById("orderDate").value = formatDate(order.createdAt);
-  document.getElementById("orderStatusText").value = order.status || "قيد التشغيل";
-
-  document.getElementById("statusSelect").value = order.status || "قيد التشغيل";
-  updateBadgePreview();
-
-  // Invoice
-  if(order.invoice){
-    document.getElementById("invoiceEmpty").style.display = "none";
-    document.getElementById("cutPrice").value = order.invoice.cutPrice ?? 0;
-    document.getElementById("engravePrice").value = order.invoice.engravePrice ?? 0;
-    document.getElementById("sheetPrice").value = order.invoice.sheetPrice ?? 0;
-    document.getElementById("discount").value = order.invoice.discount ?? 0;
-    document.getElementById("invoiceNote").value = order.invoice.note ?? "";
-  }else{
-    document.getElementById("invoiceEmpty").style.display = "block";
-    document.getElementById("cutPrice").value = 0;
-    document.getElementById("engravePrice").value = 0;
-    document.getElementById("sheetPrice").value = 0;
-    document.getElementById("discount").value = 0;
-    document.getElementById("invoiceNote").value = "";
-  }
-  calcTotal();
-
-  // Files
-  renderFiles(order.files || []);
-}
-
-function updateBadgePreview(){
-  const status = document.getElementById("statusSelect").value;
-  const badge = document.getElementById("statusBadge");
-
-  badge.textContent = status;
-
-  // لون البادج حسب الحالة
-  if(status === "تم التسليم" || status === "تم التنفيذ"){
-    badge.className = "badge ready";
-  }else{
-    badge.className = "badge working";
-  }
-}
-
-function saveStatus(){
-  if(!selectedOrderId) return alert("اختر طلب أولاً");
-
-  const orders = getOrders();
-  const idx = orders.findIndex(o=>o.id === selectedOrderId);
-  if(idx === -1) return;
-
-  const newStatus = document.getElementById("statusSelect").value;
-  orders[idx].status = newStatus;
-
-  setOrders(orders);
-
-  document.getElementById("orderStatusText").value = newStatus;
-  updateBadgePreview();
-  renderOrders();
-
-  alert("تم حفظ الحالة ✅");
-}
-
-function calcTotal(){
-  const cut = Number(document.getElementById("cutPrice").value || 0);
-  const engrave = Number(document.getElementById("engravePrice").value || 0);
-  const sheet = Number(document.getElementById("sheetPrice").value || 0);
-  const discount = Number(document.getElementById("discount").value || 0);
-
-  const total = Math.max(0, (cut + engrave + sheet) - discount);
-  document.getElementById("totalText").textContent = `الإجمالي: ${total.toFixed(2)} KD`;
-  return total;
-}
-
-["cutPrice","engravePrice","sheetPrice","discount"].forEach(id=>{
-  document.addEventListener("input", (e)=>{
-    if(e.target && e.target.id === id) calcTotal();
-  });
-});
-
-function saveInvoice(){
-  if(!selectedOrderId) return alert("اختر طلب أولاً");
-
-  const orders = getOrders();
-  const idx = orders.findIndex(o=>o.id === selectedOrderId);
-  if(idx === -1) return;
-
-  const invoice = {
-    cutPrice: Number(document.getElementById("cutPrice").value || 0),
-    engravePrice: Number(document.getElementById("engravePrice").value || 0),
-    sheetPrice: Number(document.getElementById("sheetPrice").value || 0),
-    discount: Number(document.getElementById("discount").value || 0),
-    note: document.getElementById("invoiceNote").value || "",
-    total: calcTotal(),
-    updatedAt: new Date().toISOString()
-  };
-
-  orders[idx].invoice = invoice;
-  setOrders(orders);
-
-  document.getElementById("invoiceEmpty").style.display = "none";
-  alert("تم حفظ الفاتورة ✅");
-}
-
-function sendInvoiceToClient(){
-  if(!selectedOrderId) return alert("اختر طلب أولاً");
-
-  const orders = getOrders();
-  const order = orders.find(o=>o.id === selectedOrderId);
-  if(!order) return;
-
-  if(!order.invoice){
-    return alert("لا توجد فاتورة لإرسالها ❌");
-  }
-
-  // حالياً Demo فقط
-  alert("تم إرسال الفاتورة للعميل (تجريبي) ✅\nلاحقاً نربطها واتساب/إيميل.");
-}
-
-function renderFiles(files){
-  const box = document.getElementById("filesBox");
-  const empty = document.getElementById("filesEmpty");
-
-  box.innerHTML = "";
-
-  if(!files || files.length === 0){
-    empty.style.display = "block";
+  // ✅ هنا التصحيح: كل رول له صفحة
+  if(session.role === "admin"){
+    window.location.href = "admin.html";
     return;
   }
-  empty.style.display = "none";
 
-  files.forEach(f=>{
-    const div = document.createElement("div");
-    div.className = "file-link";
-    div.innerHTML = `
-      <a href="${f.url || "#"}" target="_blank">${f.name || "ملف"}</a>
-      <span class="pill">📎</span>
-    `;
-    box.appendChild(div);
-  });
-}
+  if(session.role === "client"){
+    window.location.href = "client.html";
+    return;
+  }
 
-function logout(){
-  // لو عندك auth حقيقي راح نمسح التوكن
-  localStorage.removeItem("prodesign_session");
+  // أي شيء ثاني يرجع للدخول
+  localStorage.removeItem(LS.SESSION);
   window.location.href = "index.html";
 }
 
-// init
-seedDemoIfEmpty();
-renderOrders();
+// ✅ لو المستخدم مسجل دخول وفتح الرابط يرجعه لنفس صفحته مباشرة
+const currentSession = loadSession();
+if(currentSession && currentSession.role){
+  goByRole(currentSession);
+}
+
+// Login button
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const u = (document.getElementById("username").value || "").trim();
+  const p = (document.getElementById("password").value || "").trim();
+
+  // Admin
+  if(u === "admin" && p === "admin123"){
+    saveSession({
+      role:"admin",
+      username:"admin",
+      company:"Pro Design Admin",
+      loginAt: new Date().toISOString()
+    });
+    goByRole(loadSession());
+    return;
+  }
+
+  // Client demo
+  if(u === "client1" && p === "1234"){
+    saveSession({
+      role:"client",
+      username:"client1",
+      company:"شركة العميل 1",
+      loginAt: new Date().toISOString()
+    });
+    goByRole(loadSession());
+    return;
+  }
+
+  alert("❌ بيانات الدخول غير صحيحة");
+});
+
+// Enter key
+document.addEventListener("keydown",(e)=>{
+  if(e.key === "Enter"){
+    document.getElementById("loginBtn").click();
+  }
+});
 </script>
 
 </body>
