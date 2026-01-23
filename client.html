@@ -1,176 +1,166 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحة العميل (إرسال طلب CNC)</title>
+  <title>Pro Design CNC | صفحة العميل</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="header">صفحة العميل (إرسال طلب CNC)</div>
 
-  <div class="container">
-
-    <!-- معلومات العميل + حالة الطلب -->
-    <div class="card">
-      <div class="row" style="align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-weight:900;font-size:18px" id="helloClient">مرحباً</div>
-          <div class="small">هذه صفحة خاصة للعميل بعد تسجيل الدخول.</div>
-        </div>
-        <div style="min-width:170px">
-          <button class="btn-red" onclick="logout()">تسجيل خروج</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="row" style="align-items:center;justify-content:space-between">
-        <div>
-          <div class="title" style="margin:0">حالة الطلب الحالي</div>
-          <div class="note">✅ العميل يشوف الحالة فقط (بدون تغيير).</div>
-        </div>
-        <div>
-          <span id="statusBadge" class="badge badge-yellow">🟡 قيد التشغيل</span>
-        </div>
+  <div class="topbar">
+    <div class="brand">
+      <img src="logo.png" class="logo" alt="Pro Design Logo" />
+      <div>
+        <div class="brandTitle">Pro Design CNC</div>
+        <div class="brandSub">بوابة العميل</div>
       </div>
     </div>
 
-    <!-- نوع الطلب -->
-    <div class="card">
-      <div class="title">نوع الطلب</div>
-      <select id="orderType">
-        <option value="">اختر نوع الطلب</option>
-        <option>باب</option>
-        <option>باب مفرد</option>
-        <option>باب مزدوج</option>
-        <option>باب ونص</option>
-        <option>شباك</option>
-        <option>قص شيت فقط</option>
-        <option>حفر شيت فقط</option>
-      </select>
-      <div class="note">تقدر تغيرها حسب شغلك.</div>
+    <div class="topActions">
+      <div class="chip" id="clientCompanyTitle">...</div>
+      <button class="btn btnGhost" id="clientLogoutBtn">تسجيل خروج</button>
     </div>
+  </div>
 
-    <!-- جدول القياسات -->
+  <div class="page" id="clientRoot">
+
+    <!-- اختيار الطلب -->
     <div class="card">
-      <div class="title">📏 جدول القياسات (بالسنتيمتر)</div>
-      <div class="note">⚠️ الاتجاه محسوب من داخل البيت (يمين/يسار).</div>
+      <div class="row between">
+        <div>
+          <div class="h2">الطلبات</div>
+          <div class="muted">اختر طلب سابق أو أنشئ طلب جديد</div>
+        </div>
 
-      <div class="tableHead tableGrid grid-measure">
-        <div>م</div>
-        <div>الارتفاع (سم)</div>
-        <div>العرض (سم)</div>
-        <div>العدد</div>
-        <div>اتجاه الفتحة</div>
+        <div class="row gap">
+          <select id="clientOrderSelect"></select>
+          <button class="btn btnPrimary" id="newOrderBtn">+ طلب جديد</button>
+        </div>
       </div>
 
-      <div id="measureList"></div>
-
-      <button class="btn-blue" onclick="addMeasure()">+ إضافة قياس</button>
-
-      <div class="note" id="measureExample">✅ مثال: 300×110 عدد 1 / اتجاه الفتحة يمين</div>
+      <div class="row between mt">
+        <div class="muted">حالة الطلب:</div>
+        <span class="badge badgeWorking" id="clientStatusBadge">⏳ قيد التشغيل</span>
+      </div>
     </div>
 
-    <!-- تفاصيل الشيت -->
-    <div class="card">
-      <div class="title">🧾 تفاصيل الشيت (للشراء من المورد)</div>
-      <div class="note">اختر قياس الشيت + السماكة + الكمية، وتقدر تضيف أكثر من شيت.</div>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="t1">القياسات والتفاصيل</button>
+      <button class="tab" data-tab="t2">طلب الشيتات</button>
+      <button class="tab" data-tab="t3">تأكيد التصميم</button>
+      <button class="tab" data-tab="t4">الفاتورة</button>
+    </div>
 
-      <div class="tableHead tableGrid grid-sheet">
+    <!-- Tab 1 -->
+    <div class="card tabPage" id="t1">
+      <div class="h2">📏 القياسات (سم)</div>
+      <div class="muted">اتجاه الفتحة من داخل البيت + مخطط سهم</div>
+
+      <div id="sizesContainer"></div>
+      <button class="btn btnPrimary mt" id="addSizeBtn">+ إضافة قياس</button>
+
+      <div class="line"></div>
+
+      <div class="h2">⚙️ عرض الخط (mm)</div>
+      <div class="row gap">
+        <select id="lineWidthSelect" class="w50">
+          <option value="">اختر عرض الخط</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30 (3 سم)</option>
+          <option value="40">40 (4 سم)</option>
+          <option value="other">أخرى</option>
+        </select>
+        <input id="lineWidthOther" class="w50" placeholder="أدخل عرض الخط (mm)" disabled />
+      </div>
+
+      <div class="line"></div>
+
+      <div class="h2">✂️ تفاصيل القص / الحفر</div>
+      <textarea id="cutEngraveDetails" placeholder="اكتب التفاصيل..."></textarea>
+
+      <div class="h2 mt">📎 رفع ملف (DXF / PDF / صورة)</div>
+      <input id="fileInput" type="file" multiple />
+
+      <div class="h2 mt">📝 ملاحظات</div>
+      <textarea id="notesInput" placeholder="أي ملاحظات إضافية..."></textarea>
+
+      <div class="line"></div>
+
+      <div class="row gap">
+        <button class="btn btnGhost" id="saveDraftBtn">💾 حفظ كمسودة</button>
+        <button class="btn btnPrimary" id="sendToAdminBtn">📩 إرسال أمر تشغيل CNC</button>
+      </div>
+
+      <div class="h2 mt">📄 نسخة أمر التشغيل</div>
+      <textarea id="generatedOrderBox" class="preview" readonly></textarea>
+
+      <div class="row gap mt">
+        <button class="btn btnGhost" id="copyOrderBtn">📋 نسخ</button>
+        <button class="btn btnGhost" id="downloadOrderPdfBtn">📄 تحميل PDF</button>
+      </div>
+    </div>
+
+    <!-- Tab 2 -->
+    <div class="card tabPage hidden" id="t2">
+      <div class="h2">🧾 طلب الشيتات</div>
+      <div class="muted">قياس الشيت + السماكة + الكمية</div>
+
+      <div class="tableHead">
         <div>قياس الشيت</div>
-        <div>السماكة (mm)</div>
+        <div>السماكة</div>
         <div>الكمية</div>
         <div>حذف</div>
       </div>
 
-      <div id="sheetList"></div>
+      <div id="sheetContainer"></div>
 
-      <div class="row">
-        <div class="col"><button class="btn-blue" onclick="addSheet()">+ إضافة شيت</button></div>
-        <div class="col"><button class="btn-green" onclick="downloadSheetPDF()">📄 تحميل ملف PDF لطلب الشيت</button></div>
+      <div class="row gap mt">
+        <button class="btn btnPrimary" id="addSheetBtn">+ إضافة شيت</button>
+        <button class="btn btnGhost" id="downloadSheetPdfBtn">📄 تحميل PDF طلب الشيت</button>
+      </div>
+    </div>
+
+    <!-- Tab 3 -->
+    <div class="card tabPage hidden" id="t3">
+      <div class="h2">✅ تأكيد التصميم قبل التنفيذ</div>
+      <div class="muted">سيظهر هنا ملف التصميم PDF من المصمم عند توفره</div>
+
+      <div class="designBox" id="designBox">
+        لا يوجد تصميم حالياً
       </div>
 
-      <div class="note">يطلع لك PDF فيه اسم العميل + تفاصيل الشيتات فقط.</div>
-    </div>
-
-    <!-- تفاصيل القص/الحفر + رفع ملف -->
-    <div class="card">
-      <div class="title">✂️ تفاصيل القص / الحفر</div>
-      <textarea id="cutDetails" placeholder="مثال: قص خارجي + حفر شعار + فتحات مسكة مخفية..."></textarea>
-
-      <div class="hr"></div>
-
-      <div class="title">رفع ملف (DXF / PDF / صورة)</div>
-      <input type="file" id="fileUpload" />
-      <div class="note">⚠️ النسخة التجريبية ما ترفع للسيرفر، بس نستخدم الاسم داخل أمر التشغيل.</div>
-
-      <div class="hr"></div>
-
-      <div class="title">ملاحظات إضافية</div>
-      <textarea id="notes" placeholder="أي ملاحظات..."></textarea>
-    </div>
-
-    <!-- إرسال أمر تشغيل CNC -->
-    <div class="card">
-      <div class="title">📌 أمر تشغيل CNC</div>
-      <button class="btn-green" onclick="sendToAdmin()">📩 إرسال أمر تشغيل CNC للأدمن</button>
-      <div class="note">سيظهر هنا أمر التشغيل بعد الإرسال...</div>
-
-      <div style="margin-top:10px" class="previewBox" id="orderPreview">...</div>
-
-      <div class="row" style="margin-top:10px">
-        <div class="col"><button class="btn-black" onclick="copyText()">📋 نسخ أمر التشغيل</button></div>
-        <div class="col"><a href="admin.html">فتح لوحة الأدمن</a></div>
+      <div class="row gap mt">
+        <button class="btn btnPrimary" id="approveDesignBtn">أوافق على التنفيذ</button>
       </div>
 
-      <div class="note">⚠️ هذا الإصدار يحفظ الطلبات داخل نفس الجهاز (LocalStorage).</div>
+      <div class="h2 mt">✏️ ملاحظات تعديل</div>
+      <textarea id="designNotes" placeholder="اكتب ملاحظاتك على التصميم..."></textarea>
+      <button class="btn btnGhost mt" id="sendDesignNotesBtn">إرسال الملاحظات</button>
     </div>
 
-    <!-- الفاتورة (تظهر إذا الأدمن جهزها) -->
-    <div class="card">
-      <div class="title">🧾 الفاتورة</div>
-      <div class="note">إذا الأدمن جهز فاتورة وأرسلها لك، تظهر هنا.</div>
+    <!-- Tab 4 -->
+    <div class="card tabPage hidden" id="t4">
+      <div class="h2">🧾 الفاتورة</div>
+      <div class="muted">ستظهر الفاتورة هنا بعد إرسالها من الأدمن</div>
 
-      <div id="invoiceBox" class="previewBox">لا توجد فاتورة حالياً.</div>
+      <textarea id="invoiceBox" class="preview" readonly>لا توجد فاتورة بعد</textarea>
 
-      <div style="margin-top:10px">
-        <button class="btn-blue" onclick="downloadInvoicePDF()">📄 تحميل الفاتورة PDF</button>
+      <div class="row gap mt">
+        <button class="btn btnGhost" id="downloadInvoicePdfBtn">📄 تحميل فاتورة PDF</button>
       </div>
     </div>
 
   </div>
 
-<script src="app.js"></script>
-<script>
-  // تحميل بيانات العميل
-  const clientName = localStorage.getItem("pd_client_name") || "بدون اسم";
-  document.getElementById("helloClient").innerText = "مرحباً: " + clientName;
-
-  // حالة الطلب (عرض فقط)
-  function refreshStatus(){
-    const st = localStorage.getItem("pd_status_"+clientName) || "قيد التشغيل";
-    const badge = document.getElementById("statusBadge");
-    if(st === "جاهز"){
-      badge.className = "badge badge-green";
-      badge.innerText = "✅ جاهز";
-    }else{
-      badge.className = "badge badge-yellow";
-      badge.innerText = "🟡 قيد التشغيل";
-    }
-  }
-  refreshStatus();
-
-  // قياسات افتراضية
-  initMeasureUI();
-  initSheetUI();
-  loadInvoiceToClient();
-
-  function logout(){
-    localStorage.removeItem("pd_client_username");
-    // لا نمسح الاسم حتى ما يضيع الطلب
-    window.location.href="index.html";
-  }
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
