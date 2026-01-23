@@ -2,10 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pro Design CNC - تسجيل الدخول</title>
 
-  <!-- CSS -->
+  <!-- ربط الستايل -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -16,7 +16,7 @@
     <div class="container">
       <div class="brand">
         <div class="logo"></div>
-        <div>
+        <div style="min-width:0">
           <h1>Pro Design CNC</h1>
           <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
         </div>
@@ -24,51 +24,84 @@
     </div>
   </div>
 
+  <!-- Login Card -->
   <div class="container">
-
-    <!-- Login Card -->
-    <div class="card">
+    <div class="card" style="margin-top:14px;">
       <div class="card-title">
         <h2 style="font-size:28px;margin:0;">تسجيل الدخول</h2>
       </div>
 
-      <p class="help" style="font-size:14px;margin-top:0;">
+      <p style="color:var(--muted); margin-top:0;">
         ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن
       </p>
 
-      <label for="username">اسم المستخدم</label>
-      <input
-        id="username"
-        type="text"
-        placeholder="مثال: client1 أو admin"
-        autocomplete="username"
-      />
+      <form id="loginForm">
 
-      <label for="password">كلمة المرور</label>
-      <input
-        id="password"
-        type="password"
-        placeholder="••••••••"
-        autocomplete="current-password"
-      />
+        <label for="username">اسم المستخدم</label>
+        <input id="username" type="text" placeholder="مثال: client1 أو admin" autocomplete="username" required />
 
-      <div style="margin-top:14px;">
-        <button class="btn btn-ghost" id="loginBtn">دخول</button>
-      </div>
+        <label for="password">كلمة المرور</label>
+        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+
+        <div style="height:12px;"></div>
+
+        <button class="btn btn-ghost" type="submit" id="loginBtn">
+          دخول
+        </button>
+
+      </form>
 
       <div class="hr"></div>
 
-      <div class="help" style="font-size:14px;">
-        <b>عميل تجريبي:</b> <span style="opacity:.9;">client1 / 1234</span><br/>
-        <b>أدمن:</b> <span style="opacity:.9;">admin / admin123</span>
+      <div style="color:var(--muted); font-size:14px; line-height:1.8;">
+        <div><b>عميل تجريبي:</b> <span style="color:var(--text)">client1 / 1234</span></div>
+        <div><b>أدمن:</b> <span style="color:var(--text)">admin / admin123</span></div>
       </div>
 
-      <div id="loginMsg" class="help" style="margin-top:10px;color:#ffb4b4;display:none;"></div>
+      <div id="msg" class="help" style="margin-top:12px;"></div>
     </div>
-
   </div>
 
-  <!-- JS (مهم جداً) -->
-  <script src="app.js"></script>
+  <!-- JS -->
+  <script>
+    // 🔥 إذا في تسجيل دخول سابق → دخله مباشرة
+    (function autoRedirectIfLoggedIn(){
+      const role = localStorage.getItem("role");
+      if(role === "admin"){
+        window.location.href = "admin.html";
+      } else if(role === "client"){
+        window.location.href = "client.html";
+      }
+    })();
+
+    const loginForm = document.getElementById("loginForm");
+    const msg = document.getElementById("msg");
+
+    loginForm.addEventListener("submit", function(e){
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // حسابات تجريبية (ثابتة)
+      if(username === "admin" && password === "admin123"){
+        localStorage.setItem("role","admin");
+        localStorage.setItem("username", username);
+        window.location.href = "admin.html";
+        return;
+      }
+
+      if(username === "client1" && password === "1234"){
+        localStorage.setItem("role","client");
+        localStorage.setItem("username", username);
+        localStorage.setItem("clientName", "شركة العميل 1");
+        window.location.href = "client.html";
+        return;
+      }
+
+      msg.innerHTML = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+    });
+  </script>
+
 </body>
 </html>
