@@ -1,45 +1,74 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pro Design CNC | تسجيل الدخول</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Design CNC - تسجيل الدخول</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
+  <!-- Topbar -->
   <div class="topbar">
-    <div class="brand">
-      <img src="logo.png" class="logo" alt="Pro Design Logo" />
-      <div>
-        <div class="brandTitle">Pro Design CNC</div>
-        <div class="brandSub">نظام واحد يرتّب لك الورشة ويختصر وقتك</div>
+    <div class="container">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Pro Design CNC</h1>
+          <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="card loginCard">
-      <h1 class="h1">تسجيل الدخول</h1>
-      <p class="muted">ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن</p>
+  <div class="container">
 
-      <form id="loginForm" class="form">
-        <label>اسم المستخدم</label>
-        <input id="username" placeholder="مثال: client1 أو admin" required />
-
-        <label>كلمة المرور</label>
-        <input id="password" type="password" placeholder="••••••••" required />
-
-        <button class="btn btnPrimary" type="submit">دخول</button>
-      </form>
-
-      <div class="hint">
-        <div>عميل تجريبي: <b>client1</b> / <b>1234</b></div>
-        <div>أدمن: <b>admin</b> / <b>admin123</b></div>
+    <!-- Login Card -->
+    <div class="card">
+      <div class="card-title">
+        <h2 style="font-size:28px;margin:0;">تسجيل الدخول</h2>
       </div>
+
+      <p class="help" style="font-size:14px;margin-top:0;">
+        ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن
+      </p>
+
+      <label for="username">اسم المستخدم</label>
+      <input
+        id="username"
+        type="text"
+        placeholder="مثال: client1 أو admin"
+        autocomplete="username"
+      />
+
+      <label for="password">كلمة المرور</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+      />
+
+      <div style="margin-top:14px;">
+        <button class="btn btn-ghost" id="loginBtn">دخول</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="help" style="font-size:14px;">
+        <b>عميل تجريبي:</b> <span style="opacity:.9;">client1 / 1234</span><br/>
+        <b>أدمن:</b> <span style="opacity:.9;">admin / admin123</span>
+      </div>
+
+      <div id="loginMsg" class="help" style="margin-top:10px;color:#ffb4b4;display:none;"></div>
     </div>
+
   </div>
 
+  <!-- JS (مهم جداً) -->
   <script src="app.js"></script>
 </body>
 </html>
