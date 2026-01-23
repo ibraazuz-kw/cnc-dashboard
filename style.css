@@ -1,120 +1,55 @@
-*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma}
-body{margin:0;background:#0b0b0b;color:#fff}
-a{text-decoration:none}
+/* ===== FIX MOBILE CLIENT LAYOUT ===== */
 
-.topbar{
-  background:linear-gradient(90deg,#000,#111);
-  padding:14px 16px;
+/* يمنع الصفحة تصير عريضة وتخربط */
+body{
+  overflow-x: hidden;
+}
+
+/* الكونتينر يكون ثابت ومريح */
+.page, .container{
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px;
+}
+
+/* الأزرار والحقول لا تنضغط جنب بعض بالجوال */
+.row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* أي عنصر w50 يصير كامل بالجوال */
+.w50{
+  width: 100% !important;
+}
+
+/* التبويبات ما تخربط */
+.tabs{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.topbar-title{font-weight:800;font-size:18px}
-.topbar-link{color:#7dd3fc}
-
-.admin-layout{
-  display:grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap:14px;
-  padding:14px;
-}
-
-@media(max-width:900px){
-  .admin-layout{grid-template-columns:1fr}
-}
-
-.orders-panel,.details-panel{
-  background:#121212;
-  border:1px solid #222;
-  border-radius:16px;
-  padding:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.35);
-}
-
-.panel-title{font-size:18px;font-weight:800;margin-bottom:10px}
-.panel-subtitle{font-size:15px;font-weight:700;margin:12px 0 8px}
-
-.input{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #2b2b2b;
-  background:#0d0d0d;
-  color:#fff;
-  outline:none;
-}
-
-.orders-list{
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
   gap:10px;
+  overflow-x:auto;
+  padding-bottom:6px;
+}
+.tab{
+  white-space:nowrap;
 }
 
-.order-card{
-  background:#0d0d0d;
-  border:1px solid #2b2b2b;
-  border-radius:14px;
-  padding:12px;
-  cursor:pointer;
-  transition:.15s;
-  position:relative;
-}
-.order-card:hover{transform:scale(1.01)}
-.order-title{font-weight:800}
-.order-meta{font-size:12px;color:#aaa;margin-top:6px}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:700;
-  margin-top:8px;
-  width:max-content;
-}
-.badge.run{background:#3b2f0f;color:#ffd166;border:1px solid #5a4514}
-.badge.ready{background:#0f2f1a;color:#86efac;border:1px solid #1a4d2a}
-
-.details-box{
-  background:#0d0d0d;
-  border:1px dashed #2b2b2b;
-  border-radius:14px;
-  padding:12px;
-  min-height:120px;
-  white-space:pre-wrap;
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-@media(max-width:500px){
-  .grid-2{grid-template-columns:1fr}
-}
-
-.btn{
+/* حقول الإدخال */
+input, select, textarea{
   width:100%;
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  font-weight:800;
-  margin-top:10px;
-  cursor:pointer;
+  max-width:100%;
 }
-.btn.orange{background:#f59e0b;color:#000}
-.btn.green{background:#10b981;color:#fff}
-.btn.blue{background:#3b82f6;color:#fff}
 
-.muted{color:#aaa}
-.invoice-preview{
-  margin-top:10px;
-  background:#0d0d0d;
-  border:1px solid #2b2b2b;
-  border-radius:14px;
-  padding:12px;
-  white-space:pre-wrap;
+/* الكاردات ترتب */
+.card{
+  margin: 12px 0;
+}
+
+/* الأدمن Layout بالجوال يصير تحت بعض */
+@media (max-width: 900px){
+  .adminLayout{
+    grid-template-columns: 1fr !important;
+  }
 }
