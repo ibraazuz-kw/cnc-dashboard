@@ -1,95 +1,81 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pro Design CNC | الأدمن</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>لوحة الأدمن - CNC</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-  <div class="topbar">
-    <div class="brand">
-      <img src="logo.png" class="logo" alt="Pro Design Logo" />
-      <div>
-        <div class="brandTitle">Pro Design CNC</div>
-        <div class="brandSub">لوحة التحكم</div>
+<body class="dark">
+  <header class="topbar">
+    <div class="topbar-title">لوحة الأدمن - CNC</div>
+    <a class="topbar-link" href="index.html">رجوع</a>
+  </header>
+
+  <main class="admin-layout">
+
+    <!-- القائمة -->
+    <section class="orders-panel">
+      <div class="panel-title">📌 الطلبات</div>
+
+      <input id="searchInput" class="input" placeholder="بحث باسم العميل أو رقم الطلب..." />
+
+      <div id="ordersList" class="orders-list"></div>
+      <div id="emptyMsg" class="muted" style="display:none;">لا توجد طلبات حالياً</div>
+    </section>
+
+    <!-- التفاصيل -->
+    <section class="details-panel">
+      <div class="panel-title">📌 تفاصيل الطلب (الأدمن)</div>
+
+      <div id="detailsBox" class="details-box">
+        اختر طلب من القائمة 👈
       </div>
-    </div>
 
-    <div class="topActions">
-      <button class="btn btnGhost" id="adminLogoutBtn">تسجيل خروج</button>
-    </div>
-  </div>
-
-  <div class="adminLayout" id="adminRoot">
-
-    <!-- Left: Orders -->
-    <div class="panel">
-      <div class="h2">📌 الطلبات</div>
-      <input id="adminSearch" class="search" placeholder="بحث باسم العميل أو رقم الطلب..." />
-      <div id="ordersList" class="ordersList"></div>
-    </div>
-
-    <!-- Right: Details -->
-    <div class="panel">
-      <div class="h2">تفاصيل الطلب</div>
-      <textarea id="orderDetailsBox" class="preview" readonly>اختر طلب من القائمة</textarea>
-
-      <div class="line"></div>
-
-      <div class="h2">تغيير الحالة</div>
-      <div class="row gap">
-        <select id="adminStatusSelect" class="w50">
+      <div class="status-box">
+        <div class="panel-subtitle">تغيير الحالة</div>
+        <select id="statusSelect" class="input">
           <option value="قيد التشغيل">قيد التشغيل</option>
           <option value="جاهز">جاهز</option>
         </select>
-        <button class="btn btnPrimary w50" id="saveStatusBtn">حفظ الحالة</button>
+        <button id="saveStatusBtn" class="btn orange">حفظ الحالة</button>
       </div>
 
-      <div class="line"></div>
+      <div class="invoice-box">
+        <div class="panel-subtitle">الفاتورة (Pro Design Style)</div>
 
-      <div class="h2">🧾 الفاتورة (Pro Design Style)</div>
-      <div class="row gap">
-        <div class="col">
-          <label>سعر القص</label>
-          <input id="priceCut" type="number" min="0" value="0"/>
+        <div class="grid-2">
+          <div>
+            <label class="label">سعر القص (KD)</label>
+            <input id="cutPrice" class="input" type="number" value="0" />
+          </div>
+          <div>
+            <label class="label">سعر الحفر (KD)</label>
+            <input id="engravePrice" class="input" type="number" value="0" />
+          </div>
+          <div>
+            <label class="label">سعر الشيت/المادة (KD)</label>
+            <input id="sheetPrice" class="input" type="number" value="0" />
+          </div>
+          <div>
+            <label class="label">الخصم (KD)</label>
+            <input id="discount" class="input" type="number" value="0" />
+          </div>
         </div>
-        <div class="col">
-          <label>سعر الحفر</label>
-          <input id="priceEngrave" type="number" min="0" value="0"/>
-        </div>
+
+        <label class="label">ملاحظة</label>
+        <input id="invoiceNote" class="input" placeholder="مثال: شامل التركيب" />
+
+        <button id="createInvoiceBtn" class="btn green">إنشاء / تحديث فاتورة</button>
+        <button id="sendInvoiceBtn" class="btn blue">إرسال الفاتورة للعميل</button>
+
+        <div id="invoicePreview" class="invoice-preview muted">لا توجد فاتورة</div>
       </div>
 
-      <div class="row gap mt">
-        <div class="col">
-          <label>سعر الشيت/المادة</label>
-          <input id="priceSheet" type="number" min="0" value="0"/>
-        </div>
-        <div class="col">
-          <label>خصم</label>
-          <input id="discount" type="number" min="0" value="0"/>
-        </div>
-      </div>
+    </section>
 
-      <div class="mt">
-        <label>ملاحظة</label>
-        <input id="invoiceNote" placeholder="مثال: شامل التركيب / بدون تركيب..." />
-      </div>
-
-      <div class="row gap mt">
-        <button class="btn btnPrimary w50" id="createInvoiceBtn">إنشاء/تحديث فاتورة</button>
-        <button class="btn btnGhost w50" id="sendInvoiceToClientBtn">إرسال للعميل</button>
-      </div>
-
-      <textarea id="invoicePreviewBox" class="preview mt" readonly>لا توجد فاتورة</textarea>
-
-      <div class="row gap mt">
-        <button class="btn btnGhost w50" id="downloadInvoicePdfAdminBtn">📄 تحميل PDF</button>
-      </div>
-    </div>
-
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>
