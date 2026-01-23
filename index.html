@@ -1,144 +1,283 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pro Design CNC - تسجيل الدخول</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pro Design CNC - Client</title>
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1620;
+      --border:rgba(255,255,255,.08);
+      --text:#eaf1ff;
+      --muted:rgba(234,241,255,.65);
+      --blue:#2f7bff;
+      --blue2:#1b5dff;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
+      background: var(--bg);
+      color:var(--text);
+      direction: rtl;
+    }
+
+    .container{
+      width:min(980px,100%);
+      margin:0 auto;
+      padding:14px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(17,27,39,.95), rgba(15,22,32,.95));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom: 6px;
+      margin-top: 10px;
+    }
+
+    .tab{
+      flex:0 0 auto;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight: 800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .tab.active{
+      border-color: rgba(47,123,255,.55);
+      background: rgba(47,123,255,.16);
+    }
+
+    .hidden{ display:none !important; }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 800;
+      cursor:pointer;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color:white;
+      font-size: 15px;
+    }
+
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    @media(max-width:520px){
+      .row{grid-template-columns:1fr;}
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin: 10px 0 6px;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+
+    textarea{min-height:90px; resize:vertical}
+
+    .door-box{
+      width: 110px;
+      height: 90px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .measure-item{
+      border: 1px dashed rgba(255,255,255,.15);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.03);
+      margin-top: 10px;
+    }
+
+    .measure-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
+
+    .mini-btn{
+      width:auto;
+      padding:10px 12px;
+      font-size:14px;
+      border-radius:14px;
+    }
+
+    .help{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+  </style>
 </head>
 
 <body>
-
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="container">
-      <div class="brand">
-        <div class="logo"></div>
-        <div style="min-width:0">
-          <h1>Pro Design CNC</h1>
-          <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="container">
 
-    <div class="card" style="margin-top:14px;">
-      <div class="card-title">
-        <h2 style="font-size:28px;margin:0;">تسجيل الدخول</h2>
+    <div class="card">
+      <h2 style="margin:0">بوابة العميل - Pro Design CNC</h2>
+      <div class="tabs">
+        <button class="tab active" data-tab="tab_measure">القياسات والتفاصيل</button>
+        <button class="tab" data-tab="tab_sheets">طلب الشيتات</button>
+        <button class="tab" data-tab="tab_design">تأكيد التصميم</button>
+        <button class="tab" data-tab="tab_invoice">الفاتورة</button>
+      </div>
+    </div>
+
+    <!-- MEASURE -->
+    <div id="tab_measure" class="card tabPage">
+      <h3 style="margin-top:0">📏 القياسات والتفاصيل</h3>
+
+      <label>نوع الباب</label>
+      <select id="doorType">
+        <option value="single">باب مفرد</option>
+        <option value="double">باب مزدوج</option>
+      </select>
+
+      <div class="measure-item">
+        <div class="measure-head">
+          <div style="font-weight:900">قياس 1</div>
+        </div>
+
+        <label>اتجاه فتحة الباب</label>
+        <div class="row">
+          <button class="btn btn-ghost" id="dirRight">يمين</button>
+          <button class="btn btn-ghost" id="dirLeft">يسار</button>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:10px">
+          <div id="doorBox" class="door-box"></div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label>الارتفاع (سم)</label>
+            <input placeholder="210">
+          </div>
+          <div>
+            <label>العرض (سم)</label>
+            <input placeholder="110">
+          </div>
+        </div>
+
+        <label>العدد</label>
+        <input type="number" min="1" value="1">
       </div>
 
-      <p class="help" style="font-size:14px;margin-top:0;">
-        ادخل بياناتك للدخول إلى بوابة العميل أو الأدمن
-      </p>
-
-      <label>اسم المستخدم</label>
-      <input id="username" placeholder="مثال: client1 أو admin" autocomplete="username"/>
-
-      <label>كلمة المرور</label>
-      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
-
-      <div style="margin-top:14px;">
-        <button class="btn btn-ghost" id="loginBtn">دخول</button>
+      <div style="margin-top:12px">
+        <button class="btn">💾 حفظ</button>
       </div>
+    </div>
 
-      <div class="hr"></div>
+    <!-- SHEETS -->
+    <div id="tab_sheets" class="card tabPage hidden">
+      <h3 style="margin-top:0">🧾 طلب الشيتات</h3>
+      <p class="help">هنا طلب الشيتات</p>
+      <button class="btn btn-ghost">➕ إضافة شيت</button>
+    </div>
 
-      <div class="help" style="font-size:14px;line-height:1.9">
-        <div><b>عميل تجريبي:</b> client1 / 1234</div>
-        <div><b>أدمن:</b> admin / admin123</div>
-      </div>
+    <!-- DESIGN -->
+    <div id="tab_design" class="card tabPage hidden">
+      <h3 style="margin-top:0">✅ تأكيد التصميم</h3>
+      <p class="help">هنا تأكيد التصميم قبل التنفيذ</p>
+      <button class="btn">أوافق على التنفيذ</button>
+    </div>
+
+    <!-- INVOICE -->
+    <div id="tab_invoice" class="card tabPage hidden">
+      <h3 style="margin-top:0">🧾 الفاتورة</h3>
+      <p class="help">هنا الفاتورة</p>
+      <button class="btn btn-ghost">تحميل PDF</button>
     </div>
 
   </div>
 
-<script>
-/* =========================
-   Pro Design CNC - Login
-   Fix redirect issue (client -> admin)
-========================= */
+  <script>
+    // Tabs (Guaranteed working)
+    const tabs = document.querySelectorAll(".tab");
+    const pages = document.querySelectorAll(".tabPage");
 
-const LS = {
-  SESSION:"pd_session"
-};
+    tabs.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        tabs.forEach(x=>x.classList.remove("active"));
+        btn.classList.add("active");
 
-function loadSession(){
-  try{
-    return JSON.parse(localStorage.getItem(LS.SESSION) || "null");
-  }catch(e){
-    return null;
-  }
-}
-
-function saveSession(obj){
-  localStorage.setItem(LS.SESSION, JSON.stringify(obj));
-}
-
-function goByRole(session){
-  if(!session) return;
-
-  // ✅ هنا التصحيح: كل رول له صفحة
-  if(session.role === "admin"){
-    window.location.href = "admin.html";
-    return;
-  }
-
-  if(session.role === "client"){
-    window.location.href = "client.html";
-    return;
-  }
-
-  // أي شيء ثاني يرجع للدخول
-  localStorage.removeItem(LS.SESSION);
-  window.location.href = "index.html";
-}
-
-// ✅ لو المستخدم مسجل دخول وفتح الرابط يرجعه لنفس صفحته مباشرة
-const currentSession = loadSession();
-if(currentSession && currentSession.role){
-  goByRole(currentSession);
-}
-
-// Login button
-document.getElementById("loginBtn").addEventListener("click", ()=>{
-  const u = (document.getElementById("username").value || "").trim();
-  const p = (document.getElementById("password").value || "").trim();
-
-  // Admin
-  if(u === "admin" && p === "admin123"){
-    saveSession({
-      role:"admin",
-      username:"admin",
-      company:"Pro Design Admin",
-      loginAt: new Date().toISOString()
+        pages.forEach(p=>p.classList.add("hidden"));
+        const id = btn.dataset.tab;
+        document.getElementById(id).classList.remove("hidden");
+        window.scrollTo({top:0, behavior:"smooth"});
+      });
     });
-    goByRole(loadSession());
-    return;
-  }
 
-  // Client demo
-  if(u === "client1" && p === "1234"){
-    saveSession({
-      role:"client",
-      username:"client1",
-      company:"شركة العميل 1",
-      loginAt: new Date().toISOString()
-    });
-    goByRole(loadSession());
-    return;
-  }
+    // Door direction demo
+    const doorBox = document.getElementById("doorBox");
 
-  alert("❌ بيانات الدخول غير صحيحة");
-});
+    function doorSVG(dir){
+      const isRight = dir === "right";
+      return `
+        <svg width="90" height="70" viewBox="0 0 100 80">
+          <rect x="10" y="10" width="80" height="60" rx="10" fill="none" stroke="#fff" stroke-width="3"/>
+          <line x1="${isRight?85:15}" y1="15" x2="${isRight?85:15}" y2="65" stroke="#fff" stroke-width="4"/>
+          ${isRight
+            ? `<path d="M85 40 L25 15 L25 65 Z" fill="rgba(47,123,255,.55)"/>`
+            : `<path d="M15 40 L75 15 L75 65 Z" fill="rgba(47,123,255,.55)"/>`
+          }
+        </svg>
+      `;
+    }
 
-// Enter key
-document.addEventListener("keydown",(e)=>{
-  if(e.key === "Enter"){
-    document.getElementById("loginBtn").click();
-  }
-});
-</script>
+    doorBox.innerHTML = doorSVG("right");
 
+    document.getElementById("dirRight").onclick = ()=> doorBox.innerHTML = doorSVG("right");
+    document.getElementById("dirLeft").onclick  = ()=> doorBox.innerHTML = doorSVG("left");
+  </script>
 </body>
 </html>
