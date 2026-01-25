@@ -1,7 +1,8 @@
 /* =========================
-   Pro Design CNC (Client)
-   Stable Tabs + Measurements + Fix + Lock
-   LocalStorage MVP
+   Pro Design CNC - Client (MVP)
+   - LocalStorage Orders
+   - Measurements per door with direction + lock leaf + fix
+   - Tabs working correctly
 ========================= */
 
 function $(id){ return document.getElementById(id); }
@@ -30,10 +31,7 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
-/* =========================
-   Order + Measurement Models
-========================= */
-
+/* ====== Data Models ====== */
 function createBlankMeasurement(){
   return {
     hCm:"",
@@ -41,13 +39,13 @@ function createBlankMeasurement(){
     qty:1,
 
     doorType:"single", // single | oneHalf | double
-    direction:"right", // right | left
-    lockLeaf:"",       // rightLeaf | leftLeaf | ""
+    direction:"right", // right | left  (B)
+    lockLeaf:"",       // rightLeaf | leftLeaf (only for double/oneHalf)
 
     hasFix:false,
+    fixAuto:true,
     fixWidth:"",
     fixHeight:"",
-    fixAuto:true,      // auto width = door width
   };
 }
 
@@ -59,7 +57,6 @@ function createBlankOrder(session){
     clientCompany: session.company || session.username,
     status: "قيد التشغيل",
 
-    // global order fields
     lineWidth: "",
     cutEngraveDetails:"",
     notes:"",
@@ -69,61 +66,47 @@ function createBlankOrder(session){
   };
 }
 
-/* =========================
-   Client Init
-========================= */
-
+/* ====== Client Init ====== */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
 
   const session = getSession();
   if(!session || session.role !== "client"){
-    // مهم: لازم يرجع لصفحة الدخول فقط
     location.href = "index.html";
     return;
   }
 
-  // Top header
   $("clientCompanyTitle").textContent = `👤 ${session.company || session.username}`;
 
   $("clientLogoutBtn").onclick = ()=>{
     clearSession();
-    location.href = "index.html";
+    location.href="index.html";
   };
 
-  /* =========================
-     Tabs (FIXED)
-  ========================= */
-  const tabs = document.querySelectorAll(".tab");
-  const pages = document.querySelectorAll(".tabPage");
+  /* Tabs */
+  const tabButtons = Array.from(document.querySelectorAll(".tab"));
+  const tabPages = Array.from(document.querySelectorAll(".tabPage"));
 
   function openTab(tabId){
-    pages.forEach(p=>p.classList.add("hidden"));
-    const target = $(tabId);
-    if(target) target.classList.remove("hidden");
-
-    tabs.forEach(t=>t.classList.remove("active"));
-    const activeBtn = document.querySelector(`.tab[data-tab="${tabId}"]`);
-    if(activeBtn) activeBtn.classList.add("active");
+    tabButtons.forEach(b=>b.classList.toggle("active", b.dataset.tab === tabId));
+    tabPages.forEach(p=>p.classList.toggle("hidden", p.id !== tabId));
   }
 
-  tabs.forEach(btn=>{
+  tabButtons.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       openTab(btn.dataset.tab);
     });
   });
 
-  // افتح أول تاب دايم
+  // ensure default open
   openTab("tab_measurements");
 
-  /* =========================
-     Orders
-  ========================= */
+  /* Orders */
   let allOrders = getOrders();
-  let myOrders = allOrders.filter(o=>o.clientUsername === session.username);
+  let myOrders = allOrders.filter(o=>o.clientUsername===session.username);
 
-  if(myOrders.length === 0){
+  if(myOrders.length===0){
     const o = createBlankOrder(session);
     allOrders.push(o);
     saveOrders(allOrders);
@@ -137,20 +120,20 @@ function initClient(){
   const msg = $("clientMsg");
 
   function getCurrentOrder(){
-    return getOrders().find(o=>o.id === selectedId) || null;
+    return getOrders().find(o=>o.id===selectedId) || null;
   }
 
   function updateOrder(update){
     const list = getOrders();
-    const idx = list.findIndex(o=>o.id === selectedId);
+    const idx = list.findIndex(o=>o.id===selectedId);
     if(idx === -1) return;
-    list[idx] = { ...list[idx], ...update };
+    list[idx] = {...list[idx], ...update};
     saveOrders(list);
   }
 
   function refreshOrders(){
     allOrders = getOrders();
-    myOrders = allOrders.filter(o=>o.clientUsername === session.username);
+    myOrders = allOrders.filter(o=>o.clientUsername===session.username);
 
     orderSelect.innerHTML = myOrders
       .slice().reverse()
@@ -185,24 +168,23 @@ function initClient(){
   $("copyOrderBtn").onclick = ()=>{
     const o = getCurrentOrder();
     if(!o) return;
+
     const list = getOrders();
-    const copy = {
-      ...o,
-      id: genId("ORD"),
-      createdAt: nowStr(),
-      status: "قيد التشغيل"
-    };
+    const copy = JSON.parse(JSON.stringify(o));
+    copy.id = genId("ORD");
+    copy.createdAt = nowStr();
+    copy.status = "قيد التشغيل";
+
     list.push(copy);
     saveOrders(list);
+
     selectedId = copy.id;
     refreshOrders();
     renderAll();
     alert("✅ تم نسخ الطلب");
   };
 
-  /* =========================
-     Global Fields
-  ========================= */
+  /* Global fields */
   const lineWidthSelect = $("lineWidthSelect");
   const lineWidthOther = $("lineWidthOther");
   const cutEngraveDetails = $("cutEngraveDetails");
@@ -237,31 +219,43 @@ function initClient(){
       }else{
         lineWidthOther.disabled = true;
         lineWidthOther.value = "";
-        updateOrder({ lineWidth: lineWidthSelect.value });
+        updateOrder({lineWidth: lineWidthSelect.value});
       }
     };
 
     lineWidthOther.oninput = ()=>{
-      updateOrder({ lineWidth: lineWidthOther.value.trim() });
+      updateOrder({lineWidth: lineWidthOther.value.trim()});
     };
 
     cutEngraveDetails.value = o.cutEngraveDetails || "";
     notesInput.value = o.notes || "";
 
-    cutEngraveDetails.oninput = ()=> updateOrder({ cutEngraveDetails: cutEngraveDetails.value });
-    notesInput.oninput = ()=> updateOrder({ notes: notesInput.value });
+    cutEngraveDetails.oninput = ()=> updateOrder({cutEngraveDetails: cutEngraveDetails.value});
+    notesInput.oninput = ()=> updateOrder({notes: notesInput.value});
 
     fileInput.onchange = ()=>{
       const files = Array.from(fileInput.files || []).map(f=>f.name);
-      updateOrder({ files });
+      updateOrder({files});
       alert("✅ تم حفظ أسماء الملفات");
     };
   }
 
-  /* =========================
-     Measurements
-  ========================= */
+  /* Measurements */
   const container = $("measurementsContainer");
+
+  function doorMiniIcon(direction="right"){
+    // simple modern icon (B)
+    const flip = direction === "left" ? "scaleX(-1)" : "none";
+    return `
+      <div class="doorMini">
+        <svg width="86" height="60" viewBox="0 0 100 70" style="transform:${flip}">
+          <rect x="10" y="10" width="80" height="50" rx="10" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
+          <line x1="85" y1="15" x2="85" y2="55" stroke="rgba(255,255,255,.9)" stroke-width="4"/>
+          <path d="M85 35 L25 15 L25 55 Z" fill="rgba(47,123,255,.55)"/>
+        </svg>
+      </div>
+    `;
+  }
 
   function renderMeasurements(){
     const o = getCurrentOrder();
@@ -275,7 +269,6 @@ function initClient(){
 
       container.innerHTML += `
         <div class="measure-item">
-
           <div class="mCardTop">
             <div class="mTitle">
               <div class="num-pill">${idx+1}</div>
@@ -318,8 +311,12 @@ function initClient(){
 
           <label>اتجاه فتحة الباب</label>
           <div class="dirBtns">
-            <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين</button>
-            <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار</button>
+            <button type="button" class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">
+              يمين ${doorMiniIcon("right")}
+            </button>
+            <button type="button" class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">
+              يسار ${doorMiniIcon("left")}
+            </button>
           </div>
 
           ${isDoubleLike ? `
@@ -335,10 +332,10 @@ function initClient(){
             <div class="fixBox">
               <div class="fixHead">
                 <div style="font-weight:900">⬆️ فكس فوق الباب</div>
-                <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
+                <button type="button" class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
               </div>
 
-              <div class="tinyHelp">يمكنك ترك العرض تلقائي (نفس عرض الباب) أو إدخال عرض يدوي.</div>
+              <div class="tinyHelp">العرض تلقائي = نفس عرض الباب (مع إمكانية إدخال عرض مختلف).</div>
 
               <label>وضع عرض الفكس</label>
               <select data-i="${idx}" data-k="fixAuto">
@@ -350,8 +347,7 @@ function initClient(){
                 <div>
                   <label>عرض الفكس (سم)</label>
                   <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
-                    value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}"
-                    placeholder="مثال: 110"/>
+                    value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
                 </div>
                 <div>
                   <label>ارتفاع الفكس (سم)</label>
@@ -360,18 +356,18 @@ function initClient(){
               </div>
             </div>
           ` : ``}
-
         </div>
       `;
     });
 
-    // Bind inputs/selects
+    // Inputs/selects binding
     container.querySelectorAll("input[data-i], select[data-i]").forEach(el=>{
       const i = Number(el.dataset.i);
       const k = el.dataset.k;
 
       const apply = ()=>{
         const o2 = getCurrentOrder();
+        if(!o2) return;
         const m2 = o2.measurements[i];
 
         if(k === "qty"){
@@ -383,14 +379,14 @@ function initClient(){
           m2[k] = el.value;
         }
 
-        // door type logic
+        // If door type changed -> reset lockLeaf if single
         if(k === "doorType"){
           if(m2.doorType === "single"){
             m2.lockLeaf = "";
           }
         }
 
-        updateOrder({ measurements: o2.measurements });
+        updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
 
@@ -405,9 +401,10 @@ function initClient(){
         const v = btn.dataset.v;
 
         const o2 = getCurrentOrder();
+        if(!o2) return;
         o2.measurements[i].direction = v;
 
-        updateOrder({ measurements: o2.measurements });
+        updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
@@ -417,14 +414,15 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.fix);
         const o2 = getCurrentOrder();
-        const m2 = o2.measurements[i];
+        if(!o2) return;
 
+        const m2 = o2.measurements[i];
         m2.hasFix = true;
         m2.fixAuto = true;
         m2.fixWidth = "";
         m2.fixHeight = "";
 
-        updateOrder({ measurements: o2.measurements });
+        updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
@@ -434,13 +432,14 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.removefix);
         const o2 = getCurrentOrder();
-        const m2 = o2.measurements[i];
+        if(!o2) return;
 
+        const m2 = o2.measurements[i];
         m2.hasFix = false;
         m2.fixWidth = "";
         m2.fixHeight = "";
 
-        updateOrder({ measurements: o2.measurements });
+        updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
@@ -450,14 +449,14 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.del);
         const o2 = getCurrentOrder();
+        if(!o2) return;
 
         if(o2.measurements.length === 1){
           alert("لا يمكن حذف آخر قياس");
           return;
         }
-
-        o2.measurements.splice(i, 1);
-        updateOrder({ measurements: o2.measurements });
+        o2.measurements.splice(i,1);
+        updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
@@ -465,8 +464,9 @@ function initClient(){
 
   $("addMeasureBtn").onclick = ()=>{
     const o = getCurrentOrder();
+    if(!o) return;
     o.measurements.push(createBlankMeasurement());
-    updateOrder({ measurements: o.measurements });
+    updateOrder({measurements:o.measurements});
     renderMeasurements();
   };
 
@@ -478,6 +478,7 @@ function initClient(){
 
   $("copyOrderTextBtn").onclick = ()=>{
     const o = getCurrentOrder();
+    if(!o) return;
     navigator.clipboard.writeText(JSON.stringify(o, null, 2));
     alert("📋 تم نسخ تفاصيل الطلب");
   };
@@ -486,20 +487,15 @@ function initClient(){
     alert("🚀 تم إرسال أمر تشغيل CNC (نسخة MVP)\n\nلاحقاً سيتم ربطها بالسيرفر ليستقبلها الأدمن.");
   };
 
-  /* =========================
-     Other Tabs (MVP)
-  ========================= */
+  // Other tabs MVP
   $("addSheetBtn").onclick = ()=>{
     $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً جدول كامل)";
   };
 
   $("approveDesignBtn").onclick = ()=>{
-    alert("✅ تم اعتماد التنفيذ (MVP)");
+    alert("✅ أوافق على التنفيذ (MVP)");
   };
 
-  /* =========================
-     Render All
-  ========================= */
   function renderAll(){
     refreshOrders();
     renderStatus();
