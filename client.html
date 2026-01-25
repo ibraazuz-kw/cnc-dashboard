@@ -5,9 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pro Design CNC - بوابة العميل</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .hidden{display:none!important;}
+
+    /* Modern Header for Orders */
+    .orderBar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .orderBar .left{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .orderBar .right{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+
+    .miniBtn{
+      width:auto!important;
+      padding:10px 12px!important;
+      border-radius:14px!important;
+      font-size:14px!important;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      font-weight:800;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    /* Measurement card layout */
+    .mCardTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .mTitle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .mTitle .num-pill{flex:0 0 auto;}
+    .mTitle .txt{
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      font-weight:900;
+    }
+
+    .mActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .twoCols{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:520px){
+      .twoCols{grid-template-columns:1fr;}
+    }
+
+    .dividerSoft{
+      height:1px;
+      background: rgba(255,255,255,.06);
+      margin: 12px 0;
+    }
+
+    /* Door direction inside each measurement */
+    .dirRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .dirBtns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      width:100%;
+    }
+    .dirBtn{
+      flex:1 1 160px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      font-weight:900;
+      color: var(--text);
+      transition:.15s ease;
+    }
+    .dirBtn.active{
+      border-color: rgba(47,123,255,.55);
+      background: rgba(47,123,255,.16);
+    }
+
+    /* Fix box */
+    .fixBox{
+      border:1px dashed rgba(47,123,255,.35);
+      background: rgba(47,123,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+
+    .fixHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .tinyHelp{
+      font-size:12px;
+      color: rgba(234,241,255,.60);
+      margin-top:6px;
+    }
+
+    /* Order send box */
+    .sendBox{
+      border:1px solid rgba(47,123,255,.25);
+      background: rgba(47,123,255,.08);
+      border-radius:18px;
+      padding:12px;
+      margin-top:12px;
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- Topbar -->
   <div class="topbar">
     <div class="container">
       <div class="brand">
@@ -19,141 +168,130 @@
       </div>
 
       <div style="display:flex;gap:10px;align-items:center">
-        <div class="badge" id="clientCompanyTitle">👤 العميل</div>
-        <button class="btn btn-ghost" id="clientLogoutBtn" style="width:auto;padding:10px 14px">تسجيل خروج</button>
+        <span class="pill" id="clientCompanyTitle">👤 شركة العميل</span>
+        <button class="btn btn-ghost miniBtn" id="clientLogoutBtn">تسجيل خروج</button>
       </div>
     </div>
   </div>
 
   <div class="container" id="clientRoot">
 
+    <!-- Orders Card -->
     <div class="card">
-      <div class="card-title">
-        <h2>📌 الطلب الحالي</h2>
-        <span id="clientStatusBadge" class="badge working">⏳ قيد التشغيل</span>
+      <div class="orderBar">
+        <div class="left">
+          <div class="card-title" style="margin:0">
+            <h2 style="margin:0">📌 الطلبات</h2>
+          </div>
+          <span id="clientStatusBadge" class="badge working">⏳ قيد التشغيل</span>
+        </div>
+
+        <div class="right">
+          <button class="btn btn-blue miniBtn" id="newOrderBtn">➕ طلب جديد</button>
+          <button class="btn btn-ghost miniBtn" id="copyOrderBtn">📋 نسخ</button>
+        </div>
       </div>
 
-      <label>اختر طلب</label>
+      <label>اختر الطلب</label>
       <select id="clientOrderSelect"></select>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn btn-green" id="newOrderBtn">➕ طلب جديد</button>
-        <button class="btn btn-ghost" id="copyOrderBtn">📋 نسخ الطلب</button>
+      <div class="sendBox">
+        <div class="twoCols">
+          <button class="btn btn-ghost" id="copyOrderTextBtn">📋 نسخ تفاصيل الطلب</button>
+          <button class="btn btn-blue" id="sendCncBtn">🚀 إرسال أمر تشغيل CNC</button>
+        </div>
+        <div class="tinyHelp">
+          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage). بعد ربط السيرفر تصبح الطلبات مشتركة بين الجميع.
+        </div>
       </div>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="tab_measure">📏 القياسات والتفاصيل</button>
-      <button class="tab" data-tab="tab_sheets">🧾 طلب الشيتات</button>
-      <button class="tab" data-tab="tab_design">✅ تأكيد التصميم</button>
-      <button class="tab" data-tab="tab_invoice">🧾 الفاتورة</button>
+    <!-- Tabs -->
+    <div class="card">
+      <div class="card-title">
+        <h2>📑 الأقسام</h2>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="tab_measurements">📏 القياسات والتفاصيل</button>
+        <button class="tab" data-tab="tab_sheets">🧾 طلب الشيتات</button>
+        <button class="tab" data-tab="tab_design">✅ تأكيد التصميم</button>
+        <button class="tab" data-tab="tab_invoice">🧾 الفاتورة</button>
+      </div>
     </div>
 
-    <!-- القياسات -->
-    <div class="card tabPage" id="tab_measure">
+    <!-- TAB: Measurements -->
+    <div class="card tabPage" id="tab_measurements">
       <div class="card-title">
         <h2>📏 القياسات والتفاصيل</h2>
+        <button class="btn btn-blue miniBtn" id="addMeasureBtn" style="width:auto">➕ إضافة قياس</button>
       </div>
 
-      <label>نوع الباب (اختياري)</label>
-      <select id="doorTypeSelect">
-        <option value="">بدون تحديد</option>
-        <option value="single">باب مفرد</option>
-        <option value="half">باب ونص</option>
-        <option value="double">باب مزدوج (دبل)</option>
-      </select>
+      <div id="measurementsContainer"></div>
 
-      <button class="btn btn-ghost" id="addFixBtn" style="margin-top:10px">➕ إضافة فكس فوق الباب</button>
-
-      <div class="hr"></div>
-
-      <label>اتجاه فتحة الباب</label>
-      <div id="doorDirectionArea"></div>
-
-      <label>تحديد القفل</label>
-      <select id="lockSideSelect">
-        <option value="">بدون تحديد</option>
-        <option value="right">القفل يمين</option>
-        <option value="left">القفل يسار</option>
-        <option value="leaf1">ضلفة 1</option>
-        <option value="leaf2">ضلفة 2</option>
-      </select>
-
-      <div class="hr"></div>
-
-      <div class="card-title">
-        <h2>📐 قياسات الباب</h2>
-        <button class="btn btn-blue" id="addSizeBtn" style="width:auto;padding:10px 14px">➕ إضافة قياس</button>
-      </div>
-
-      <div id="sizesContainer"></div>
-
-      <div class="hr"></div>
+      <div class="dividerSoft"></div>
 
       <label>عرض الخط (mm)</label>
-      <div class="row">
+      <div class="twoCols">
         <select id="lineWidthSelect">
-          <option value="">اختر عرض الخط</option>
-          <option value="1">1 mm</option>
-          <option value="2">2 mm</option>
-          <option value="3">3 mm</option>
+          <option value="">اختر</option>
           <option value="4">4 mm</option>
-          <option value="other">قياس آخر</option>
+          <option value="6">6 mm</option>
+          <option value="8">8 mm</option>
+          <option value="10">10 mm</option>
+          <option value="12">12 mm</option>
+          <option value="15">15 mm</option>
+          <option value="20">20 mm</option>
+          <option value="25">25 mm</option>
+          <option value="30">3 cm</option>
+          <option value="40">4 cm</option>
+          <option value="other">أخرى</option>
         </select>
 
-        <input id="lineWidthOther" placeholder="اكتب عرض الخط (mm)" disabled />
+        <input id="lineWidthOther" disabled placeholder="اكتب عرض الخط (mm)"/>
       </div>
 
-      <label>تفاصيل القص / الحفر</label>
-      <textarea id="cutEngraveDetails" placeholder="اكتب التفاصيل..."></textarea>
+      <label style="margin-top:12px">تفاصيل القص / الحفر</label>
+      <textarea id="cutEngraveDetails" placeholder="مثال: قص + حفر شعار + تخريم..."></textarea>
 
-      <label>رفع ملف (DXF / PDF / صورة)</label>
+      <label>رفع ملفات (DXF / PDF / صور)</label>
       <input id="fileInput" type="file" multiple />
 
-      <label>ملاحظات</label>
+      <label>ملاحظات إضافية</label>
       <textarea id="notesInput" placeholder="أي ملاحظات إضافية..."></textarea>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn btn-ghost" id="saveDraftBtn">💾 حفظ كمسودة</button>
-        <button class="btn btn-blue" id="sendToAdminBtn">📩 إرسال أمر تشغيل CNC</button>
-      </div>
+      <div class="dividerSoft"></div>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn btn-ghost" id="copyTextBtn">📋 نسخ</button>
-        <button class="btn btn-ghost" id="downloadPdfBtn">📄 تحميل PDF</button>
-      </div>
-
+      <button class="btn btn-ghost" id="saveDraftBtn">💾 حفظ كمسودة</button>
       <div class="help" id="clientMsg"></div>
     </div>
 
-    <!-- الشيتات -->
+    <!-- TAB: Sheets -->
     <div class="card tabPage hidden" id="tab_sheets">
       <div class="card-title">
         <h2>🧾 طلب الشيتات</h2>
       </div>
 
-      <div id="sheetContainer"></div>
-
+      <div class="help">قريباً: جدول كامل (قياس الشيت - السماكة - الكمية) + PDF للمورد</div>
       <button class="btn btn-blue" id="addSheetBtn">➕ إضافة شيت</button>
-      <button class="btn btn-ghost" id="downloadSheetPdfBtn" style="margin-top:10px">📄 تحميل PDF طلب الشيت</button>
+      <div class="help" id="sheetsMsg"></div>
     </div>
 
-    <!-- تأكيد التصميم -->
+    <!-- TAB: Design -->
     <div class="card tabPage hidden" id="tab_design">
       <div class="card-title">
         <h2>✅ تأكيد التصميم قبل التنفيذ</h2>
       </div>
 
-      <div class="help">سيظهر المخطط النهائي PDF هنا عند توفره</div>
-      <div class="badge" style="margin-top:10px">لا يوجد تصميم حالياً</div>
-
-      <button class="btn btn-green" id="approveDesignBtn" style="margin-top:12px">أوافق على التنفيذ</button>
+      <div class="help">سيظهر ملف التصميم النهائي PDF هنا بعد رفعه من الأدمن</div>
 
       <label>ملاحظات تعديل</label>
       <textarea id="designNotes" placeholder="اكتب ملاحظاتك..."></textarea>
+
+      <button class="btn btn-green" id="approveDesignBtn">✅ أوافق على التنفيذ</button>
     </div>
 
-    <!-- الفاتورة -->
+    <!-- TAB: Invoice -->
     <div class="card tabPage hidden" id="tab_invoice">
       <div class="card-title">
         <h2>🧾 الفاتورة</h2>
@@ -166,5 +304,11 @@
   </div>
 
   <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+      if(typeof initClient === "function") initClient();
+    });
+  </script>
+
 </body>
 </html>
