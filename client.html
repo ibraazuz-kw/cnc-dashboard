@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pro Design CNC - بوابة العميل</title>
   <link rel="stylesheet" href="style.css" />
+
   <style>
     .hidden{display:none!important;}
 
-    /* Modern Header for Orders */
     .orderBar{
       display:flex;
       flex-wrap:wrap;
@@ -43,7 +43,6 @@
       white-space:nowrap;
     }
 
-    /* Measurement card layout */
     .mCardTop{
       display:flex;
       align-items:center;
@@ -90,14 +89,6 @@
       margin: 12px 0;
     }
 
-    /* Door direction inside each measurement */
-    .dirRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
     .dirBtns{
       display:flex;
       gap:10px;
@@ -105,8 +96,8 @@
       width:100%;
     }
     .dirBtn{
-      flex:1 1 160px;
-      padding:10px 12px;
+      flex:1 1 170px;
+      padding:12px 12px;
       border-radius:16px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
@@ -114,13 +105,24 @@
       font-weight:900;
       color: var(--text);
       transition:.15s ease;
+      text-align:center;
     }
     .dirBtn.active{
       border-color: rgba(47,123,255,.55);
       background: rgba(47,123,255,.16);
     }
 
-    /* Fix box */
+    .doorMini{
+      margin-top:8px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      background: rgba(0,0,0,.25);
+      padding:10px 6px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
     .fixBox{
       border:1px dashed rgba(47,123,255,.35);
       background: rgba(47,123,255,.08);
@@ -143,7 +145,6 @@
       margin-top:6px;
     }
 
-    /* Order send box */
     .sendBox{
       border:1px solid rgba(47,123,255,.25);
       background: rgba(47,123,255,.08);
@@ -156,7 +157,6 @@
 
 <body>
 
-  <!-- Topbar -->
   <div class="topbar">
     <div class="container">
       <div class="brand">
@@ -176,7 +176,6 @@
 
   <div class="container" id="clientRoot">
 
-    <!-- Orders Card -->
     <div class="card">
       <div class="orderBar">
         <div class="left">
@@ -201,12 +200,11 @@
           <button class="btn btn-blue" id="sendCncBtn">🚀 إرسال أمر تشغيل CNC</button>
         </div>
         <div class="tinyHelp">
-          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage). بعد ربط السيرفر تصبح الطلبات مشتركة بين الجميع.
+          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage).
         </div>
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="card">
       <div class="card-title">
         <h2>📑 الأقسام</h2>
@@ -220,7 +218,6 @@
       </div>
     </div>
 
-    <!-- TAB: Measurements -->
     <div class="card tabPage" id="tab_measurements">
       <div class="card-title">
         <h2>📏 القياسات والتفاصيل</h2>
@@ -266,18 +263,15 @@
       <div class="help" id="clientMsg"></div>
     </div>
 
-    <!-- TAB: Sheets -->
     <div class="card tabPage hidden" id="tab_sheets">
       <div class="card-title">
         <h2>🧾 طلب الشيتات</h2>
       </div>
-
-      <div class="help">قريباً: جدول كامل (قياس الشيت - السماكة - الكمية) + PDF للمورد</div>
+      <div class="help">قريباً: جدول كامل + PDF للمورد</div>
       <button class="btn btn-blue" id="addSheetBtn">➕ إضافة شيت</button>
       <div class="help" id="sheetsMsg"></div>
     </div>
 
-    <!-- TAB: Design -->
     <div class="card tabPage hidden" id="tab_design">
       <div class="card-title">
         <h2>✅ تأكيد التصميم قبل التنفيذ</h2>
@@ -291,7 +285,6 @@
       <button class="btn btn-green" id="approveDesignBtn">✅ أوافق على التنفيذ</button>
     </div>
 
-    <!-- TAB: Invoice -->
     <div class="card tabPage hidden" id="tab_invoice">
       <div class="card-title">
         <h2>🧾 الفاتورة</h2>
