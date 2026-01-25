@@ -24,6 +24,22 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
+function createBlankMeasurement(){
+  return {
+    hCm:"",
+    wCm:"",
+    qty:1,
+
+    doorType:"single", // single | oneHalf | double
+    direction:"right", // right | left
+    lockLeaf:"",       // rightLeaf | leftLeaf (for double/oneHalf)
+    hasFix:false,
+    fixWidth:"",
+    fixHeight:"",
+    fixAuto:true,      // auto width = door width
+  };
+}
+
 function createBlankOrder(session){
   return {
     id: genId("ORD"),
@@ -38,29 +54,51 @@ function createBlankOrder(session){
     notes:"",
     files: [],
 
-    // measurements: each measurement has its own door type/direction/lock/fix
-    measurements: [
-      createBlankMeasurement()
-    ],
+    // each measurement has its own door type/direction/lock/fix
+    measurements: [ createBlankMeasurement() ],
   };
 }
 
-function createBlankMeasurement(){
-  return {
-    hCm:"",
-    wCm:"",
-    qty:1,
+/* =========================
+   Tabs Helper (FIXED)
+========================= */
+function initTabs(){
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  const pages = Array.from(document.querySelectorAll(".tabPage"));
 
-    doorType:"single", // single | oneHalf | double
-    direction:"right", // right | left (B approved)
-    lockLeaf:"",       // for double/oneHalf: rightLeaf | leftLeaf
-    hasFix:false,
-    fixWidth:"",
-    fixHeight:"",
-    fixAuto:true,      // auto width = door width
-  };
+  if(tabs.length === 0 || pages.length === 0) return;
+
+  function openTab(tabId){
+    tabs.forEach(t=>t.classList.remove("active"));
+    pages.forEach(p=>p.classList.add("hidden"));
+
+    const btn = tabs.find(x=>x.dataset.tab === tabId);
+    const page = document.getElementById(tabId);
+
+    if(btn) btn.classList.add("active");
+    if(page) page.classList.remove("hidden");
+  }
+
+  // Bind clicks
+  tabs.forEach(btn=>{
+    btn.onclick = ()=>{
+      const tabId = btn.dataset.tab;
+      openTab(tabId);
+    };
+  });
+
+  // Open first active OR first tab
+  const active = tabs.find(t=>t.classList.contains("active"));
+  if(active && active.dataset.tab){
+    openTab(active.dataset.tab);
+  }else{
+    openTab(tabs[0].dataset.tab);
+  }
 }
 
+/* =========================
+   Client Init
+========================= */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
@@ -71,24 +109,15 @@ function initClient(){
     return;
   }
 
+  // Init tabs safely
+  initTabs();
+
   $("clientCompanyTitle").textContent = `👤 ${session.company || session.username}`;
 
   $("clientLogoutBtn").onclick = ()=>{
     clearSession();
     location.href="index.html";
   };
-
-  // Tabs
-  document.querySelectorAll(".tab").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-      btn.classList.add("active");
-
-      const tabId = btn.dataset.tab;
-      document.querySelectorAll(".tabPage").forEach(p=>p.classList.add("hidden"));
-      $(tabId).classList.remove("hidden");
-    });
-  });
 
   // Orders
   let allOrders = getOrders();
@@ -157,7 +186,12 @@ function initClient(){
     const o = getCurrentOrder();
     if(!o) return;
     const list = getOrders();
-    const copy = {...o, id: genId("ORD"), createdAt: nowStr(), status:"قيد التشغيل"};
+    const copy = {
+      ...o,
+      id: genId("ORD"),
+      createdAt: nowStr(),
+      status:"قيد التشغيل",
+    };
     list.push(copy);
     saveOrders(list);
     selectedId = copy.id;
@@ -180,6 +214,7 @@ function initClient(){
     // line width
     const lw = o.lineWidth || "";
     const preset = ["4","6","8","10","12","15","20","25","30","40"];
+
     if(preset.includes(lw)){
       lineWidthSelect.value = lw;
       lineWidthOther.value = "";
@@ -279,20 +314,30 @@ function initClient(){
             </div>
           </div>
 
-          <label>اتجاه فتحة الباب</label>
-          <div class="dirBtns">
-            <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين</button>
-            <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار</button>
-          </div>
+          <div class="twoCols">
+            <div>
+              <label>اتجاه فتحة الباب (لهذا القياس)</label>
+              <div class="dirBtns">
+                <button type="button" class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين</button>
+                <button type="button" class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار</button>
+              </div>
+            </div>
 
-          ${isDoubleLike ? `
-            <label style="margin-top:10px">مكان القفل (Lock)</label>
-            <select data-i="${idx}" data-k="lockLeaf">
-              <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
-              <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
-              <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
-            </select>
-          ` : ``}
+            <div>
+              <label>مكان القفل</label>
+              ${
+                isDoubleLike
+                ? `
+                  <select data-i="${idx}" data-k="lockLeaf">
+                    <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
+                    <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
+                    <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
+                  </select>
+                `
+                : `<div class="tinyHelp">غير مطلوب (باب مفرد)</div>`
+              }
+            </div>
+          </div>
 
           ${m.hasFix ? `
             <div class="fixBox">
@@ -301,7 +346,7 @@ function initClient(){
                 <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
               </div>
 
-              <div class="tinyHelp">يمكنك ترك العرض تلقائي (نفس عرض الباب) أو إدخال عرض يدوي.</div>
+              <div class="tinyHelp">العرض تلقائي = نفس عرض هذا القياس (ويمكن تغييره يدوي).</div>
 
               <label>وضع عرض الفكس</label>
               <select data-i="${idx}" data-k="fixAuto">
@@ -312,7 +357,8 @@ function initClient(){
               <div class="twoCols">
                 <div>
                   <label>عرض الفكس (سم)</label>
-                  <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""} value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
+                  <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
+                    value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
                 </div>
                 <div>
                   <label>ارتفاع الفكس (سم)</label>
@@ -339,7 +385,6 @@ function initClient(){
           m2[k] = Number(el.value || 1);
         }else if(k === "fixAuto"){
           m2[k] = (el.value === "true");
-          // when switching to auto, clear manual width
           if(m2.fixAuto) m2.fixWidth = "";
         }else{
           m2[k] = el.value;
@@ -349,11 +394,14 @@ function initClient(){
         if(k === "doorType"){
           if(m2.doorType === "single"){
             m2.lockLeaf = "";
+          }else{
+            // keep lockLeaf as-is
+            if(!m2.lockLeaf) m2.lockLeaf = "";
           }
         }
 
         updateOrder({measurements: o2.measurements});
-        renderMeasurements(); // re-render for conditional UI
+        renderMeasurements();
       };
 
       el.oninput = apply;
@@ -447,17 +495,27 @@ function initClient(){
   };
 
   // Other tabs MVP
-  $("addSheetBtn").onclick = ()=>{
-    $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً جدول كامل)";
-  };
+  const addSheetBtn = $("addSheetBtn");
+  if(addSheetBtn){
+    addSheetBtn.onclick = ()=>{
+      const sm = $("sheetsMsg");
+      if(sm) sm.textContent = "✅ تم إضافة شيت (MVP قريباً جدول كامل)";
+    };
+  }
 
-  $("approveDesignBtn").onclick = ()=>{
-    alert("✅ تم اعتماد التنفيذ (MVP)");
-  };
+  const approveDesignBtn = $("approveDesignBtn");
+  if(approveDesignBtn){
+    approveDesignBtn.onclick = ()=>{
+      alert("✅ تم اعتماد التنفيذ (MVP)");
+    };
+  }
 
-  $("designNotes").oninput = ()=>{
-    // stored later when design module is completed
-  };
+  const designNotes = $("designNotes");
+  if(designNotes){
+    designNotes.oninput = ()=>{
+      // stored later
+    };
+  }
 
   function renderAll(){
     refreshOrders();
