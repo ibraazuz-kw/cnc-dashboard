@@ -64,14 +64,6 @@ body{
   box-shadow: 0 10px 20px rgba(47,123,255,.25);
 }
 
-.avatar{
-  width:36px;
-  height:36px;
-  border-radius:14px;
-  background: rgba(47,123,255,.2);
-  border:1px solid rgba(255,255,255,.08);
-}
-
 .brand h1{
   font-size: 16px;
   margin:0;
@@ -219,30 +211,12 @@ input:focus, select:focus, textarea:focus{
   background: rgba(47,123,255,.16);
 }
 
-.row{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-@media (max-width: 520px){
-  .row{ grid-template-columns: 1fr; }
-}
-
 .measure-item{
   border: 1px dashed rgba(255,255,255,.15);
   border-radius: 16px;
   padding: 12px;
   background: rgba(255,255,255,.03);
   margin-top: 10px;
-}
-
-.measure-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom: 8px;
 }
 
 .num-pill{
@@ -256,26 +230,8 @@ input:focus, select:focus, textarea:focus{
   font-weight:800;
 }
 
-.door-box{
-  width: 110px;
-  height: 90px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.25);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin: 8px auto 0;
-}
-
 .help{
   font-size: 12px;
   color: var(--muted);
   margin-top: 6px;
-}
-
-.hr{
-  height:1px;
-  background: rgba(255,255,255,.08);
-  margin: 12px 0;
 }
