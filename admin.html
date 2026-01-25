@@ -2,80 +2,83 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>لوحة الأدمن - CNC</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Design CNC - لوحة الأدمن</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
-<body class="dark">
-  <header class="topbar">
-    <div class="topbar-title">لوحة الأدمن - CNC</div>
-    <a class="topbar-link" href="index.html">رجوع</a>
-  </header>
-
-  <main class="admin-layout">
-
-    <!-- القائمة -->
-    <section class="orders-panel">
-      <div class="panel-title">📌 الطلبات</div>
-
-      <input id="searchInput" class="input" placeholder="بحث باسم العميل أو رقم الطلب..." />
-
-      <div id="ordersList" class="orders-list"></div>
-      <div id="emptyMsg" class="muted" style="display:none;">لا توجد طلبات حالياً</div>
-    </section>
-
-    <!-- التفاصيل -->
-    <section class="details-panel">
-      <div class="panel-title">📌 تفاصيل الطلب (الأدمن)</div>
-
-      <div id="detailsBox" class="details-box">
-        اختر طلب من القائمة 👈
-      </div>
-
-      <div class="status-box">
-        <div class="panel-subtitle">تغيير الحالة</div>
-        <select id="statusSelect" class="input">
-          <option value="قيد التشغيل">قيد التشغيل</option>
-          <option value="جاهز">جاهز</option>
-        </select>
-        <button id="saveStatusBtn" class="btn orange">حفظ الحالة</button>
-      </div>
-
-      <div class="invoice-box">
-        <div class="panel-subtitle">الفاتورة (Pro Design Style)</div>
-
-        <div class="grid-2">
-          <div>
-            <label class="label">سعر القص (KD)</label>
-            <input id="cutPrice" class="input" type="number" value="0" />
-          </div>
-          <div>
-            <label class="label">سعر الحفر (KD)</label>
-            <input id="engravePrice" class="input" type="number" value="0" />
-          </div>
-          <div>
-            <label class="label">سعر الشيت/المادة (KD)</label>
-            <input id="sheetPrice" class="input" type="number" value="0" />
-          </div>
-          <div>
-            <label class="label">الخصم (KD)</label>
-            <input id="discount" class="input" type="number" value="0" />
-          </div>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="brand">
+        <div class="logo"></div>
+        <div style="min-width:0">
+          <h1>Pro Design CNC</h1>
+          <p>لوحة الأدمن - إدارة الطلبات والفواتير</p>
         </div>
-
-        <label class="label">ملاحظة</label>
-        <input id="invoiceNote" class="input" placeholder="مثال: شامل التركيب" />
-
-        <button id="createInvoiceBtn" class="btn green">إنشاء / تحديث فاتورة</button>
-        <button id="sendInvoiceBtn" class="btn blue">إرسال الفاتورة للعميل</button>
-
-        <div id="invoicePreview" class="invoice-preview muted">لا توجد فاتورة</div>
       </div>
 
-    </section>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-ghost" id="adminLogoutBtn" style="width:auto;padding:10px 14px">تسجيل خروج</button>
+      </div>
+    </div>
+  </div>
 
-  </main>
+  <div class="container" id="adminRoot">
+
+    <div class="card">
+      <div class="card-title">
+        <h2>📌 الطلبات</h2>
+      </div>
+
+      <label>بحث</label>
+      <input id="adminSearch" placeholder="بحث باسم العميل أو رقم الطلب..." />
+
+      <label>اختر طلب</label>
+      <select id="adminOrderSelect"></select>
+
+      <div class="hr"></div>
+
+      <div class="card-title">
+        <h2>📌 تفاصيل الطلب (الأدمن)</h2>
+      </div>
+
+      <div class="help" id="adminOrderDetails">اختر طلب من القائمة 👆</div>
+
+      <label>تغيير الحالة</label>
+      <select id="adminStatus">
+        <option value="قيد التشغيل">قيد التشغيل</option>
+        <option value="جاهز">جاهز</option>
+      </select>
+
+      <button class="btn btn-blue" id="saveStatusBtn" style="margin-top:10px">حفظ الحالة</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <h2>🧾 الفاتورة (Pro Design Style)</h2>
+      </div>
+
+      <label>سعر القص (KD)</label>
+      <input id="priceCut" type="number" value="0" />
+
+      <label>سعر الحفر (KD)</label>
+      <input id="priceEngrave" type="number" value="0" />
+
+      <label>سعر الشيت/المادة (KD)</label>
+      <input id="priceSheet" type="number" value="0" />
+
+      <label>الخصم (KD)</label>
+      <input id="discount" type="number" value="0" />
+
+      <label>ملاحظة</label>
+      <textarea id="invoiceNote" placeholder="مثال: شامل التركيب"></textarea>
+
+      <button class="btn btn-green" id="createInvoiceBtn" style="margin-top:10px">إنشاء / تحديث فاتورة</button>
+      <button class="btn btn-ghost" id="sendInvoiceBtn" style="margin-top:10px">إرسال الفاتورة للعميل</button>
+    </div>
+
+  </div>
 
   <script src="app.js"></script>
 </body>
