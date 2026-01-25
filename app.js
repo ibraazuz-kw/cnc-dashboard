@@ -1,20 +1,10 @@
-/* =========================
-   Pro Design CNC (Client)
-   Door Direction + Lock Side + Fix
-   LocalStorage MVP
-========================= */
-
 function $(id){ return document.getElementById(id); }
-function safe(v){ return (v ?? "").toString().trim(); }
 
 const LS = {
   SESSION:"pd_session",
   ORDERS:"pd_orders",
   INVOICES:"pd_invoices",
 };
-
-const SHEET_SIZES = ["122x244","122x300","150x300","100x300","100x200","122x350","122x400","150x400"];
-const THICKNESS = Array.from({length:11},(_,i)=>String(i+2)); //2..12
 
 function loadJSON(k, fb){
   try{ return JSON.parse(localStorage.getItem(k) || "") ?? fb; }
@@ -28,10 +18,7 @@ function clearSession(){ localStorage.removeItem(LS.SESSION); }
 function getOrders(){ return loadJSON(LS.ORDERS, []); }
 function saveOrders(list){ saveJSON(LS.ORDERS, list); }
 
-function nowStr(){
-  const d = new Date();
-  return d.toLocaleString("ar-KW");
-}
+function nowStr(){ return new Date().toLocaleString("ar-KW"); }
 function genId(prefix){ return `${prefix}-${Date.now()}`; }
 
 function badgeClass(status){
@@ -39,11 +26,7 @@ function badgeClass(status){
 }
 
 function doorDiagram(type="single", dir="right"){
-  // Simple SVG like your drawing
-  // type: single/double
-  // dir: right/left/in/out (for double)
   if(type === "double"){
-    // double in/out
     const isIn = dir === "in";
     return `
     <div class="door-box">
@@ -60,7 +43,6 @@ function doorDiagram(type="single", dir="right"){
     </div>`;
   }
 
-  // single right/left
   const isRight = dir === "right";
   return `
   <div class="door-box">
@@ -80,44 +62,49 @@ function createBlankOrder(session){
     id: genId("ORD"),
     createdAt: nowStr(),
     clientUsername: session.username,
-    clientCompany: session.company || "عميل",
+    clientCompany: session.company || session.username,
     status: "قيد التشغيل",
     locked: false,
 
     doorType: "",
-    doorDirection: "right", // single: right/left | double: in/out
+    doorDirection: "right",
     lockSide: "",
 
     hasFix: false,
-    fixAuto: true,
-    fixWidthCm: "",
-    fixHeightCm: "",
 
-    lineWidth: "",
     sizes: [{hCm:"", wCm:"", qty:1}],
     sheetItems: [{size:"122x244", thicknessMm:"2", qty:1}],
+
+    lineWidth: "",
     cutEngraveDetails:"",
     notes:"",
     files: [],
+
     designApproved:false,
     designNotes:"",
+
     invoiceId:null,
   };
 }
 
-/* ---------------- Client Init ---------------- */
+/* =========================
+   CLIENT PAGE
+========================= */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
 
   const session = getSession();
-  if(!session || session.role!=="client"){ location.href="/"; return; }
+  if(!session || session.role !== "client"){
+    location.href = "index.html";
+    return;
+  }
 
   $("clientCompanyTitle").textContent = `👤 ${session.company || session.username}`;
 
   $("clientLogoutBtn").onclick = ()=>{
     clearSession();
-    location.href="/";
+    location.href="index.html";
   };
 
   // Tabs
@@ -125,65 +112,100 @@ function initClient(){
     btn.addEventListener("click",()=>{
       document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
       btn.classList.add("active");
-      const t = btn.dataset.tab;
+
+      const tabId = btn.dataset.tab;
       document.querySelectorAll(".tabPage").forEach(p=>p.classList.add("hidden"));
-      $(t).classList.remove("hidden");
+      $(tabId).classList.remove("hidden");
     });
   });
 
-  // Load orders
-  let orders = getOrders().filter(o=>o.clientUsername===session.username);
-  if(orders.length===0){
+  // Orders
+  let all = getOrders();
+  let myOrders = all.filter(o=>o.clientUsername===session.username);
+
+  if(myOrders.length===0){
     const o = createBlankOrder(session);
-    const all = getOrders();
     all.push(o);
     saveOrders(all);
-    orders = [o];
+    myOrders = [o];
   }
 
-  let selectedId = orders[orders.length-1].id;
+  let selectedId = myOrders[myOrders.length-1].id;
 
   const orderSelect = $("clientOrderSelect");
   const statusBadge = $("clientStatusBadge");
 
-  function refreshOrdersList(){
-    orders = getOrders().filter(o=>o.clientUsername===session.username);
-    orderSelect.innerHTML = orders
+  function refreshOrders(){
+    all = getOrders();
+    myOrders = all.filter(o=>o.clientUsername===session.username);
+
+    orderSelect.innerHTML = myOrders
       .slice().reverse()
       .map(o=>`<option value="${o.id}">${o.id} | ${o.createdAt}</option>`)
       .join("");
+
     orderSelect.value = selectedId;
   }
 
-  function currentOrder(){
-    const all = getOrders();
-    return all.find(o=>o.id===selectedId) || null;
+  function getCurrentOrder(){
+    return getOrders().find(o=>o.id===selectedId) || null;
   }
 
-  function saveCurrentOrder(update){
-    const all = getOrders();
-    const idx = all.findIndex(o=>o.id===selectedId);
-    if(idx===-1) return;
-    all[idx] = {...all[idx], ...update};
-    saveOrders(all);
+  function updateOrder(update){
+    const list = getOrders();
+    const idx = list.findIndex(o=>o.id===selectedId);
+    if(idx === -1) return;
+    list[idx] = {...list[idx], ...update};
+    saveOrders(list);
   }
 
   function renderStatus(){
-    const o = currentOrder();
+    const o = getCurrentOrder();
     if(!o) return;
     statusBadge.className = badgeClass(o.status);
-    statusBadge.textContent = o.status==="جاهز" ? "✅ جاهز" : "⏳ قيد التشغيل";
+    statusBadge.textContent = (o.status==="جاهز") ? "✅ جاهز" : "⏳ قيد التشغيل";
   }
 
-  /* ---- Door type & direction ---- */
+  orderSelect.onchange = ()=>{
+    selectedId = orderSelect.value;
+    renderAll();
+  };
+
+  $("newOrderBtn").onclick = ()=>{
+    const list = getOrders();
+    const o = createBlankOrder(session);
+    list.push(o);
+    saveOrders(list);
+    selectedId = o.id;
+    refreshOrders();
+    renderAll();
+  };
+
+  $("copyOrderBtn").onclick = ()=>{
+    const o = getCurrentOrder();
+    if(!o) return;
+    const list = getOrders();
+    const copy = {...o, id: genId("ORD"), createdAt: nowStr(), status:"قيد التشغيل"};
+    list.push(copy);
+    saveOrders(list);
+    selectedId = copy.id;
+    refreshOrders();
+    renderAll();
+    alert("✅ تم نسخ الطلب");
+  };
+
+  // Door UI
   const doorTypeSelect = $("doorTypeSelect");
   const doorDirectionArea = $("doorDirectionArea");
   const lockSideSelect = $("lockSideSelect");
 
-  function renderDoorDirectionUI(){
-    const o = currentOrder(); if(!o) return;
+  function renderDoor(){
+    const o = getCurrentOrder();
+    if(!o) return;
 
-    // If doorType empty -> show single right/left as default UI
+    doorTypeSelect.value = o.doorType || "";
+    lockSideSelect.value = o.lockSide || "";
+
     const type = o.doorType || "single";
 
     if(type === "double"){
@@ -193,114 +215,67 @@ function initClient(){
           <button class="btn btn-ghost" id="dd_out">مزدوج للخارج ${doorDiagram("double","out")}</button>
         </div>
       `;
-      $("dd_in").onclick = ()=>{ if(o.locked) return; saveCurrentOrder({doorDirection:"in"}); renderDoorDirectionUI(); };
-      $("dd_out").onclick = ()=>{ if(o.locked) return; saveCurrentOrder({doorDirection:"out"}); renderDoorDirectionUI(); };
-    } else {
+      $("dd_in").onclick = ()=>{ updateOrder({doorDirection:"in"}); renderDoor(); };
+      $("dd_out").onclick = ()=>{ updateOrder({doorDirection:"out"}); renderDoor(); };
+    }else{
       doorDirectionArea.innerHTML = `
         <div class="row">
           <button class="btn btn-ghost" id="dd_right">يمين ${doorDiagram("single","right")}</button>
           <button class="btn btn-ghost" id="dd_left">يسار ${doorDiagram("single","left")}</button>
         </div>
       `;
-      $("dd_right").onclick = ()=>{ if(o.locked) return; saveCurrentOrder({doorDirection:"right"}); renderDoorDirectionUI(); };
-      $("dd_left").onclick = ()=>{ if(o.locked) return; saveCurrentOrder({doorDirection:"left"}); renderDoorDirectionUI(); };
+      $("dd_right").onclick = ()=>{ updateOrder({doorDirection:"right"}); renderDoor(); };
+      $("dd_left").onclick = ()=>{ updateOrder({doorDirection:"left"}); renderDoor(); };
     }
   }
 
   doorTypeSelect.onchange = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
     const v = doorTypeSelect.value;
-    saveCurrentOrder({
+    updateOrder({
       doorType: v,
-      doorDirection: v==="double" ? "in" : "right",
+      doorDirection: v==="double" ? "in" : "right"
     });
-    renderDoorDirectionUI();
+    renderDoor();
   };
 
   lockSideSelect.onchange = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
-    saveCurrentOrder({lockSide: lockSideSelect.value});
+    updateOrder({lockSide: lockSideSelect.value});
   };
 
-  /* ---- Fix (فكس) ---- */
-  const addFixBtn = $("addFixBtn");
-  addFixBtn.onclick = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
-    saveCurrentOrder({hasFix:true, fixAuto:true});
+  $("addFixBtn").onclick = ()=>{
+    updateOrder({hasFix:true});
     alert("✅ تم إضافة فكس فوق الباب");
+    renderSizes();
   };
 
-  /* ---- Sizes ---- */
+  // Sizes
   const sizesContainer = $("sizesContainer");
 
   function renderSizes(){
-    const o = currentOrder();
+    const o = getCurrentOrder();
     if(!o) return;
 
     sizesContainer.innerHTML = "";
 
-    // Fix block if exists
     if(o.hasFix){
-      const doorWidth = Number(o.sizes?.[0]?.wCm || 0);
-      const autoWidth = doorWidth ? doorWidth : "";
-
       sizesContainer.innerHTML += `
       <div class="measure-item">
         <div class="measure-head">
           <div style="display:flex;align-items:center;gap:10px">
             <div class="num-pill">F</div>
-            <div>
-              <div style="font-weight:800">فكس فوق الباب</div>
-              <div class="help">عرض تلقائي = عرض الباب (مع خيار قياس مختلف)</div>
-            </div>
+            <div style="font-weight:800">فكس فوق الباب</div>
           </div>
           <button class="btn btn-red" id="removeFixBtn" style="width:auto;padding:10px 12px">حذف</button>
         </div>
-
-        <label>اختيار قياس الفكس</label>
-        <select id="fixMode">
-          <option value="auto" ${o.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
-          <option value="manual" ${!o.fixAuto?"selected":""}>قياس آخر (يدوي)</option>
-        </select>
-
-        <div class="row">
-          <div>
-            <label>عرض الفكس (سم)</label>
-            <input id="fixWidth" ${o.fixAuto?"disabled":""} value="${o.fixAuto ? autoWidth : (o.fixWidthCm||"")}" placeholder="مثال: 110"/>
-          </div>
-          <div>
-            <label>ارتفاع الفكس (سم)</label>
-            <input id="fixHeight" value="${o.fixHeightCm||""}" placeholder="مثال: 40"/>
-          </div>
-        </div>
+        <div class="help">تم إضافة فكس (التفاصيل لاحقاً)</div>
       </div>
       `;
-
       $("removeFixBtn").onclick = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        saveCurrentOrder({hasFix:false, fixWidthCm:"", fixHeightCm:""});
+        updateOrder({hasFix:false});
         renderSizes();
-      };
-
-      $("fixMode").onchange = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        const isAuto = $("fixMode").value === "auto";
-        saveCurrentOrder({fixAuto:isAuto});
-        renderSizes();
-      };
-
-      $("fixWidth").oninput = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        saveCurrentOrder({fixWidthCm: $("fixWidth").value});
-      };
-
-      $("fixHeight").oninput = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        saveCurrentOrder({fixHeightCm: $("fixHeight").value});
       };
     }
 
-    // Door size items
     (o.sizes || []).forEach((s,i)=>{
       sizesContainer.innerHTML += `
       <div class="measure-item">
@@ -315,317 +290,215 @@ function initClient(){
         <div class="row">
           <div>
             <label>الارتفاع (سم)</label>
-            <input ${o.locked?"disabled":""} data-i="${i}" data-k="hCm" value="${s.hCm||""}" placeholder="مثال: 210"/>
+            <input data-i="${i}" data-k="hCm" value="${s.hCm||""}" placeholder="مثال: 210"/>
           </div>
           <div>
             <label>العرض (سم)</label>
-            <input ${o.locked?"disabled":""} data-i="${i}" data-k="wCm" value="${s.wCm||""}" placeholder="مثال: 110"/>
+            <input data-i="${i}" data-k="wCm" value="${s.wCm||""}" placeholder="مثال: 110"/>
           </div>
         </div>
 
         <label>العدد</label>
-        <input ${o.locked?"disabled":""} type="number" min="1" data-i="${i}" data-k="qty" value="${s.qty||1}"/>
+        <input type="number" min="1" data-i="${i}" data-k="qty" value="${s.qty||1}"/>
       </div>
       `;
     });
 
     sizesContainer.querySelectorAll("input[data-i]").forEach(el=>{
       el.oninput = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
+        const o = getCurrentOrder();
         const i = Number(el.dataset.i);
         const k = el.dataset.k;
         o.sizes[i][k] = el.value;
-        saveCurrentOrder({sizes:o.sizes});
-        renderSizes(); // update fix auto width if needed
+        updateOrder({sizes:o.sizes});
       };
     });
 
     sizesContainer.querySelectorAll("button[data-del]").forEach(btn=>{
       btn.onclick = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
+        const o = getCurrentOrder();
         if(o.sizes.length===1){ alert("لا يمكن حذف آخر قياس"); return; }
         o.sizes.splice(Number(btn.dataset.del),1);
-        saveCurrentOrder({sizes:o.sizes});
+        updateOrder({sizes:o.sizes});
         renderSizes();
       };
     });
   }
 
   $("addSizeBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
+    const o = getCurrentOrder();
     o.sizes.push({hCm:"", wCm:"", qty:1});
-    saveCurrentOrder({sizes:o.sizes});
+    updateOrder({sizes:o.sizes});
     renderSizes();
   };
 
-  /* ---- Line width ---- */
+  // Line width
   const lineWidthSelect = $("lineWidthSelect");
   const lineWidthOther = $("lineWidthOther");
 
   lineWidthSelect.onchange = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
     if(lineWidthSelect.value==="other"){
       lineWidthOther.disabled = false;
       lineWidthOther.focus();
     }else{
       lineWidthOther.disabled = true;
       lineWidthOther.value = "";
-      saveCurrentOrder({lineWidth: lineWidthSelect.value});
+      updateOrder({lineWidth: lineWidthSelect.value});
     }
   };
+
   lineWidthOther.oninput = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
-    saveCurrentOrder({lineWidth: safe(lineWidthOther.value)});
+    updateOrder({lineWidth: lineWidthOther.value});
   };
 
-  /* ---- Details / notes / files ---- */
+  // Textareas
   const cutEngraveDetails = $("cutEngraveDetails");
   const notesInput = $("notesInput");
-  const fileInput = $("fileInput");
 
-  function bindTextAreas(){
-    const o = currentOrder(); if(!o) return;
+  function bindText(){
+    const o = getCurrentOrder();
     cutEngraveDetails.value = o.cutEngraveDetails || "";
     notesInput.value = o.notes || "";
-    cutEngraveDetails.disabled = o.locked;
-    notesInput.disabled = o.locked;
 
-    cutEngraveDetails.oninput = ()=>{ if(o.locked) return; saveCurrentOrder({cutEngraveDetails: cutEngraveDetails.value}); };
-    notesInput.oninput = ()=>{ if(o.locked) return; saveCurrentOrder({notes: notesInput.value}); };
+    cutEngraveDetails.oninput = ()=> updateOrder({cutEngraveDetails: cutEngraveDetails.value});
+    notesInput.oninput = ()=> updateOrder({notes: notesInput.value});
   }
 
-  fileInput.onchange = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
-    const names = Array.from(fileInput.files || []).map(f=>f.name);
-    saveCurrentOrder({files: names});
-    alert("تم حفظ أسماء الملفات (نسخة تجريبية)");
+  // Files
+  $("fileInput").onchange = ()=>{
+    const files = Array.from($("fileInput").files || []).map(f=>f.name);
+    updateOrder({files});
+    alert("✅ تم حفظ أسماء الملفات");
   };
 
-  /* ---- Sheets ---- */
-  const sheetContainer = $("sheetContainer");
-
-  function renderSheets(){
-    const o = currentOrder(); if(!o) return;
-
-    sheetContainer.innerHTML = `
-      <div style="display:grid;grid-template-columns:1.2fr .8fr .6fr .4fr;gap:10px;
-                  background:rgba(47,123,255,.18);border:1px solid rgba(47,123,255,.35);
-                  padding:10px;border-radius:16px;font-weight:800;margin-bottom:10px">
-        <div>قياس الشيت</div>
-        <div>السماكة</div>
-        <div>الكمية</div>
-        <div>حذف</div>
-      </div>
-    `;
-
-    (o.sheetItems || []).forEach((it,i)=>{
-      sheetContainer.innerHTML += `
-      <div style="display:grid;grid-template-columns:1.2fr .8fr .6fr .4fr;gap:10px;margin-bottom:10px">
-        <select ${o.locked?"disabled":""} data-i="${i}" data-k="size">
-          ${SHEET_SIZES.map(s=>`<option value="${s}" ${s===it.size?"selected":""}>${s}</option>`).join("")}
-        </select>
-        <select ${o.locked?"disabled":""} data-i="${i}" data-k="thicknessMm">
-          ${THICKNESS.map(t=>`<option value="${t}" ${t===it.thicknessMm?"selected":""}>${t} mm</option>`).join("")}
-        </select>
-        <input ${o.locked?"disabled":""} data-i="${i}" data-k="qty" type="number" min="1" value="${it.qty||1}"/>
-        <button class="btn btn-red" ${o.locked?"disabled":""} data-del="${i}" style="padding:10px 12px">حذف</button>
-      </div>
-      `;
-    });
-
-    sheetContainer.querySelectorAll("select,input").forEach(el=>{
-      el.oninput = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        const i = Number(el.dataset.i);
-        const k = el.dataset.k;
-        o.sheetItems[i][k] = el.value;
-        saveCurrentOrder({sheetItems:o.sheetItems});
-      };
-      el.onchange = el.oninput;
-    });
-
-    sheetContainer.querySelectorAll("button[data-del]").forEach(btn=>{
-      btn.onclick = ()=>{
-        const o = currentOrder(); if(!o || o.locked) return;
-        if(o.sheetItems.length===1){ alert("لا يمكن حذف آخر شيت"); return; }
-        o.sheetItems.splice(Number(btn.dataset.del),1);
-        saveCurrentOrder({sheetItems:o.sheetItems});
-        renderSheets();
-      };
-    });
-  }
-
-  $("addSheetBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o || o.locked) return;
-    o.sheetItems.push({size:"122x244", thicknessMm:"2", qty:1});
-    saveCurrentOrder({sheetItems:o.sheetItems});
-    renderSheets();
-  };
-
-  $("downloadSheetPdfBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o) return;
-    alert("سيتم فتح الطباعة، اختر Save as PDF");
-    window.print();
-  };
-
-  /* ---- Build Order Text ---- */
-  function buildOrderText(o){
-    const lines = [];
-    lines.push("📌 أمر تشغيل CNC - Pro Design");
-    lines.push("--------------------------------");
-    lines.push(`العميل: ${o.clientCompany}`);
-    lines.push(`رقم الطلب: ${o.id}`);
-    lines.push(`التاريخ: ${o.createdAt}`);
-    lines.push(`الحالة: ${o.status}`);
-    lines.push("--------------------------------");
-    lines.push(`نوع الباب: ${o.doorType || "-"}`);
-    lines.push(`اتجاه الفتحة: ${o.doorDirection || "-"}`);
-    lines.push(`القفل: ${o.lockSide || "-"}`);
-    if(o.hasFix){
-      lines.push(`فكس فوق الباب: نعم`);
-      lines.push(`قياس الفكس: ${o.fixAuto ? "تلقائي" : "يدوي"} | عرض: ${o.fixAuto ? (o.sizes?.[0]?.wCm||"-") : (o.fixWidthCm||"-")} | ارتفاع: ${o.fixHeightCm||"-"}`);
-    }else{
-      lines.push(`فكس فوق الباب: لا`);
-    }
-    lines.push("--------------------------------");
-    lines.push("📏 قياسات الباب (سم):");
-    (o.sizes||[]).forEach((s,i)=>{
-      lines.push(`${i+1}) ارتفاع ${s.hCm} × عرض ${s.wCm} | العدد: ${s.qty}`);
-    });
-    lines.push("--------------------------------");
-    lines.push(`⚙️ عرض الخط (mm): ${o.lineWidth || "-"}`);
-    lines.push("--------------------------------");
-    lines.push("🧾 الشيتات:");
-    (o.sheetItems||[]).forEach((x,i)=>{
-      lines.push(`${i+1}) ${x.size} | ${x.thicknessMm}mm | كمية: ${x.qty}`);
-    });
-    lines.push("--------------------------------");
-    lines.push("✂️ تفاصيل القص/الحفر:");
-    lines.push(o.cutEngraveDetails || "-");
-    lines.push("--------------------------------");
-    lines.push("📎 ملفات:");
-    lines.push((o.files && o.files.length) ? o.files.join(", ") : "لا يوجد");
-    lines.push("--------------------------------");
-    lines.push("📝 ملاحظات:");
-    lines.push(o.notes || "-");
-    return lines.join("\n");
-  }
-
+  // Buttons
   $("saveDraftBtn").onclick = ()=>{
     alert("✅ تم حفظ المسودة");
   };
 
   $("sendToAdminBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o) return;
-    saveCurrentOrder({locked:true});
-    const updated = currentOrder();
-    $("generatedOrderBox").value = buildOrderText(updated);
-    alert("✅ تم إرسال أمر التشغيل للأدمن وتم قفل الطلب للتعديل");
-    renderStatus();
-    renderSizes(); renderSheets(); bindTextAreas(); renderDoorDirectionUI();
+    alert("📩 تم إرسال أمر تشغيل CNC للأدمن (نسخة MVP)");
   };
 
-  $("copyOrderBtn").onclick = async ()=>{
-    const txt = $("generatedOrderBox").value;
-    if(!safe(txt)){ alert("لا يوجد أمر تشغيل"); return; }
-    await navigator.clipboard.writeText(txt);
-    alert("✅ تم النسخ");
+  $("copyTextBtn").onclick = ()=>{
+    const o = getCurrentOrder();
+    navigator.clipboard.writeText(JSON.stringify(o, null, 2));
+    alert("📋 تم نسخ بيانات الطلب");
   };
 
-  $("downloadOrderPdfBtn").onclick = ()=>{
-    alert("سيتم فتح الطباعة، اختر Save as PDF");
-    window.print();
+  $("downloadPdfBtn").onclick = ()=>{
+    alert("📄 PDF سيتم ربطه لاحقاً");
   };
 
-  /* ---- New order ---- */
-  $("newOrderBtn").onclick = ()=>{
-    const all = getOrders();
-    const o = createBlankOrder(session);
-    all.push(o);
-    saveOrders(all);
-    selectedId = o.id;
-    refreshOrdersList();
-    loadSelected();
+  // Sheets (مبدئي)
+  const sheetContainer = $("sheetContainer");
+
+  function renderSheets(){
+    const o = getCurrentOrder();
+    sheetContainer.innerHTML = `
+      <div class="help">طلب الشيتات (نسخة MVP)</div>
+      <div class="badge">عدد الشيتات: ${(o.sheetItems||[]).length}</div>
+    `;
+  }
+
+  $("addSheetBtn").onclick = ()=>{
+    const o = getCurrentOrder();
+    o.sheetItems.push({size:"122x244", thicknessMm:"2", qty:1});
+    updateOrder({sheetItems:o.sheetItems});
+    renderSheets();
   };
 
-  orderSelect.onchange = ()=>{
-    selectedId = orderSelect.value;
-    loadSelected();
+  $("downloadSheetPdfBtn").onclick = ()=>{
+    alert("📄 PDF طلب الشيت سيتم ربطه لاحقاً");
   };
 
   // Design
   $("approveDesignBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o) return;
-    saveCurrentOrder({designApproved:true});
-    alert("✅ تم اعتماد التصميم");
+    updateOrder({designApproved:true});
+    alert("✅ تم تأكيد التنفيذ");
   };
 
-  $("sendDesignNotesBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o) return;
-    saveCurrentOrder({designNotes: $("designNotes").value});
-    alert("✅ تم إرسال الملاحظات");
+  $("designNotes").oninput = ()=>{
+    updateOrder({designNotes: $("designNotes").value});
   };
 
-  // Invoice view
-  function getInvoices(){ return loadJSON(LS.INVOICES, []); }
-  function getInvoiceById(id){ return getInvoices().find(x=>x.id===id) || null; }
-
-  function renderInvoice(){
-    const o = currentOrder(); if(!o) return;
-    const box = $("invoiceBox");
-    if(!o.invoiceId){
-      box.value = "لا توجد فاتورة بعد";
-      return;
-    }
-    const inv = getInvoiceById(o.invoiceId);
-    if(!inv){ box.value="لا توجد فاتورة بعد"; return; }
-    box.value = inv.text;
-  }
-
-  $("downloadInvoicePdfBtn").onclick = ()=>{
-    const o = currentOrder(); if(!o || !o.invoiceId){ alert("لا توجد فاتورة"); return; }
-    alert("سيتم فتح الطباعة، اختر Save as PDF");
-    window.print();
-  };
-
-  function loadSelected(){
-    refreshOrdersList();
-    const o = currentOrder(); if(!o) return;
-
+  function renderAll(){
+    refreshOrders();
     renderStatus();
-
-    // door type
-    doorTypeSelect.value = o.doorType || "";
-    lockSideSelect.value = o.lockSide || "";
-
-    // line width
-    if(o.lineWidth && ["4","6","8","10","12","15","20","25","30","40"].includes(o.lineWidth)){
-      lineWidthSelect.value = o.lineWidth;
-      lineWidthOther.value = "";
-      lineWidthOther.disabled = true;
-    }else if(o.lineWidth){
-      lineWidthSelect.value = "other";
-      lineWidthOther.disabled = o.locked ? true : false;
-      lineWidthOther.value = o.lineWidth;
-    }else{
-      lineWidthSelect.value = "";
-      lineWidthOther.value = "";
-      lineWidthOther.disabled = true;
-    }
-
-    $("generatedOrderBox").value = buildOrderText(o);
-
-    renderDoorDirectionUI();
+    renderDoor();
     renderSizes();
     renderSheets();
-    bindTextAreas();
-    renderInvoice();
+    bindText();
   }
 
-  loadSelected();
+  renderAll();
 }
 
-/* Init */
-document.addEventListener("DOMContentLoaded",()=>{
+/* =========================
+   ADMIN PAGE
+========================= */
+function initAdmin(){
+  const root = $("adminRoot");
+  if(!root) return;
+
+  const session = getSession();
+  if(!session || session.role !== "admin"){
+    location.href = "index.html";
+    return;
+  }
+
+  $("adminLogoutBtn").onclick = ()=>{
+    clearSession();
+    location.href="index.html";
+  };
+
+  const orderSelect = $("adminOrderSelect");
+  const details = $("adminOrderDetails");
+
+  function refreshOrders(){
+    const orders = getOrders();
+    orderSelect.innerHTML = orders
+      .slice().reverse()
+      .map(o=>`<option value="${o.id}">${o.clientCompany} | ${o.id}</option>`)
+      .join("");
+  }
+
+  function getSelected(){
+    const id = orderSelect.value;
+    return getOrders().find(o=>o.id===id) || null;
+  }
+
+  function renderDetails(){
+    const o = getSelected();
+    if(!o){
+      details.textContent = "اختر طلب من القائمة 👆";
+      return;
+    }
+    details.textContent = `العميل: ${o.clientCompany} | الحالة: ${o.status} | تاريخ: ${o.createdAt}`;
+    $("adminStatus").value = o.status || "قيد التشغيل";
+  }
+
+  $("saveStatusBtn").onclick = ()=>{
+    const o = getSelected();
+    if(!o) return;
+    const list = getOrders();
+    const idx = list.findIndex(x=>x.id===o.id);
+    list[idx].status = $("adminStatus").value;
+    saveOrders(list);
+    alert("✅ تم حفظ الحالة");
+    renderDetails();
+  };
+
+  orderSelect.onchange = renderDetails;
+
+  refreshOrders();
+  renderDetails();
+}
+
+/* =========================
+   INIT
+========================= */
+document.addEventListener("DOMContentLoaded", ()=>{
   initClient();
+  initAdmin();
 });
