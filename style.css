@@ -186,6 +186,28 @@ input:focus, select:focus, textarea:focus{
   color: var(--text);
 }
 
+/* Pills + mini buttons */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  font-weight:800;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.miniBtn{
+  width:auto!important;
+  padding:10px 12px!important;
+  border-radius:14px!important;
+  font-size:14px!important;
+}
+
+/* Tabs */
 .tabs{
   display:flex;
   gap:10px;
@@ -211,12 +233,74 @@ input:focus, select:focus, textarea:focus{
   background: rgba(47,123,255,.16);
 }
 
+/* Layout helpers */
+.twoCols{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media (max-width:520px){
+  .twoCols{grid-template-columns:1fr;}
+}
+
+.dividerSoft{
+  height:1px;
+  background: rgba(255,255,255,.06);
+  margin: 12px 0;
+}
+
+/* Order bar */
+.orderBar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+}
+.orderBar .left{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+.orderBar .right{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+
+/* Send box */
+.sendBox{
+  border:1px solid rgba(47,123,255,.25);
+  background: rgba(47,123,255,.08);
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+}
+
+.tinyHelp{
+  font-size:12px;
+  color: rgba(234,241,255,.60);
+  margin-top:6px;
+}
+
+/* Measurement item */
 .measure-item{
   border: 1px dashed rgba(255,255,255,.15);
   border-radius: 16px;
   padding: 12px;
   background: rgba(255,255,255,.03);
   margin-top: 10px;
+}
+
+.mCardTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.mTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
 }
 
 .num-pill{
@@ -228,6 +312,93 @@ input:focus, select:focus, textarea:focus{
   background: rgba(47,123,255,.16);
   border:1px solid rgba(47,123,255,.35);
   font-weight:800;
+}
+
+.mTitle .txt{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-weight:900;
+}
+
+.mActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+/* Direction buttons */
+.dirBtns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  width:100%;
+}
+.dirBtn{
+  flex:1 1 160px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  cursor:pointer;
+  font-weight:900;
+  color: var(--text);
+  transition:.15s ease;
+}
+.dirBtn.active{
+  border-color: rgba(47,123,255,.55);
+  background: rgba(47,123,255,.16);
+}
+
+/* New: options grid (direction + lock + fix) */
+.optGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.optCard{
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  border-radius:16px;
+  padding:12px;
+}
+
+.optCard.full{
+  grid-column: 1 / -1;
+}
+
+.optTitle{
+  font-weight:900;
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.optRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.dirBtns.small .dirBtn{
+  padding:10px 12px;
+  border-radius:14px;
+  flex:1 1 120px;
+}
+
+.fixMini{
+  margin-top:10px;
+  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:10px;
+}
+
+@media (max-width:520px){
+  .optGrid{grid-template-columns:1fr;}
 }
 
 .help{
