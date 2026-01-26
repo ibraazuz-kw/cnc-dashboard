@@ -9,17 +9,23 @@
   --blue:#2f7bff;
   --blue2:#1b5dff;
 
+  --green:#12b76a;
+  --orange:#f59e0b;
+  --red:#ef4444;
+
   --shadow:0 12px 30px rgba(0,0,0,.45);
   --radius:18px;
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+
 body{
   font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
-  background: radial-gradient(1200px 700px at 20% -10%, rgba(47,123,255,.25), transparent 60%),
-              radial-gradient(900px 600px at 90% 0%, rgba(245,158,11,.12), transparent 60%),
-              var(--bg);
+  background:
+    radial-gradient(1200px 700px at 20% -10%, rgba(47,123,255,.25), transparent 60%),
+    radial-gradient(900px 600px at 90% 0%, rgba(245,158,11,.12), transparent 60%),
+    var(--bg);
   color:var(--text);
   direction: rtl;
   line-height:1.6;
@@ -33,6 +39,7 @@ body{
   padding: 14px;
 }
 
+/* Topbar */
 .topbar{
   position: sticky;
   top:0;
@@ -78,6 +85,7 @@ body{
   color:var(--muted);
 }
 
+/* Cards */
 .card{
   background: linear-gradient(180deg, rgba(17,27,39,.95), rgba(15,22,32,.95));
   border:1px solid var(--border);
@@ -100,6 +108,7 @@ body{
   font-size: 16px;
 }
 
+/* Badge */
 .badge{
   display:inline-flex;
   align-items:center;
@@ -109,6 +118,7 @@ body{
   border: 1px solid var(--border);
   background: rgba(255,255,255,.03);
   font-size: 13px;
+  font-weight: 800;
 }
 
 .badge.ready{
@@ -122,6 +132,7 @@ body{
   color: #ffe8b0;
 }
 
+/* Inputs */
 label{
   display:block;
   font-size: 13px;
@@ -151,12 +162,13 @@ input:focus, select:focus, textarea:focus{
   box-shadow: 0 0 0 4px rgba(47,123,255,.15);
 }
 
+/* Buttons */
 .btn{
   width:100%;
   border:none;
   border-radius: 16px;
   padding: 12px 14px;
-  font-weight: 700;
+  font-weight: 800;
   cursor:pointer;
   transition: .2s ease;
   display:flex;
@@ -186,20 +198,6 @@ input:focus, select:focus, textarea:focus{
   color: var(--text);
 }
 
-/* Pills + mini buttons */
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-  font-weight:800;
-  font-size:13px;
-  white-space:nowrap;
-}
-
 .miniBtn{
   width:auto!important;
   padding:10px 12px!important;
@@ -223,7 +221,7 @@ input:focus, select:focus, textarea:focus{
   border: 1px solid var(--border);
   background: rgba(255,255,255,.04);
   color: var(--text);
-  font-weight: 700;
+  font-weight: 900;
   cursor:pointer;
   white-space:nowrap;
 }
@@ -233,7 +231,42 @@ input:focus, select:focus, textarea:focus{
   background: rgba(47,123,255,.16);
 }
 
-/* Layout helpers */
+/* Order Bar */
+.orderBar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+}
+.orderBar .left{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+.orderBar .right{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  font-weight:900;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.sendBox{
+  border:1px solid rgba(47,123,255,.25);
+  background: rgba(47,123,255,.08);
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+}
+
 .twoCols{
   display:grid;
   grid-template-columns: 1fr 1fr;
@@ -249,43 +282,24 @@ input:focus, select:focus, textarea:focus{
   margin: 12px 0;
 }
 
-/* Order bar */
-.orderBar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  justify-content:space-between;
-}
-.orderBar .left{
-  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-}
-.orderBar .right{
-  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-}
-
-/* Send box */
-.sendBox{
-  border:1px solid rgba(47,123,255,.25);
-  background: rgba(47,123,255,.08);
-  border-radius:18px;
-  padding:12px;
-  margin-top:12px;
-}
-
-.tinyHelp{
-  font-size:12px;
-  color: rgba(234,241,255,.60);
-  margin-top:6px;
-}
-
 /* Measurement item */
 .measure-item{
-  border: 1px dashed rgba(255,255,255,.15);
-  border-radius: 16px;
-  padding: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  padding: 14px;
   background: rgba(255,255,255,.03);
-  margin-top: 10px;
+  margin-top: 12px;
+}
+
+.num-pill{
+  width:34px;height:34px;
+  border-radius: 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(47,123,255,.16);
+  border:1px solid rgba(47,123,255,.35);
+  font-weight:900;
 }
 
 .mCardTop{
@@ -300,105 +314,82 @@ input:focus, select:focus, textarea:focus{
   display:flex;
   align-items:center;
   gap:10px;
-  min-width:0;
-}
-
-.num-pill{
-  width:34px;height:34px;
-  border-radius: 12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: rgba(47,123,255,.16);
-  border:1px solid rgba(47,123,255,.35);
-  font-weight:800;
 }
 
 .mTitle .txt{
-  min-width:0;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-weight:900;
+  font-weight: 950;
 }
 
 .mActions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  align-items:center;
 }
 
-/* Direction buttons */
+/* Direction buttons with SVG arrow */
 .dirBtns{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  width:100%;
 }
+
 .dirBtn{
   flex:1 1 160px;
-  padding:10px 12px;
+  padding:12px 12px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.04);
   cursor:pointer;
-  font-weight:900;
+  font-weight: 950;
   color: var(--text);
   transition:.15s ease;
+  text-align:center;
 }
+
 .dirBtn.active{
   border-color: rgba(47,123,255,.55);
   background: rgba(47,123,255,.16);
+  box-shadow: 0 12px 26px rgba(47,123,255,.18);
 }
 
-/* New: options grid (direction + lock + fix) */
-.optGrid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
-
-.optCard{
-  border:1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.03);
+.doorIcon{
+  width:100%;
+  height:70px;
   border-radius:16px;
-  padding:12px;
-}
-
-.optCard.full{
-  grid-column: 1 / -1;
-}
-
-.optTitle{
-  font-weight:900;
-  font-size:13px;
-  margin-bottom:8px;
-}
-
-.optRow{
+  margin-top:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.22);
   display:flex;
   align-items:center;
+  justify-content:center;
+}
+
+.doorSvg{
+  width:90px;
+  height:60px;
+}
+
+/* Fix box */
+.fixBox{
+  border:1px dashed rgba(47,123,255,.35);
+  background: rgba(47,123,255,.08);
+  border-radius:16px;
+  padding:12px;
+  margin-top:10px;
+}
+
+.fixHead{
+  display:flex;
   justify-content:space-between;
+  align-items:center;
   gap:10px;
   flex-wrap:wrap;
 }
 
-.dirBtns.small .dirBtn{
-  padding:10px 12px;
-  border-radius:14px;
-  flex:1 1 120px;
-}
-
-.fixMini{
-  margin-top:10px;
-  border-top:1px solid rgba(255,255,255,.06);
-  padding-top:10px;
-}
-
-@media (max-width:520px){
-  .optGrid{grid-template-columns:1fr;}
+.tinyHelp{
+  font-size:12px;
+  color: rgba(234,241,255,.60);
+  margin-top:6px;
 }
 
 .help{
