@@ -2,17 +2,17 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pro Design CNC - تسجيل الدخول</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+
   <div class="topbar">
     <div class="container">
       <div class="brand">
         <div class="logo"></div>
-        <div style="min-width:0">
+        <div>
           <h1>Pro Design CNC</h1>
           <p>تسجيل الدخول</p>
         </div>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="indexRoot">
     <div class="card">
       <div class="card-title">
         <h2>🔐 تسجيل الدخول</h2>
@@ -36,16 +36,15 @@
       <label>اسم المستخدم</label>
       <input id="usernameInput" placeholder="مثال: client1 أو admin" />
 
-      <label>اسم الشركة (للعميل فقط)</label>
-      <input id="companyInput" placeholder="مثال: شركة العميل 1" />
-
-      <div class="hr"></div>
+      <div id="companyWrap">
+        <label>اسم الشركة (للعميل فقط)</label>
+        <input id="companyInput" placeholder="مثال: شركة العميل 1" />
+      </div>
 
       <button class="btn btn-blue" id="loginBtn">دخول</button>
 
-      <div class="help" style="margin-top:10px">
-        * النظام حالياً MVP: التخزين داخل المتصفح (LocalStorage)
-      </div>
+      <div class="help" id="loginMsg"></div>
+      <div class="help">* النظام حالياً MVP: التخزين داخل المتصفح (LocalStorage)</div>
     </div>
   </div>
 
@@ -55,5 +54,6 @@
       if(typeof initIndex === "function") initIndex();
     });
   </script>
+
 </body>
 </html>
