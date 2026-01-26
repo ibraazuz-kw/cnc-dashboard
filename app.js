@@ -25,11 +25,7 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
-/* =========================
-   Helpers: Safe Navigation
-========================= */
 function goTo(path){
-  // Render friendly (no index.html)
   location.href = path;
 }
 
@@ -44,7 +40,7 @@ function ensureRole(requiredRole){
 }
 
 /* =========================
-   Data models
+   Models
 ========================= */
 function createBlankMeasurement(){
   return {
@@ -52,14 +48,14 @@ function createBlankMeasurement(){
     wCm:"",
     qty:1,
 
-    doorType:"single", // single | oneHalf | double
-    direction:"right", // right | left
-    lockLeaf:"",       // rightLeaf | leftLeaf (only for double/oneHalf)
+    doorType:"single",   // single | oneHalf | double
+    direction:"right",   // right | left
+    lockLeaf:"",         // rightLeaf | leftLeaf (for double only)
 
     hasFix:false,
+    fixMode:"auto",      // auto | custom
     fixWidth:"",
     fixHeight:"",
-    fixAuto:true,
   };
 }
 
@@ -78,7 +74,6 @@ function createBlankOrder(session){
 
     measurements: [ createBlankMeasurement() ],
 
-    // admin invoice fields (MVP)
     invoice:{
       cut:0,
       engrave:0,
@@ -89,7 +84,7 @@ function createBlankOrder(session){
 }
 
 /* =========================
-   INDEX PAGE
+   INDEX
 ========================= */
 function initIndex(){
   const roleSelect = $("roleSelect");
@@ -99,7 +94,6 @@ function initIndex(){
 
   if(!roleSelect || !usernameInput || !loginBtn) return;
 
-  // If already logged in, route correctly
   const session = getSession();
   if(session?.role === "client") return goTo("/client.html");
   if(session?.role === "admin") return goTo("/admin.html");
@@ -109,13 +103,11 @@ function initIndex(){
     companyInput.disabled = (role !== "client");
     if(role !== "client") companyInput.value = "";
   };
-
   roleSelect.dispatchEvent(new Event("change"));
 
   loginBtn.onclick = ()=>{
     const role = roleSelect.value;
     const username = (usernameInput.value || "").trim();
-
     if(!username){
       alert("⚠️ اكتب اسم المستخدم");
       return;
@@ -135,7 +127,7 @@ function initIndex(){
 }
 
 /* =========================
-   CLIENT PAGE
+   CLIENT
 ========================= */
 function initClient(){
   const root = $("clientRoot");
@@ -205,7 +197,6 @@ function initClient(){
     if(!myOrders.find(x=>x.id===selectedId)){
       selectedId = myOrders[myOrders.length-1]?.id || "";
     }
-
     orderSelect.value = selectedId;
   }
 
@@ -255,9 +246,9 @@ function initClient(){
     const o = getCurrentOrder();
     if(!o) return;
 
-    // line width
     const lw = o.lineWidth || "";
     const preset = ["4","6","8","10","12","15","20","25","30","40"];
+
     if(preset.includes(lw)){
       lineWidthSelect.value = lw;
       lineWidthOther.value = "";
@@ -287,14 +278,12 @@ function initClient(){
       updateOrder({lineWidth: lineWidthOther.value.trim()});
     };
 
-    // textareas
     cutEngraveDetails.value = o.cutEngraveDetails || "";
     notesInput.value = o.notes || "";
 
     cutEngraveDetails.oninput = ()=> updateOrder({cutEngraveDetails: cutEngraveDetails.value});
     notesInput.oninput = ()=> updateOrder({notes: notesInput.value});
 
-    // files (MVP: store names only)
     fileInput.onchange = ()=>{
       const files = Array.from(fileInput.files || []).map(f=>f.name);
       updateOrder({files});
@@ -302,7 +291,51 @@ function initClient(){
     };
   }
 
-  // Measurements UI
+  /* =========================
+     Door CAD Arrow (Modern)
+  ========================= */
+  function doorCadArrowSVG(dir){
+    // dir: right | left
+    const hingeX = (dir === "right") ? 14 : 86;
+    const leafToX = (dir === "right") ? 82 : 18;
+    const arcSweep = (dir === "right") ? 0 : 1;
+
+    // NOTE: pure SVG no external libs
+    return `
+      <svg viewBox="0 0 100 70" width="100%" height="64" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="rgba(47,123,255,.75)"/>
+            <stop offset="1" stop-color="rgba(47,123,255,.20)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- frame -->
+        <rect x="6" y="8" width="88" height="54" rx="12"
+          fill="rgba(0,0,0,.20)" stroke="rgba(255,255,255,.16)" stroke-width="1.2"/>
+
+        <!-- hinge line -->
+        <line x1="${hingeX}" y1="16" x2="${hingeX}" y2="54"
+          stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- door leaf -->
+        <line x1="${hingeX}" y1="54" x2="${leafToX}" y2="28"
+          stroke="url(#g)" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- swing arc -->
+        <path d="M ${hingeX} 54 A 26 26 0 0 ${arcSweep} ${leafToX} 28"
+          fill="none" stroke="rgba(47,123,255,.55)" stroke-width="2.2" stroke-dasharray="3 3"/>
+
+        <!-- handle dot -->
+        <circle cx="${dir==="right" ? 64 : 36}" cy="40" r="2.6" fill="rgba(255,255,255,.65)"/>
+      </svg>
+    `;
+  }
+
+  /* =========================
+     Measurements (NO CROWD)
+     Direction CAD + Lock + Fix
+  ========================= */
   const container = $("measurementsContainer");
 
   function renderMeasurements(){
@@ -313,7 +346,7 @@ function initClient(){
     container.innerHTML = "";
 
     mList.forEach((m, idx)=>{
-      const isDoubleLike = (m.doorType === "double" || m.doorType === "oneHalf");
+      const showLock = (m.doorType === "double"); // as requested
 
       container.innerHTML += `
         <div class="measure-item">
@@ -324,15 +357,17 @@ function initClient(){
             </div>
 
             <div class="mActions">
-              <button class="btn btn-ghost miniBtn" data-fix="${idx}">➕ إضافة فكس</button>
+              <button class="btn btn-ghost miniBtn" data-togglefix="${idx}">
+                ${m.hasFix ? "⬆️ تعديل الفكس" : "➕ إضافة فكس"}
+              </button>
               <button class="btn btn-red miniBtn" data-del="${idx}">حذف</button>
             </div>
           </div>
 
           <div class="dividerSoft"></div>
 
-          <div class="measureGrid">
-            <!-- Left: Measurements -->
+          <div class="measureGrid" style="display:grid;grid-template-columns:1.25fr .95fr;gap:12px;">
+            <!-- LEFT: القياسات -->
             <div>
               <div class="twoCols">
                 <div>
@@ -361,16 +396,47 @@ function initClient(){
               </div>
             </div>
 
-            <!-- Right: Direction / Lock / Fix -->
-            <div class="sideBox">
+            <!-- RIGHT: اتجاه + قفل + فكس -->
+            <div class="sideBox" style="
+              border:1px solid rgba(255,255,255,.08);
+              background: rgba(255,255,255,.03);
+              border-radius: 16px;
+              padding: 10px;
+            ">
               <label>اتجاه فتحة الباب</label>
-              <div class="dirBtns">
-                <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين ➜</button>
-                <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار ⬅</button>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button class="dirCad ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right"
+                  style="
+                    border-radius:16px;
+                    border:1px solid rgba(255,255,255,.10);
+                    background:${m.direction==="right" ? "rgba(47,123,255,.14)" : "rgba(0,0,0,.18)"};
+                    padding:10px;
+                    cursor:pointer;
+                    color:inherit;
+                    text-align:center;
+                  ">
+                  <div style="font-weight:900;margin-bottom:6px;">يمين</div>
+                  ${doorCadArrowSVG("right")}
+                </button>
+
+                <button class="dirCad ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left"
+                  style="
+                    border-radius:16px;
+                    border:1px solid rgba(255,255,255,.10);
+                    background:${m.direction==="left" ? "rgba(47,123,255,.14)" : "rgba(0,0,0,.18)"};
+                    padding:10px;
+                    cursor:pointer;
+                    color:inherit;
+                    text-align:center;
+                  ">
+                  <div style="font-weight:900;margin-bottom:6px;">يسار</div>
+                  ${doorCadArrowSVG("left")}
+                </button>
               </div>
 
-              ${isDoubleLike ? `
-                <label style="margin-top:10px">مكان القفل (Lock)</label>
+              ${showLock ? `
+                <label style="margin-top:10px">مكان القفل (للـ دبل)</label>
                 <select data-i="${idx}" data-k="lockLeaf">
                   <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
                   <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
@@ -379,25 +445,35 @@ function initClient(){
               ` : ``}
 
               ${m.hasFix ? `
-                <div class="fixBox">
-                  <div class="fixHead">
+                <div class="fixBox" style="
+                  border:1px dashed rgba(47,123,255,.35);
+                  background: rgba(47,123,255,.08);
+                  border-radius:16px;
+                  padding:12px;
+                  margin-top:10px;
+                ">
+                  <div class="fixHead" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
                     <div style="font-weight:900">⬆️ فكس فوق الباب</div>
                     <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
                   </div>
 
-                  <div class="tinyHelp">العرض تلقائي = نفس عرض الباب، أو يدوي إذا تبي.</div>
+                  <div style="font-size:12px;color: rgba(234,241,255,.60);margin-top:6px;">
+                    الفكس دائماً فوق الباب (مفرد / باب ونص / دبل)
+                  </div>
 
-                  <label>وضع عرض الفكس</label>
-                  <select data-i="${idx}" data-k="fixAuto">
-                    <option value="true" ${m.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
-                    <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
+                  <label>عرض الفكس</label>
+                  <select data-i="${idx}" data-k="fixMode">
+                    <option value="auto" ${m.fixMode==="auto"?"selected":""}>تلقائي (نفس عرض الباب)</option>
+                    <option value="custom" ${m.fixMode==="custom"?"selected":""}>يدوي</option>
                   </select>
 
                   <div class="twoCols" style="margin-top:8px">
                     <div>
                       <label>عرض الفكس (سم)</label>
-                      <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
-                        value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
+                      <input data-i="${idx}" data-k="fixWidth"
+                        ${m.fixMode==="auto" ? "disabled" : ""}
+                        value="${m.fixMode==="auto" ? (m.wCm||"") : (m.fixWidth||"")}"
+                        placeholder="مثال: 110"/>
                     </div>
                     <div>
                       <label>ارتفاع الفكس (سم)</label>
@@ -408,12 +484,11 @@ function initClient(){
               ` : ``}
             </div>
           </div>
-
         </div>
       `;
     });
 
-    // Inputs/selects binding
+    // Bind inputs & selects
     container.querySelectorAll("input[data-i], select[data-i]").forEach(el=>{
       const i = Number(el.dataset.i);
       const k = el.dataset.k;
@@ -424,16 +499,21 @@ function initClient(){
 
         if(k === "qty"){
           m2[k] = Number(el.value || 1);
-        }else if(k === "fixAuto"){
-          m2[k] = (el.value === "true");
-          if(m2.fixAuto) m2.fixWidth = "";
         }else{
           m2[k] = el.value;
         }
 
+        // if doorType not double => remove lock
         if(k === "doorType"){
-          if(m2.doorType === "single"){
+          if(m2.doorType !== "double"){
             m2.lockLeaf = "";
+          }
+        }
+
+        // fix auto width
+        if(k === "fixMode"){
+          if(m2.fixMode === "auto"){
+            m2.fixWidth = "";
           }
         }
 
@@ -445,7 +525,7 @@ function initClient(){
       el.onchange = apply;
     });
 
-    // Direction buttons
+    // Direction CAD buttons
     container.querySelectorAll("button[data-dir]").forEach(btn=>{
       btn.onclick = ()=>{
         const i = Number(btn.dataset.dir);
@@ -459,17 +539,15 @@ function initClient(){
       };
     });
 
-    // Add fix
-    container.querySelectorAll("button[data-fix]").forEach(btn=>{
+    // Fix toggle/add
+    container.querySelectorAll("button[data-togglefix]").forEach(btn=>{
       btn.onclick = ()=>{
-        const i = Number(btn.dataset.fix);
+        const i = Number(btn.dataset.togglefix);
         const o2 = getCurrentOrder();
         const m2 = o2.measurements[i];
 
         m2.hasFix = true;
-        m2.fixAuto = true;
-        m2.fixWidth = "";
-        m2.fixHeight = "";
+        if(!m2.fixMode) m2.fixMode = "auto";
 
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
@@ -497,10 +575,12 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.del);
         const o2 = getCurrentOrder();
+
         if(o2.measurements.length === 1){
           alert("لا يمكن حذف آخر قياس");
           return;
         }
+
         o2.measurements.splice(i,1);
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
@@ -528,12 +608,11 @@ function initClient(){
   };
 
   $("sendCncBtn").onclick = ()=>{
-    alert("🚀 تم إرسال أمر تشغيل CNC (نسخة MVP)\n\nلاحقاً سيتم ربطها بالسيرفر ليستقبلها الأدمن.");
+    alert("🚀 تم إرسال أمر تشغيل CNC (نسخة MVP)");
   };
 
-  // Other tabs MVP
   $("addSheetBtn").onclick = ()=>{
-    $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً جدول كامل)";
+    $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً)";
   };
 
   $("approveDesignBtn").onclick = ()=>{
@@ -551,7 +630,7 @@ function initClient(){
 }
 
 /* =========================
-   ADMIN PAGE
+   ADMIN
 ========================= */
 function initAdmin(){
   const root = $("adminRoot");
