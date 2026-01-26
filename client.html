@@ -9,7 +9,6 @@
 
 <body>
 
-  <!-- Topbar -->
   <div class="topbar">
     <div class="container">
       <div class="brand">
@@ -29,7 +28,7 @@
 
   <div class="container" id="clientRoot">
 
-    <!-- Orders Card -->
+    <!-- Orders -->
     <div class="card">
       <div class="orderBar">
         <div class="left">
@@ -54,7 +53,7 @@
           <button class="btn btn-blue" id="sendCncBtn">🚀 إرسال أمر تشغيل CNC</button>
         </div>
         <div class="tinyHelp">
-          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage).
+          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage). بعد ربط السيرفر تصبح الطلبات مشتركة بين الجميع.
         </div>
       </div>
     </div>
@@ -73,7 +72,7 @@
       </div>
     </div>
 
-    <!-- TAB: Measurements -->
+    <!-- Measurements -->
     <div class="card tabPage" id="tab_measurements">
       <div class="card-title">
         <h2>📏 القياسات والتفاصيل</h2>
@@ -119,18 +118,18 @@
       <div class="help" id="clientMsg"></div>
     </div>
 
-    <!-- TAB: Sheets -->
+    <!-- Sheets -->
     <div class="card tabPage hidden" id="tab_sheets">
       <div class="card-title">
         <h2>🧾 طلب الشيتات</h2>
       </div>
 
-      <div class="help">قريباً: جدول كامل + PDF للمورد</div>
+      <div class="help">قريباً: جدول كامل (قياس الشيت - السماكة - الكمية) + PDF للمورد</div>
       <button class="btn btn-blue" id="addSheetBtn">➕ إضافة شيت</button>
       <div class="help" id="sheetsMsg"></div>
     </div>
 
-    <!-- TAB: Design -->
+    <!-- Design -->
     <div class="card tabPage hidden" id="tab_design">
       <div class="card-title">
         <h2>✅ تأكيد التصميم قبل التنفيذ</h2>
@@ -144,7 +143,7 @@
       <button class="btn btn-green" id="approveDesignBtn">✅ أوافق على التنفيذ</button>
     </div>
 
-    <!-- TAB: Invoice -->
+    <!-- Invoice -->
     <div class="card tabPage hidden" id="tab_invoice">
       <div class="card-title">
         <h2>🧾 الفاتورة</h2>
