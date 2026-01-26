@@ -5,158 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pro Design CNC - بوابة العميل</title>
   <link rel="stylesheet" href="style.css" />
-
-  <style>
-    .hidden{display:none!important;}
-
-    .orderBar{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .orderBar .left{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    }
-    .orderBar .right{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    }
-
-    .miniBtn{
-      width:auto!important;
-      padding:10px 12px!important;
-      border-radius:14px!important;
-      font-size:14px!important;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      font-weight:800;
-      font-size:13px;
-      white-space:nowrap;
-    }
-
-    .mCardTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .mTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .mTitle .num-pill{flex:0 0 auto;}
-    .mTitle .txt{
-      min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      font-weight:900;
-    }
-
-    .mActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .twoCols{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width:520px){
-      .twoCols{grid-template-columns:1fr;}
-    }
-
-    .dividerSoft{
-      height:1px;
-      background: rgba(255,255,255,.06);
-      margin: 12px 0;
-    }
-
-    .dirBtns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      width:100%;
-    }
-    .dirBtn{
-      flex:1 1 170px;
-      padding:12px 12px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      cursor:pointer;
-      font-weight:900;
-      color: var(--text);
-      transition:.15s ease;
-      text-align:center;
-    }
-    .dirBtn.active{
-      border-color: rgba(47,123,255,.55);
-      background: rgba(47,123,255,.16);
-    }
-
-    .doorMini{
-      margin-top:8px;
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:16px;
-      background: rgba(0,0,0,.25);
-      padding:10px 6px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
-
-    .fixBox{
-      border:1px dashed rgba(47,123,255,.35);
-      background: rgba(47,123,255,.08);
-      border-radius:16px;
-      padding:12px;
-      margin-top:10px;
-    }
-
-    .fixHead{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .tinyHelp{
-      font-size:12px;
-      color: rgba(234,241,255,.60);
-      margin-top:6px;
-    }
-
-    .sendBox{
-      border:1px solid rgba(47,123,255,.25);
-      background: rgba(47,123,255,.08);
-      border-radius:18px;
-      padding:12px;
-      margin-top:12px;
-    }
-  </style>
 </head>
 
 <body>
 
+  <!-- Topbar -->
   <div class="topbar">
     <div class="container">
       <div class="brand">
@@ -176,6 +29,7 @@
 
   <div class="container" id="clientRoot">
 
+    <!-- Orders Card -->
     <div class="card">
       <div class="orderBar">
         <div class="left">
@@ -205,6 +59,7 @@
       </div>
     </div>
 
+    <!-- Tabs -->
     <div class="card">
       <div class="card-title">
         <h2>📑 الأقسام</h2>
@@ -218,6 +73,7 @@
       </div>
     </div>
 
+    <!-- TAB: Measurements -->
     <div class="card tabPage" id="tab_measurements">
       <div class="card-title">
         <h2>📏 القياسات والتفاصيل</h2>
@@ -263,15 +119,18 @@
       <div class="help" id="clientMsg"></div>
     </div>
 
+    <!-- TAB: Sheets -->
     <div class="card tabPage hidden" id="tab_sheets">
       <div class="card-title">
         <h2>🧾 طلب الشيتات</h2>
       </div>
+
       <div class="help">قريباً: جدول كامل + PDF للمورد</div>
       <button class="btn btn-blue" id="addSheetBtn">➕ إضافة شيت</button>
       <div class="help" id="sheetsMsg"></div>
     </div>
 
+    <!-- TAB: Design -->
     <div class="card tabPage hidden" id="tab_design">
       <div class="card-title">
         <h2>✅ تأكيد التصميم قبل التنفيذ</h2>
@@ -285,6 +144,7 @@
       <button class="btn btn-green" id="approveDesignBtn">✅ أوافق على التنفيذ</button>
     </div>
 
+    <!-- TAB: Invoice -->
     <div class="card tabPage hidden" id="tab_invoice">
       <div class="card-title">
         <h2>🧾 الفاتورة</h2>
