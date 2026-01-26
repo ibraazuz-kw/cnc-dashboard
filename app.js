@@ -1,10 +1,3 @@
-/* =========================
-   Pro Design CNC - Client (MVP)
-   - LocalStorage Orders
-   - Measurements per door with direction + lock leaf + fix
-   - Tabs working correctly
-========================= */
-
 function $(id){ return document.getElementById(id); }
 
 const LS = {
@@ -31,7 +24,6 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
-/* ====== Data Models ====== */
 function createBlankMeasurement(){
   return {
     hCm:"",
@@ -39,13 +31,13 @@ function createBlankMeasurement(){
     qty:1,
 
     doorType:"single", // single | oneHalf | double
-    direction:"right", // right | left  (B)
-    lockLeaf:"",       // rightLeaf | leftLeaf (only for double/oneHalf)
+    direction:"right", // right | left
+    lockLeaf:"",       // rightLeaf | leftLeaf (only if double/oneHalf)
 
     hasFix:false,
-    fixAuto:true,
     fixWidth:"",
     fixHeight:"",
+    fixAuto:true,
   };
 }
 
@@ -66,7 +58,6 @@ function createBlankOrder(session){
   };
 }
 
-/* ====== Client Init ====== */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
@@ -84,25 +75,19 @@ function initClient(){
     location.href="index.html";
   };
 
-  /* Tabs */
-  const tabButtons = Array.from(document.querySelectorAll(".tab"));
-  const tabPages = Array.from(document.querySelectorAll(".tabPage"));
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
 
-  function openTab(tabId){
-    tabButtons.forEach(b=>b.classList.toggle("active", b.dataset.tab === tabId));
-    tabPages.forEach(p=>p.classList.toggle("hidden", p.id !== tabId));
-  }
-
-  tabButtons.forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      openTab(btn.dataset.tab);
+      const tabId = btn.dataset.tab;
+      document.querySelectorAll(".tabPage").forEach(p=>p.classList.add("hidden"));
+      $(tabId).classList.remove("hidden");
     });
   });
 
-  // ensure default open
-  openTab("tab_measurements");
-
-  /* Orders */
+  // Orders
   let allOrders = getOrders();
   let myOrders = allOrders.filter(o=>o.clientUsername===session.username);
 
@@ -168,23 +153,17 @@ function initClient(){
   $("copyOrderBtn").onclick = ()=>{
     const o = getCurrentOrder();
     if(!o) return;
-
     const list = getOrders();
-    const copy = JSON.parse(JSON.stringify(o));
-    copy.id = genId("ORD");
-    copy.createdAt = nowStr();
-    copy.status = "قيد التشغيل";
-
+    const copy = {...o, id: genId("ORD"), createdAt: nowStr(), status:"قيد التشغيل"};
     list.push(copy);
     saveOrders(list);
-
     selectedId = copy.id;
     refreshOrders();
     renderAll();
     alert("✅ تم نسخ الطلب");
   };
 
-  /* Global fields */
+  // Global fields
   const lineWidthSelect = $("lineWidthSelect");
   const lineWidthOther = $("lineWidthOther");
   const cutEngraveDetails = $("cutEngraveDetails");
@@ -195,8 +174,8 @@ function initClient(){
     const o = getCurrentOrder();
     if(!o) return;
 
+    const lw = o.lineWidth || "";
     const preset = ["4","6","8","10","12","15","20","25","30","40"];
-    const lw = (o.lineWidth || "").trim();
 
     if(preset.includes(lw)){
       lineWidthSelect.value = lw;
@@ -240,22 +219,8 @@ function initClient(){
     };
   }
 
-  /* Measurements */
+  // Measurements
   const container = $("measurementsContainer");
-
-  function doorMiniIcon(direction="right"){
-    // simple modern icon (B)
-    const flip = direction === "left" ? "scaleX(-1)" : "none";
-    return `
-      <div class="doorMini">
-        <svg width="86" height="60" viewBox="0 0 100 70" style="transform:${flip}">
-          <rect x="10" y="10" width="80" height="50" rx="10" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3"/>
-          <line x1="85" y1="15" x2="85" y2="55" stroke="rgba(255,255,255,.9)" stroke-width="4"/>
-          <path d="M85 35 L25 15 L25 55 Z" fill="rgba(47,123,255,.55)"/>
-        </svg>
-      </div>
-    `;
-  }
 
   function renderMeasurements(){
     const o = getCurrentOrder();
@@ -269,6 +234,7 @@ function initClient(){
 
       container.innerHTML += `
         <div class="measure-item">
+
           <div class="mCardTop">
             <div class="mTitle">
               <div class="num-pill">${idx+1}</div>
@@ -276,7 +242,6 @@ function initClient(){
             </div>
 
             <div class="mActions">
-              <button class="btn btn-ghost miniBtn" data-fix="${idx}">➕ إضافة فكس</button>
               <button class="btn btn-red miniBtn" data-del="${idx}">حذف</button>
             </div>
           </div>
@@ -309,53 +274,75 @@ function initClient(){
             </div>
           </div>
 
-          <label>اتجاه فتحة الباب</label>
-          <div class="dirBtns">
-            <button type="button" class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">
-              يمين ${doorMiniIcon("right")}
-            </button>
-            <button type="button" class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">
-              يسار ${doorMiniIcon("left")}
-            </button>
-          </div>
+          <!-- Options beside measurements (modern, no clutter) -->
+          <div class="optGrid">
 
-          ${isDoubleLike ? `
-            <label style="margin-top:10px">مكان القفل (Lock)</label>
-            <select data-i="${idx}" data-k="lockLeaf">
-              <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
-              <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
-              <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
-            </select>
-          ` : ``}
-
-          ${m.hasFix ? `
-            <div class="fixBox">
-              <div class="fixHead">
-                <div style="font-weight:900">⬆️ فكس فوق الباب</div>
-                <button type="button" class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
-              </div>
-
-              <div class="tinyHelp">العرض تلقائي = نفس عرض الباب (مع إمكانية إدخال عرض مختلف).</div>
-
-              <label>وضع عرض الفكس</label>
-              <select data-i="${idx}" data-k="fixAuto">
-                <option value="true" ${m.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
-                <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
-              </select>
-
-              <div class="twoCols">
-                <div>
-                  <label>عرض الفكس (سم)</label>
-                  <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
-                    value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
-                </div>
-                <div>
-                  <label>ارتفاع الفكس (سم)</label>
-                  <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
-                </div>
+            <div class="optCard">
+              <div class="optTitle">اتجاه فتحة الباب</div>
+              <div class="dirBtns small">
+                <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين</button>
+                <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار</button>
               </div>
             </div>
-          ` : ``}
+
+            <div class="optCard">
+              <div class="optTitle">مكان القفل (Lock)</div>
+              ${isDoubleLike ? `
+                <select data-i="${idx}" data-k="lockLeaf">
+                  <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
+                  <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على اليمين</option>
+                  <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على اليسار</option>
+                </select>
+              ` : `
+                <div class="tinyHelp">باب مفرد (لا يحتاج تحديد)</div>
+              `}
+            </div>
+
+            <div class="optCard full">
+              <div class="optRow">
+                <div>
+                  <div class="optTitle">⬆️ فكس فوق الباب</div>
+                  <div class="tinyHelp">يظهر فوق الباب (مفرد / دبل / ونص)</div>
+                </div>
+
+                <button class="btn btn-ghost miniBtn" data-fix="${idx}" style="${m.hasFix ? "display:none" : ""}">
+                  ➕ إضافة فكس
+                </button>
+
+                <button class="btn btn-red miniBtn" data-removefix="${idx}" style="${m.hasFix ? "" : "display:none"}">
+                  حذف الفكس
+                </button>
+              </div>
+
+              ${m.hasFix ? `
+                <div class="fixMini">
+                  <div class="twoCols">
+                    <div>
+                      <label>عرض الفكس</label>
+                      <select data-i="${idx}" data-k="fixAuto">
+                        <option value="true" ${m.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
+                        <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label>ارتفاع الفكس (سم)</label>
+                      <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
+                    </div>
+                  </div>
+
+                  <div style="margin-top:10px">
+                    <label>عرض الفكس (سم)</label>
+                    <input data-i="${idx}" data-k="fixWidth"
+                      ${m.fixAuto?"disabled":""}
+                      value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}"
+                      placeholder="مثال: 110"/>
+                  </div>
+                </div>
+              ` : ``}
+            </div>
+
+          </div>
+
         </div>
       `;
     });
@@ -367,7 +354,6 @@ function initClient(){
 
       const apply = ()=>{
         const o2 = getCurrentOrder();
-        if(!o2) return;
         const m2 = o2.measurements[i];
 
         if(k === "qty"){
@@ -379,7 +365,6 @@ function initClient(){
           m2[k] = el.value;
         }
 
-        // If door type changed -> reset lockLeaf if single
         if(k === "doorType"){
           if(m2.doorType === "single"){
             m2.lockLeaf = "";
@@ -401,7 +386,6 @@ function initClient(){
         const v = btn.dataset.v;
 
         const o2 = getCurrentOrder();
-        if(!o2) return;
         o2.measurements[i].direction = v;
 
         updateOrder({measurements: o2.measurements});
@@ -414,9 +398,8 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.fix);
         const o2 = getCurrentOrder();
-        if(!o2) return;
-
         const m2 = o2.measurements[i];
+
         m2.hasFix = true;
         m2.fixAuto = true;
         m2.fixWidth = "";
@@ -432,9 +415,8 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.removefix);
         const o2 = getCurrentOrder();
-        if(!o2) return;
-
         const m2 = o2.measurements[i];
+
         m2.hasFix = false;
         m2.fixWidth = "";
         m2.fixHeight = "";
@@ -449,12 +431,12 @@ function initClient(){
       btn.onclick = ()=>{
         const i = Number(btn.dataset.del);
         const o2 = getCurrentOrder();
-        if(!o2) return;
 
         if(o2.measurements.length === 1){
           alert("لا يمكن حذف آخر قياس");
           return;
         }
+
         o2.measurements.splice(i,1);
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
@@ -464,7 +446,6 @@ function initClient(){
 
   $("addMeasureBtn").onclick = ()=>{
     const o = getCurrentOrder();
-    if(!o) return;
     o.measurements.push(createBlankMeasurement());
     updateOrder({measurements:o.measurements});
     renderMeasurements();
@@ -478,7 +459,6 @@ function initClient(){
 
   $("copyOrderTextBtn").onclick = ()=>{
     const o = getCurrentOrder();
-    if(!o) return;
     navigator.clipboard.writeText(JSON.stringify(o, null, 2));
     alert("📋 تم نسخ تفاصيل الطلب");
   };
@@ -493,7 +473,7 @@ function initClient(){
   };
 
   $("approveDesignBtn").onclick = ()=>{
-    alert("✅ أوافق على التنفيذ (MVP)");
+    alert("✅ تم اعتماد التنفيذ (MVP)");
   };
 
   function renderAll(){
