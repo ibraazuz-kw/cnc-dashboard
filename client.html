@@ -2,155 +2,75 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pro Design CNC - بوابة العميل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pro Design CNC - لوحة الأدمن</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
   <div class="topbar">
     <div class="container">
       <div class="brand">
         <div class="logo"></div>
         <div style="min-width:0">
           <h1>Pro Design CNC</h1>
-          <p>بوابة العميل</p>
+          <p>لوحة الأدمن - إدارة الطلبات والفواتير</p>
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;align-items:center">
-        <span class="pill" id="clientCompanyTitle">👤 شركة العميل</span>
-        <button class="btn btn-ghost miniBtn" id="clientLogoutBtn">تسجيل خروج</button>
-      </div>
+      <button class="btn btn-ghost miniBtn" id="adminLogoutBtn">تسجيل خروج</button>
     </div>
   </div>
 
-  <div class="container" id="clientRoot">
+  <div class="container" id="adminRoot">
 
-    <!-- Orders -->
-    <div class="card">
-      <div class="orderBar">
-        <div class="left">
-          <div class="card-title" style="margin:0">
-            <h2 style="margin:0">📌 الطلبات</h2>
-          </div>
-          <span id="clientStatusBadge" class="badge working">⏳ قيد التشغيل</span>
-        </div>
-
-        <div class="right">
-          <button class="btn btn-blue miniBtn" id="newOrderBtn">➕ طلب جديد</button>
-          <button class="btn btn-ghost miniBtn" id="copyOrderBtn">📋 نسخ</button>
-        </div>
-      </div>
-
-      <label>اختر الطلب</label>
-      <select id="clientOrderSelect"></select>
-
-      <div class="sendBox">
-        <div class="twoCols">
-          <button class="btn btn-ghost" id="copyOrderTextBtn">📋 نسخ تفاصيل الطلب</button>
-          <button class="btn btn-blue" id="sendCncBtn">🚀 إرسال أمر تشغيل CNC</button>
-        </div>
-        <div class="tinyHelp">
-          * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage). بعد ربط السيرفر تصبح الطلبات مشتركة بين الجميع.
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabs -->
     <div class="card">
       <div class="card-title">
-        <h2>📑 الأقسام</h2>
+        <h2>📌 الطلبات</h2>
       </div>
 
-      <div class="tabs">
-        <button class="tab active" data-tab="tab_measurements">📏 القياسات والتفاصيل</button>
-        <button class="tab" data-tab="tab_sheets">🧾 طلب الشيتات</button>
-        <button class="tab" data-tab="tab_design">✅ تأكيد التصميم</button>
-        <button class="tab" data-tab="tab_invoice">🧾 الفاتورة</button>
-      </div>
-    </div>
+      <label>بحث</label>
+      <input id="adminSearchInput" placeholder="بحث باسم العميل أو رقم الطلب..." />
 
-    <!-- Measurements -->
-    <div class="card tabPage" id="tab_measurements">
-      <div class="card-title">
-        <h2>📏 القياسات والتفاصيل</h2>
-        <button class="btn btn-blue miniBtn" id="addMeasureBtn" style="width:auto">➕ إضافة قياس</button>
-      </div>
-
-      <div id="measurementsContainer"></div>
+      <label>اختر طلب</label>
+      <select id="adminOrderSelect"></select>
 
       <div class="dividerSoft"></div>
 
-      <label>عرض الخط (mm)</label>
-      <div class="twoCols">
-        <select id="lineWidthSelect">
-          <option value="">اختر</option>
-          <option value="4">4 mm</option>
-          <option value="6">6 mm</option>
-          <option value="8">8 mm</option>
-          <option value="10">10 mm</option>
-          <option value="12">12 mm</option>
-          <option value="15">15 mm</option>
-          <option value="20">20 mm</option>
-          <option value="25">25 mm</option>
-          <option value="30">3 cm</option>
-          <option value="40">4 cm</option>
-          <option value="other">أخرى</option>
-        </select>
-
-        <input id="lineWidthOther" disabled placeholder="اكتب عرض الخط (mm)"/>
+      <div class="card-title" style="margin-bottom:6px">
+        <h2>📌 تفاصيل الطلب (الأدمن)</h2>
       </div>
 
-      <label style="margin-top:12px">تفاصيل القص / الحفر</label>
-      <textarea id="cutEngraveDetails" placeholder="مثال: قص + حفر شعار + تخريم..."></textarea>
+      <label>تغيير الحالة</label>
+      <select id="adminStatusSelect">
+        <option value="قيد التشغيل">قيد التشغيل</option>
+        <option value="جاهز">جاهز</option>
+      </select>
 
-      <label>رفع ملفات (DXF / PDF / صور)</label>
-      <input id="fileInput" type="file" multiple />
+      <button class="btn btn-blue" id="adminSaveStatusBtn">حفظ الحالة</button>
 
-      <label>ملاحظات إضافية</label>
-      <textarea id="notesInput" placeholder="أي ملاحظات إضافية..."></textarea>
-
-      <div class="dividerSoft"></div>
-
-      <button class="btn btn-ghost" id="saveDraftBtn">💾 حفظ كمسودة</button>
-      <div class="help" id="clientMsg"></div>
+      <div class="help" id="adminMsg"></div>
     </div>
 
-    <!-- Sheets -->
-    <div class="card tabPage hidden" id="tab_sheets">
+    <div class="card">
       <div class="card-title">
-        <h2>🧾 طلب الشيتات</h2>
+        <h2>🧾 الفاتورة (Pro Design Style)</h2>
       </div>
 
-      <div class="help">قريباً: جدول كامل (قياس الشيت - السماكة - الكمية) + PDF للمورد</div>
-      <button class="btn btn-blue" id="addSheetBtn">➕ إضافة شيت</button>
-      <div class="help" id="sheetsMsg"></div>
-    </div>
+      <label>سعر القص (KD)</label>
+      <input id="invCut" type="number" value="0"/>
 
-    <!-- Design -->
-    <div class="card tabPage hidden" id="tab_design">
-      <div class="card-title">
-        <h2>✅ تأكيد التصميم قبل التنفيذ</h2>
-      </div>
+      <label>سعر الحفر (KD)</label>
+      <input id="invEngrave" type="number" value="0"/>
 
-      <div class="help">سيظهر ملف التصميم النهائي PDF هنا بعد رفعه من الأدمن</div>
+      <label>سعر الشيت/المادة (KD)</label>
+      <input id="invSheet" type="number" value="0"/>
 
-      <label>ملاحظات تعديل</label>
-      <textarea id="designNotes" placeholder="اكتب ملاحظاتك..."></textarea>
+      <label>ملاحظات الفاتورة</label>
+      <textarea id="invNotes" placeholder="مثال: شامل التركيب / خصم / ..."></textarea>
 
-      <button class="btn btn-green" id="approveDesignBtn">✅ أوافق على التنفيذ</button>
-    </div>
-
-    <!-- Invoice -->
-    <div class="card tabPage hidden" id="tab_invoice">
-      <div class="card-title">
-        <h2>🧾 الفاتورة</h2>
-      </div>
-
-      <div class="help">الفاتورة يتم إنشاؤها من الأدمن وتظهر هنا للعميل</div>
-      <div class="badge">لا توجد فاتورة حالياً</div>
+      <button class="btn btn-green" id="saveInvoiceBtn">💾 حفظ الفاتورة</button>
+      <div class="help" id="invoiceMsg"></div>
     </div>
 
   </div>
@@ -158,9 +78,8 @@
   <script src="app.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", ()=>{
-      if(typeof initClient === "function") initClient();
+      if(typeof initAdmin === "function") initAdmin();
     });
   </script>
-
 </body>
 </html>
