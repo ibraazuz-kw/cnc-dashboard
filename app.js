@@ -12,7 +12,7 @@ function loadJSON(k, fb){
 function saveJSON(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
 
 function getSession(){ return loadJSON(LS.SESSION, null); }
-function saveSession(v){ saveJSON(LS.SESSION, v); }
+function setSession(s){ saveJSON(LS.SESSION, s); }
 function clearSession(){ localStorage.removeItem(LS.SESSION); }
 
 function getOrders(){ return loadJSON(LS.ORDERS, []); }
@@ -25,37 +25,19 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
-function goTo(path){
-  location.href = path;
-}
-
-function ensureRole(requiredRole){
-  const session = getSession();
-  if(!session || session.role !== requiredRole){
-    clearSession();
-    goTo("/");
-    return null;
-  }
-  return session;
-}
-
-/* =========================
-   Models
-========================= */
 function createBlankMeasurement(){
   return {
     hCm:"",
     wCm:"",
     qty:1,
 
-    doorType:"single",   // single | oneHalf | double
-    direction:"right",   // right | left
-    lockLeaf:"",         // rightLeaf | leftLeaf (for double only)
-
+    doorType:"single", // single | oneHalf | double
+    direction:"right", // right | left
+    lockLeaf:"",       // rightLeaf | leftLeaf
     hasFix:false,
-    fixMode:"auto",      // auto | custom
     fixWidth:"",
     fixHeight:"",
+    fixAuto:true,
   };
 }
 
@@ -73,88 +55,78 @@ function createBlankOrder(session){
     files: [],
 
     measurements: [ createBlankMeasurement() ],
-
-    invoice:{
-      cut:0,
-      engrave:0,
-      sheet:0,
-      notes:""
-    }
   };
 }
 
-/* =========================
-   INDEX
-========================= */
+/* =======================
+   INDEX (LOGIN)
+======================= */
 function initIndex(){
+  const root = $("indexRoot");
+  if(!root) return;
+
   const roleSelect = $("roleSelect");
   const usernameInput = $("usernameInput");
+  const companyWrap = $("companyWrap");
   const companyInput = $("companyInput");
   const loginBtn = $("loginBtn");
+  const loginMsg = $("loginMsg");
 
-  if(!roleSelect || !usernameInput || !loginBtn) return;
-
-  const session = getSession();
-  if(session?.role === "client") return goTo("/client.html");
-  if(session?.role === "admin") return goTo("/admin.html");
-
-  roleSelect.onchange = ()=>{
+  function refreshCompany(){
     const role = roleSelect.value;
-    companyInput.disabled = (role !== "client");
-    if(role !== "client") companyInput.value = "";
-  };
-  roleSelect.dispatchEvent(new Event("change"));
+    companyWrap.style.display = (role === "client") ? "block" : "none";
+  }
+  refreshCompany();
+  roleSelect.onchange = refreshCompany;
 
   loginBtn.onclick = ()=>{
     const role = roleSelect.value;
     const username = (usernameInput.value || "").trim();
+    const company = (companyInput.value || "").trim();
+
     if(!username){
-      alert("⚠️ اكتب اسم المستخدم");
+      loginMsg.textContent = "⚠️ اكتب اسم المستخدم";
       return;
     }
 
-    const sessionObj = {
+    if(role === "client" && !company){
+      loginMsg.textContent = "⚠️ اكتب اسم الشركة";
+      return;
+    }
+
+    setSession({
       role,
       username,
-      company: role==="client" ? (companyInput.value || "").trim() : ""
-    };
+      company: role === "client" ? company : ""
+    });
 
-    saveSession(sessionObj);
-
-    if(role==="client") goTo("/client.html");
-    else goTo("/admin.html");
+    if(role === "client"){
+      location.href = "client.html";
+    }else{
+      location.href = "admin.html";
+    }
   };
 }
 
-/* =========================
+/* =======================
    CLIENT
-========================= */
+======================= */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
 
-  const session = ensureRole("client");
-  if(!session) return;
+  const session = getSession();
+  if(!session || session.role !== "client"){
+    location.href = "index.html";
+    return;
+  }
 
   $("clientCompanyTitle").textContent = `👤 ${session.company || session.username}`;
 
   $("clientLogoutBtn").onclick = ()=>{
     clearSession();
-    goTo("/");
+    location.href="index.html";
   };
-
-  // Tabs
-  document.querySelectorAll(".tab").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-      btn.classList.add("active");
-
-      const tabId = btn.dataset.tab;
-      document.querySelectorAll(".tabPage").forEach(p=>p.classList.add("hidden"));
-      $(tabId).classList.remove("hidden");
-      window.scrollTo({top:0, behavior:"smooth"});
-    });
-  });
 
   // Orders
   let allOrders = getOrders();
@@ -194,9 +166,6 @@ function initClient(){
       .map(o=>`<option value="${o.id}">${o.id} | ${o.createdAt}</option>`)
       .join("");
 
-    if(!myOrders.find(x=>x.id===selectedId)){
-      selectedId = myOrders[myOrders.length-1]?.id || "";
-    }
     orderSelect.value = selectedId;
   }
 
@@ -291,51 +260,7 @@ function initClient(){
     };
   }
 
-  /* =========================
-     Door CAD Arrow (Modern)
-  ========================= */
-  function doorCadArrowSVG(dir){
-    // dir: right | left
-    const hingeX = (dir === "right") ? 14 : 86;
-    const leafToX = (dir === "right") ? 82 : 18;
-    const arcSweep = (dir === "right") ? 0 : 1;
-
-    // NOTE: pure SVG no external libs
-    return `
-      <svg viewBox="0 0 100 70" width="100%" height="64" aria-hidden="true">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="rgba(47,123,255,.75)"/>
-            <stop offset="1" stop-color="rgba(47,123,255,.20)"/>
-          </linearGradient>
-        </defs>
-
-        <!-- frame -->
-        <rect x="6" y="8" width="88" height="54" rx="12"
-          fill="rgba(0,0,0,.20)" stroke="rgba(255,255,255,.16)" stroke-width="1.2"/>
-
-        <!-- hinge line -->
-        <line x1="${hingeX}" y1="16" x2="${hingeX}" y2="54"
-          stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-linecap="round"/>
-
-        <!-- door leaf -->
-        <line x1="${hingeX}" y1="54" x2="${leafToX}" y2="28"
-          stroke="url(#g)" stroke-width="5" stroke-linecap="round"/>
-
-        <!-- swing arc -->
-        <path d="M ${hingeX} 54 A 26 26 0 0 ${arcSweep} ${leafToX} 28"
-          fill="none" stroke="rgba(47,123,255,.55)" stroke-width="2.2" stroke-dasharray="3 3"/>
-
-        <!-- handle dot -->
-        <circle cx="${dir==="right" ? 64 : 36}" cy="40" r="2.6" fill="rgba(255,255,255,.65)"/>
-      </svg>
-    `;
-  }
-
-  /* =========================
-     Measurements (NO CROWD)
-     Direction CAD + Lock + Fix
-  ========================= */
+  // Measurements
   const container = $("measurementsContainer");
 
   function renderMeasurements(){
@@ -346,149 +271,79 @@ function initClient(){
     container.innerHTML = "";
 
     mList.forEach((m, idx)=>{
-      const showLock = (m.doorType === "double"); // as requested
+      const isDoubleLike = (m.doorType === "double" || m.doorType === "oneHalf");
 
       container.innerHTML += `
         <div class="measure-item">
-          <div class="mCardTop">
-            <div class="mTitle">
+          <div class="measure-head">
+            <div style="display:flex;align-items:center;gap:10px">
               <div class="num-pill">${idx+1}</div>
-              <div class="txt">قياس الباب</div>
+              <div style="font-weight:900">قياس الباب</div>
             </div>
-
-            <div class="mActions">
-              <button class="btn btn-ghost miniBtn" data-togglefix="${idx}">
-                ${m.hasFix ? "⬆️ تعديل الفكس" : "➕ إضافة فكس"}
-              </button>
-              <button class="btn btn-red miniBtn" data-del="${idx}">حذف</button>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-ghost" style="width:auto" data-fix="${idx}">➕ إضافة فكس</button>
+              <button class="btn btn-red" style="width:auto" data-del="${idx}">حذف</button>
             </div>
           </div>
 
-          <div class="dividerSoft"></div>
+          <label>الارتفاع (سم)</label>
+          <input data-i="${idx}" data-k="hCm" value="${m.hCm||""}" placeholder="مثال: 210"/>
 
-          <div class="measureGrid" style="display:grid;grid-template-columns:1.25fr .95fr;gap:12px;">
-            <!-- LEFT: القياسات -->
-            <div>
-              <div class="twoCols">
-                <div>
-                  <label>الارتفاع (سم)</label>
-                  <input data-i="${idx}" data-k="hCm" value="${m.hCm||""}" placeholder="مثال: 210"/>
-                </div>
-                <div>
-                  <label>العرض (سم)</label>
-                  <input data-i="${idx}" data-k="wCm" value="${m.wCm||""}" placeholder="مثال: 110"/>
-                </div>
-              </div>
+          <label>العرض (سم)</label>
+          <input data-i="${idx}" data-k="wCm" value="${m.wCm||""}" placeholder="مثال: 110"/>
 
-              <div class="twoCols" style="margin-top:8px">
-                <div>
-                  <label>العدد</label>
-                  <input type="number" min="1" data-i="${idx}" data-k="qty" value="${m.qty||1}"/>
-                </div>
-                <div>
-                  <label>نوع الباب</label>
-                  <select data-i="${idx}" data-k="doorType">
-                    <option value="single" ${m.doorType==="single"?"selected":""}>باب مفرد</option>
-                    <option value="oneHalf" ${m.doorType==="oneHalf"?"selected":""}>باب ونص</option>
-                    <option value="double" ${m.doorType==="double"?"selected":""}>باب دبل</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+          <label>العدد</label>
+          <input type="number" min="1" data-i="${idx}" data-k="qty" value="${m.qty||1}"/>
 
-            <!-- RIGHT: اتجاه + قفل + فكس -->
-            <div class="sideBox" style="
-              border:1px solid rgba(255,255,255,.08);
-              background: rgba(255,255,255,.03);
-              border-radius: 16px;
-              padding: 10px;
-            ">
-              <label>اتجاه فتحة الباب</label>
+          <label>نوع الباب</label>
+          <select data-i="${idx}" data-k="doorType">
+            <option value="single" ${m.doorType==="single"?"selected":""}>باب مفرد</option>
+            <option value="oneHalf" ${m.doorType==="oneHalf"?"selected":""}>باب ونص</option>
+            <option value="double" ${m.doorType==="double"?"selected":""}>باب دبل</option>
+          </select>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <button class="dirCad ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right"
-                  style="
-                    border-radius:16px;
-                    border:1px solid rgba(255,255,255,.10);
-                    background:${m.direction==="right" ? "rgba(47,123,255,.14)" : "rgba(0,0,0,.18)"};
-                    padding:10px;
-                    cursor:pointer;
-                    color:inherit;
-                    text-align:center;
-                  ">
-                  <div style="font-weight:900;margin-bottom:6px;">يمين</div>
-                  ${doorCadArrowSVG("right")}
-                </button>
-
-                <button class="dirCad ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left"
-                  style="
-                    border-radius:16px;
-                    border:1px solid rgba(255,255,255,.10);
-                    background:${m.direction==="left" ? "rgba(47,123,255,.14)" : "rgba(0,0,0,.18)"};
-                    padding:10px;
-                    cursor:pointer;
-                    color:inherit;
-                    text-align:center;
-                  ">
-                  <div style="font-weight:900;margin-bottom:6px;">يسار</div>
-                  ${doorCadArrowSVG("left")}
-                </button>
-              </div>
-
-              ${showLock ? `
-                <label style="margin-top:10px">مكان القفل (للـ دبل)</label>
-                <select data-i="${idx}" data-k="lockLeaf">
-                  <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
-                  <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
-                  <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
-                </select>
-              ` : ``}
-
-              ${m.hasFix ? `
-                <div class="fixBox" style="
-                  border:1px dashed rgba(47,123,255,.35);
-                  background: rgba(47,123,255,.08);
-                  border-radius:16px;
-                  padding:12px;
-                  margin-top:10px;
-                ">
-                  <div class="fixHead" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <div style="font-weight:900">⬆️ فكس فوق الباب</div>
-                    <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
-                  </div>
-
-                  <div style="font-size:12px;color: rgba(234,241,255,.60);margin-top:6px;">
-                    الفكس دائماً فوق الباب (مفرد / باب ونص / دبل)
-                  </div>
-
-                  <label>عرض الفكس</label>
-                  <select data-i="${idx}" data-k="fixMode">
-                    <option value="auto" ${m.fixMode==="auto"?"selected":""}>تلقائي (نفس عرض الباب)</option>
-                    <option value="custom" ${m.fixMode==="custom"?"selected":""}>يدوي</option>
-                  </select>
-
-                  <div class="twoCols" style="margin-top:8px">
-                    <div>
-                      <label>عرض الفكس (سم)</label>
-                      <input data-i="${idx}" data-k="fixWidth"
-                        ${m.fixMode==="auto" ? "disabled" : ""}
-                        value="${m.fixMode==="auto" ? (m.wCm||"") : (m.fixWidth||"")}"
-                        placeholder="مثال: 110"/>
-                    </div>
-                    <div>
-                      <label>ارتفاع الفكس (سم)</label>
-                      <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
-                    </div>
-                  </div>
-                </div>
-              ` : ``}
-            </div>
+          <label>اتجاه فتحة الباب</label>
+          <div class="dirBtns">
+            <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين</button>
+            <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار</button>
           </div>
+
+          ${isDoubleLike ? `
+            <label style="margin-top:10px">مكان القفل (Lock)</label>
+            <select data-i="${idx}" data-k="lockLeaf">
+              <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
+              <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
+              <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
+            </select>
+          ` : ``}
+
+          ${m.hasFix ? `
+            <div class="fixBox">
+              <div class="fixHead">
+                <div style="font-weight:900">⬆️ فكس فوق الباب</div>
+                <button class="btn btn-red" style="width:auto" data-removefix="${idx}">حذف الفكس</button>
+              </div>
+
+              <div class="tinyHelp">يمكنك ترك العرض تلقائي (نفس عرض الباب) أو إدخال عرض يدوي.</div>
+
+              <label>وضع عرض الفكس</label>
+              <select data-i="${idx}" data-k="fixAuto">
+                <option value="true" ${m.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
+                <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
+              </select>
+
+              <label>عرض الفكس (سم)</label>
+              <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
+                value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
+
+              <label>ارتفاع الفكس (سم)</label>
+              <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
+            </div>
+          ` : ``}
         </div>
       `;
     });
 
-    // Bind inputs & selects
     container.querySelectorAll("input[data-i], select[data-i]").forEach(el=>{
       const i = Number(el.dataset.i);
       const k = el.dataset.k;
@@ -499,22 +354,15 @@ function initClient(){
 
         if(k === "qty"){
           m2[k] = Number(el.value || 1);
+        }else if(k === "fixAuto"){
+          m2[k] = (el.value === "true");
+          if(m2.fixAuto) m2.fixWidth = "";
         }else{
           m2[k] = el.value;
         }
 
-        // if doorType not double => remove lock
-        if(k === "doorType"){
-          if(m2.doorType !== "double"){
-            m2.lockLeaf = "";
-          }
-        }
-
-        // fix auto width
-        if(k === "fixMode"){
-          if(m2.fixMode === "auto"){
-            m2.fixWidth = "";
-          }
+        if(k === "doorType" && m2.doorType === "single"){
+          m2.lockLeaf = "";
         }
 
         updateOrder({measurements: o2.measurements});
@@ -525,62 +373,52 @@ function initClient(){
       el.onchange = apply;
     });
 
-    // Direction CAD buttons
     container.querySelectorAll("button[data-dir]").forEach(btn=>{
       btn.onclick = ()=>{
         const i = Number(btn.dataset.dir);
         const v = btn.dataset.v;
-
         const o2 = getCurrentOrder();
         o2.measurements[i].direction = v;
-
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
 
-    // Fix toggle/add
-    container.querySelectorAll("button[data-togglefix]").forEach(btn=>{
+    container.querySelectorAll("button[data-fix]").forEach(btn=>{
       btn.onclick = ()=>{
-        const i = Number(btn.dataset.togglefix);
+        const i = Number(btn.dataset.fix);
         const o2 = getCurrentOrder();
         const m2 = o2.measurements[i];
-
         m2.hasFix = true;
-        if(!m2.fixMode) m2.fixMode = "auto";
-
+        m2.fixAuto = true;
+        m2.fixWidth = "";
+        m2.fixHeight = "";
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
 
-    // Remove fix
     container.querySelectorAll("button[data-removefix]").forEach(btn=>{
       btn.onclick = ()=>{
         const i = Number(btn.dataset.removefix);
         const o2 = getCurrentOrder();
         const m2 = o2.measurements[i];
-
         m2.hasFix = false;
         m2.fixWidth = "";
         m2.fixHeight = "";
-
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
       };
     });
 
-    // Delete measurement
     container.querySelectorAll("button[data-del]").forEach(btn=>{
       btn.onclick = ()=>{
         const i = Number(btn.dataset.del);
         const o2 = getCurrentOrder();
-
         if(o2.measurements.length === 1){
           alert("لا يمكن حذف آخر قياس");
           return;
         }
-
         o2.measurements.splice(i,1);
         updateOrder({measurements: o2.measurements});
         renderMeasurements();
@@ -611,14 +449,6 @@ function initClient(){
     alert("🚀 تم إرسال أمر تشغيل CNC (نسخة MVP)");
   };
 
-  $("addSheetBtn").onclick = ()=>{
-    $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً)";
-  };
-
-  $("approveDesignBtn").onclick = ()=>{
-    alert("✅ تم اعتماد التنفيذ (MVP)");
-  };
-
   function renderAll(){
     refreshOrders();
     renderStatus();
@@ -629,121 +459,21 @@ function initClient(){
   renderAll();
 }
 
-/* =========================
+/* =======================
    ADMIN
-========================= */
+======================= */
 function initAdmin(){
   const root = $("adminRoot");
   if(!root) return;
 
-  const session = ensureRole("admin");
-  if(!session) return;
+  const session = getSession();
+  if(!session || session.role !== "admin"){
+    location.href = "index.html";
+    return;
+  }
 
   $("adminLogoutBtn").onclick = ()=>{
     clearSession();
-    goTo("/");
+    location.href="index.html";
   };
-
-  const adminSearchInput = $("adminSearchInput");
-  const adminOrderSelect = $("adminOrderSelect");
-  const adminStatusSelect = $("adminStatusSelect");
-  const adminSaveStatusBtn = $("adminSaveStatusBtn");
-  const adminMsg = $("adminMsg");
-
-  const invCut = $("invCut");
-  const invEngrave = $("invEngrave");
-  const invSheet = $("invSheet");
-  const invNotes = $("invNotes");
-  const saveInvoiceBtn = $("saveInvoiceBtn");
-  const invoiceMsg = $("invoiceMsg");
-
-  let selectedId = "";
-
-  function listOrdersFiltered(){
-    const q = (adminSearchInput.value || "").trim().toLowerCase();
-    const list = getOrders();
-
-    if(!q) return list;
-
-    return list.filter(o=>{
-      return (o.id || "").toLowerCase().includes(q)
-        || (o.clientCompany || "").toLowerCase().includes(q)
-        || (o.clientUsername || "").toLowerCase().includes(q);
-    });
-  }
-
-  function refreshSelect(){
-    const list = listOrdersFiltered();
-
-    adminOrderSelect.innerHTML = list
-      .slice().reverse()
-      .map(o=>`<option value="${o.id}">${o.id} | ${o.clientCompany} | ${o.createdAt}</option>`)
-      .join("");
-
-    if(!selectedId && list.length) selectedId = list[list.length-1].id;
-
-    adminOrderSelect.value = selectedId;
-  }
-
-  function getCurrentOrder(){
-    return getOrders().find(o=>o.id===selectedId) || null;
-  }
-
-  function updateOrder(update){
-    const list = getOrders();
-    const idx = list.findIndex(o=>o.id===selectedId);
-    if(idx === -1) return;
-    list[idx] = {...list[idx], ...update};
-    saveOrders(list);
-  }
-
-  function renderOrder(){
-    const o = getCurrentOrder();
-    if(!o) return;
-
-    adminStatusSelect.value = o.status || "قيد التشغيل";
-
-    const inv = o.invoice || {cut:0, engrave:0, sheet:0, notes:""};
-    invCut.value = inv.cut ?? 0;
-    invEngrave.value = inv.engrave ?? 0;
-    invSheet.value = inv.sheet ?? 0;
-    invNotes.value = inv.notes ?? "";
-  }
-
-  adminSearchInput.oninput = ()=>{
-    refreshSelect();
-    renderOrder();
-  };
-
-  adminOrderSelect.onchange = ()=>{
-    selectedId = adminOrderSelect.value;
-    renderOrder();
-  };
-
-  adminSaveStatusBtn.onclick = ()=>{
-    const o = getCurrentOrder();
-    if(!o) return;
-    updateOrder({status: adminStatusSelect.value});
-    adminMsg.textContent = "✅ تم حفظ الحالة";
-    setTimeout(()=> adminMsg.textContent="", 1200);
-  };
-
-  saveInvoiceBtn.onclick = ()=>{
-    const o = getCurrentOrder();
-    if(!o) return;
-
-    const invoice = {
-      cut: Number(invCut.value || 0),
-      engrave: Number(invEngrave.value || 0),
-      sheet: Number(invSheet.value || 0),
-      notes: (invNotes.value || "").trim()
-    };
-
-    updateOrder({invoice});
-    invoiceMsg.textContent = "✅ تم حفظ الفاتورة";
-    setTimeout(()=> invoiceMsg.textContent="", 1200);
-  };
-
-  refreshSelect();
-  renderOrder();
 }
