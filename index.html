@@ -6,13 +6,14 @@
   <title>Pro Design CNC - تسجيل الدخول</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <div class="topbar">
     <div class="container">
       <div class="brand">
         <div class="logo"></div>
-        <div>
+        <div style="min-width:0">
           <h1>Pro Design CNC</h1>
           <p>تسجيل الدخول</p>
         </div>
@@ -21,7 +22,8 @@
     </div>
   </div>
 
-  <div class="container" id="indexRoot">
+  <div class="container">
+
     <div class="card">
       <div class="card-title">
         <h2>🔐 تسجيل الدخول</h2>
@@ -36,16 +38,26 @@
       <label>اسم المستخدم</label>
       <input id="usernameInput" placeholder="مثال: client1 أو admin" />
 
-      <div id="companyWrap">
-        <label>اسم الشركة (للعميل فقط)</label>
-        <input id="companyInput" placeholder="مثال: شركة العميل 1" />
-      </div>
+      <label>اسم الشركة (للعميل فقط)</label>
+      <input id="companyInput" placeholder="مثال: شركة العميل 1" />
+
+      <div style="margin-top:12px"></div>
 
       <button class="btn btn-blue" id="loginBtn">دخول</button>
 
       <div class="help" id="loginMsg"></div>
-      <div class="help">* النظام حالياً MVP: التخزين داخل المتصفح (LocalStorage)</div>
+
+      <div class="hr"></div>
+
+      <div class="help">
+        * النظام حالياً MVP: التخزين داخل المتصفح (LocalStorage)
+      </div>
+
+      <button class="btn btn-ghost" id="resetBtn" style="margin-top:10px">
+        🧹 تصفير النظام (حل مشاكل الدخول)
+      </button>
     </div>
+
   </div>
 
   <script src="app.js"></script>
