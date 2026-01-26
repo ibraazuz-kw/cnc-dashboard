@@ -12,6 +12,7 @@ function loadJSON(k, fb){
 function saveJSON(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
 
 function getSession(){ return loadJSON(LS.SESSION, null); }
+function saveSession(v){ saveJSON(LS.SESSION, v); }
 function clearSession(){ localStorage.removeItem(LS.SESSION); }
 
 function getOrders(){ return loadJSON(LS.ORDERS, []); }
@@ -24,14 +25,37 @@ function badgeClass(status){
   return status === "جاهز" ? "badge ready" : "badge working";
 }
 
+/* =========================
+   Helpers: Safe Navigation
+========================= */
+function goTo(path){
+  // Render friendly (no index.html)
+  location.href = path;
+}
+
+function ensureRole(requiredRole){
+  const session = getSession();
+  if(!session || session.role !== requiredRole){
+    clearSession();
+    goTo("/");
+    return null;
+  }
+  return session;
+}
+
+/* =========================
+   Data models
+========================= */
 function createBlankMeasurement(){
   return {
     hCm:"",
     wCm:"",
     qty:1,
+
     doorType:"single", // single | oneHalf | double
     direction:"right", // right | left
-    lockLeaf:"",       // for double/oneHalf
+    lockLeaf:"",       // rightLeaf | leftLeaf (only for double/oneHalf)
+
     hasFix:false,
     fixWidth:"",
     fixHeight:"",
@@ -53,24 +77,78 @@ function createBlankOrder(session){
     files: [],
 
     measurements: [ createBlankMeasurement() ],
+
+    // admin invoice fields (MVP)
+    invoice:{
+      cut:0,
+      engrave:0,
+      sheet:0,
+      notes:""
+    }
   };
 }
 
+/* =========================
+   INDEX PAGE
+========================= */
+function initIndex(){
+  const roleSelect = $("roleSelect");
+  const usernameInput = $("usernameInput");
+  const companyInput = $("companyInput");
+  const loginBtn = $("loginBtn");
+
+  if(!roleSelect || !usernameInput || !loginBtn) return;
+
+  // If already logged in, route correctly
+  const session = getSession();
+  if(session?.role === "client") return goTo("/client.html");
+  if(session?.role === "admin") return goTo("/admin.html");
+
+  roleSelect.onchange = ()=>{
+    const role = roleSelect.value;
+    companyInput.disabled = (role !== "client");
+    if(role !== "client") companyInput.value = "";
+  };
+
+  roleSelect.dispatchEvent(new Event("change"));
+
+  loginBtn.onclick = ()=>{
+    const role = roleSelect.value;
+    const username = (usernameInput.value || "").trim();
+
+    if(!username){
+      alert("⚠️ اكتب اسم المستخدم");
+      return;
+    }
+
+    const sessionObj = {
+      role,
+      username,
+      company: role==="client" ? (companyInput.value || "").trim() : ""
+    };
+
+    saveSession(sessionObj);
+
+    if(role==="client") goTo("/client.html");
+    else goTo("/admin.html");
+  };
+}
+
+/* =========================
+   CLIENT PAGE
+========================= */
 function initClient(){
   const root = $("clientRoot");
   if(!root) return;
 
-  const session = getSession();
-  if(!session || session.role !== "client"){
-    location.href = "index.html";
-    return;
-  }
+  const session = ensureRole("client");
+  if(!session) return;
 
   $("clientCompanyTitle").textContent = `👤 ${session.company || session.username}`;
 
   $("clientLogoutBtn").onclick = ()=>{
     clearSession();
-    location.href="index.html";
+    goTo("/");
   };
 
   // Tabs
@@ -82,6 +160,7 @@ function initClient(){
       const tabId = btn.dataset.tab;
       document.querySelectorAll(".tabPage").forEach(p=>p.classList.add("hidden"));
       $(tabId).classList.remove("hidden");
+      window.scrollTo({top:0, behavior:"smooth"});
     });
   });
 
@@ -123,6 +202,10 @@ function initClient(){
       .map(o=>`<option value="${o.id}">${o.id} | ${o.createdAt}</option>`)
       .join("");
 
+    if(!myOrders.find(x=>x.id===selectedId)){
+      selectedId = myOrders[myOrders.length-1]?.id || "";
+    }
+
     orderSelect.value = selectedId;
   }
 
@@ -152,10 +235,7 @@ function initClient(){
     const o = getCurrentOrder();
     if(!o) return;
     const list = getOrders();
-    const copy = JSON.parse(JSON.stringify(o));
-    copy.id = genId("ORD");
-    copy.createdAt = nowStr();
-    copy.status = "قيد التشغيل";
+    const copy = {...o, id: genId("ORD"), createdAt: nowStr(), status:"قيد التشغيل"};
     list.push(copy);
     saveOrders(list);
     selectedId = copy.id;
@@ -222,25 +302,8 @@ function initClient(){
     };
   }
 
-  // Measurements
+  // Measurements UI
   const container = $("measurementsContainer");
-
-  function doorButtonSVG(dir){
-    if(dir === "right"){
-      return `
-      <svg class="doorSvg" viewBox="0 0 100 70">
-        <rect x="10" y="10" width="80" height="50" rx="10" fill="none" stroke="white" stroke-width="3"/>
-        <line x1="85" y1="15" x2="85" y2="55" stroke="white" stroke-width="4"/>
-        <path d="M85 35 L25 15 L25 55 Z" fill="rgba(47,123,255,.55)"/>
-      </svg>`;
-    }
-    return `
-    <svg class="doorSvg" viewBox="0 0 100 70">
-      <rect x="10" y="10" width="80" height="50" rx="10" fill="none" stroke="white" stroke-width="3"/>
-      <line x1="15" y1="15" x2="15" y2="55" stroke="white" stroke-width="4"/>
-      <path d="M15 35 L75 15 L75 55 Z" fill="rgba(47,123,255,.55)"/>
-    </svg>`;
-  }
 
   function renderMeasurements(){
     const o = getCurrentOrder();
@@ -254,7 +317,6 @@ function initClient(){
 
       container.innerHTML += `
         <div class="measure-item">
-
           <div class="mCardTop">
             <div class="mTitle">
               <div class="num-pill">${idx+1}</div>
@@ -262,89 +324,90 @@ function initClient(){
             </div>
 
             <div class="mActions">
-              <button class="btn btn-ghost miniBtn" data-fix="${idx}">➕ فكس</button>
+              <button class="btn btn-ghost miniBtn" data-fix="${idx}">➕ إضافة فكس</button>
               <button class="btn btn-red miniBtn" data-del="${idx}">حذف</button>
             </div>
           </div>
 
           <div class="dividerSoft"></div>
 
-          <div class="twoCols">
+          <div class="measureGrid">
+            <!-- Left: Measurements -->
             <div>
-              <label>الارتفاع (سم)</label>
-              <input data-i="${idx}" data-k="hCm" value="${m.hCm||""}" placeholder="مثال: 210"/>
-            </div>
-            <div>
-              <label>العرض (سم)</label>
-              <input data-i="${idx}" data-k="wCm" value="${m.wCm||""}" placeholder="مثال: 110"/>
-            </div>
-          </div>
-
-          <div class="twoCols">
-            <div>
-              <label>العدد</label>
-              <input type="number" min="1" data-i="${idx}" data-k="qty" value="${m.qty||1}"/>
-            </div>
-            <div>
-              <label>نوع الباب</label>
-              <select data-i="${idx}" data-k="doorType">
-                <option value="single" ${m.doorType==="single"?"selected":""}>باب مفرد</option>
-                <option value="oneHalf" ${m.doorType==="oneHalf"?"selected":""}>باب ونص</option>
-                <option value="double" ${m.doorType==="double"?"selected":""}>باب دبل</option>
-              </select>
-            </div>
-          </div>
-
-          <label>اتجاه فتحة الباب</label>
-          <div class="dirBtns">
-            <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">
-              يمين
-              <div class="doorIcon">${doorButtonSVG("right")}</div>
-            </button>
-
-            <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">
-              يسار
-              <div class="doorIcon">${doorButtonSVG("left")}</div>
-            </button>
-          </div>
-
-          ${isDoubleLike ? `
-            <label style="margin-top:10px">مكان القفل (Lock)</label>
-            <select data-i="${idx}" data-k="lockLeaf">
-              <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
-              <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
-              <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
-            </select>
-          ` : ``}
-
-          ${m.hasFix ? `
-            <div class="fixBox">
-              <div class="fixHead">
-                <div style="font-weight:900">⬆️ فكس فوق الباب</div>
-                <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
-              </div>
-
-              <div class="tinyHelp">العرض تلقائي = نفس عرض الباب، أو يدوي.</div>
-
-              <label>وضع عرض الفكس</label>
-              <select data-i="${idx}" data-k="fixAuto">
-                <option value="true" ${m.fixAuto?"selected":""}>تلقائي</option>
-                <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
-              </select>
-
               <div class="twoCols">
                 <div>
-                  <label>عرض الفكس (سم)</label>
-                  <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
-                    value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
+                  <label>الارتفاع (سم)</label>
+                  <input data-i="${idx}" data-k="hCm" value="${m.hCm||""}" placeholder="مثال: 210"/>
                 </div>
                 <div>
-                  <label>ارتفاع الفكس (سم)</label>
-                  <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
+                  <label>العرض (سم)</label>
+                  <input data-i="${idx}" data-k="wCm" value="${m.wCm||""}" placeholder="مثال: 110"/>
+                </div>
+              </div>
+
+              <div class="twoCols" style="margin-top:8px">
+                <div>
+                  <label>العدد</label>
+                  <input type="number" min="1" data-i="${idx}" data-k="qty" value="${m.qty||1}"/>
+                </div>
+                <div>
+                  <label>نوع الباب</label>
+                  <select data-i="${idx}" data-k="doorType">
+                    <option value="single" ${m.doorType==="single"?"selected":""}>باب مفرد</option>
+                    <option value="oneHalf" ${m.doorType==="oneHalf"?"selected":""}>باب ونص</option>
+                    <option value="double" ${m.doorType==="double"?"selected":""}>باب دبل</option>
+                  </select>
                 </div>
               </div>
             </div>
-          ` : ``}
+
+            <!-- Right: Direction / Lock / Fix -->
+            <div class="sideBox">
+              <label>اتجاه فتحة الباب</label>
+              <div class="dirBtns">
+                <button class="dirBtn ${m.direction==="right"?"active":""}" data-dir="${idx}" data-v="right">يمين ➜</button>
+                <button class="dirBtn ${m.direction==="left"?"active":""}" data-dir="${idx}" data-v="left">يسار ⬅</button>
+              </div>
+
+              ${isDoubleLike ? `
+                <label style="margin-top:10px">مكان القفل (Lock)</label>
+                <select data-i="${idx}" data-k="lockLeaf">
+                  <option value="" ${m.lockLeaf===""?"selected":""}>بدون تحديد</option>
+                  <option value="rightLeaf" ${m.lockLeaf==="rightLeaf"?"selected":""}>القفل على الضلفة اليمين</option>
+                  <option value="leftLeaf" ${m.lockLeaf==="leftLeaf"?"selected":""}>القفل على الضلفة اليسار</option>
+                </select>
+              ` : ``}
+
+              ${m.hasFix ? `
+                <div class="fixBox">
+                  <div class="fixHead">
+                    <div style="font-weight:900">⬆️ فكس فوق الباب</div>
+                    <button class="btn btn-red miniBtn" data-removefix="${idx}">حذف الفكس</button>
+                  </div>
+
+                  <div class="tinyHelp">العرض تلقائي = نفس عرض الباب، أو يدوي إذا تبي.</div>
+
+                  <label>وضع عرض الفكس</label>
+                  <select data-i="${idx}" data-k="fixAuto">
+                    <option value="true" ${m.fixAuto?"selected":""}>تلقائي (نفس عرض الباب)</option>
+                    <option value="false" ${!m.fixAuto?"selected":""}>يدوي</option>
+                  </select>
+
+                  <div class="twoCols" style="margin-top:8px">
+                    <div>
+                      <label>عرض الفكس (سم)</label>
+                      <input data-i="${idx}" data-k="fixWidth" ${m.fixAuto?"disabled":""}
+                        value="${m.fixAuto ? (m.wCm||"") : (m.fixWidth||"")}" placeholder="مثال: 110"/>
+                    </div>
+                    <div>
+                      <label>ارتفاع الفكس (سم)</label>
+                      <input data-i="${idx}" data-k="fixHeight" value="${m.fixHeight||""}" placeholder="مثال: 40"/>
+                    </div>
+                  </div>
+                </div>
+              ` : ``}
+            </div>
+          </div>
 
         </div>
       `;
@@ -375,8 +438,7 @@ function initClient(){
         }
 
         updateOrder({measurements: o2.measurements});
-        // إعادة رسم فقط عند تغييرات تحتاج UI جديد
-        if(["doorType","fixAuto"].includes(k)) renderMeasurements();
+        renderMeasurements();
       };
 
       el.oninput = apply;
@@ -469,6 +531,7 @@ function initClient(){
     alert("🚀 تم إرسال أمر تشغيل CNC (نسخة MVP)\n\nلاحقاً سيتم ربطها بالسيرفر ليستقبلها الأدمن.");
   };
 
+  // Other tabs MVP
   $("addSheetBtn").onclick = ()=>{
     $("sheetsMsg").textContent = "✅ تم إضافة شيت (MVP قريباً جدول كامل)";
   };
@@ -485,4 +548,123 @@ function initClient(){
   }
 
   renderAll();
+}
+
+/* =========================
+   ADMIN PAGE
+========================= */
+function initAdmin(){
+  const root = $("adminRoot");
+  if(!root) return;
+
+  const session = ensureRole("admin");
+  if(!session) return;
+
+  $("adminLogoutBtn").onclick = ()=>{
+    clearSession();
+    goTo("/");
+  };
+
+  const adminSearchInput = $("adminSearchInput");
+  const adminOrderSelect = $("adminOrderSelect");
+  const adminStatusSelect = $("adminStatusSelect");
+  const adminSaveStatusBtn = $("adminSaveStatusBtn");
+  const adminMsg = $("adminMsg");
+
+  const invCut = $("invCut");
+  const invEngrave = $("invEngrave");
+  const invSheet = $("invSheet");
+  const invNotes = $("invNotes");
+  const saveInvoiceBtn = $("saveInvoiceBtn");
+  const invoiceMsg = $("invoiceMsg");
+
+  let selectedId = "";
+
+  function listOrdersFiltered(){
+    const q = (adminSearchInput.value || "").trim().toLowerCase();
+    const list = getOrders();
+
+    if(!q) return list;
+
+    return list.filter(o=>{
+      return (o.id || "").toLowerCase().includes(q)
+        || (o.clientCompany || "").toLowerCase().includes(q)
+        || (o.clientUsername || "").toLowerCase().includes(q);
+    });
+  }
+
+  function refreshSelect(){
+    const list = listOrdersFiltered();
+
+    adminOrderSelect.innerHTML = list
+      .slice().reverse()
+      .map(o=>`<option value="${o.id}">${o.id} | ${o.clientCompany} | ${o.createdAt}</option>`)
+      .join("");
+
+    if(!selectedId && list.length) selectedId = list[list.length-1].id;
+
+    adminOrderSelect.value = selectedId;
+  }
+
+  function getCurrentOrder(){
+    return getOrders().find(o=>o.id===selectedId) || null;
+  }
+
+  function updateOrder(update){
+    const list = getOrders();
+    const idx = list.findIndex(o=>o.id===selectedId);
+    if(idx === -1) return;
+    list[idx] = {...list[idx], ...update};
+    saveOrders(list);
+  }
+
+  function renderOrder(){
+    const o = getCurrentOrder();
+    if(!o) return;
+
+    adminStatusSelect.value = o.status || "قيد التشغيل";
+
+    const inv = o.invoice || {cut:0, engrave:0, sheet:0, notes:""};
+    invCut.value = inv.cut ?? 0;
+    invEngrave.value = inv.engrave ?? 0;
+    invSheet.value = inv.sheet ?? 0;
+    invNotes.value = inv.notes ?? "";
+  }
+
+  adminSearchInput.oninput = ()=>{
+    refreshSelect();
+    renderOrder();
+  };
+
+  adminOrderSelect.onchange = ()=>{
+    selectedId = adminOrderSelect.value;
+    renderOrder();
+  };
+
+  adminSaveStatusBtn.onclick = ()=>{
+    const o = getCurrentOrder();
+    if(!o) return;
+    updateOrder({status: adminStatusSelect.value});
+    adminMsg.textContent = "✅ تم حفظ الحالة";
+    setTimeout(()=> adminMsg.textContent="", 1200);
+  };
+
+  saveInvoiceBtn.onclick = ()=>{
+    const o = getCurrentOrder();
+    if(!o) return;
+
+    const invoice = {
+      cut: Number(invCut.value || 0),
+      engrave: Number(invEngrave.value || 0),
+      sheet: Number(invSheet.value || 0),
+      notes: (invNotes.value || "").trim()
+    };
+
+    updateOrder({invoice});
+    invoiceMsg.textContent = "✅ تم حفظ الفاتورة";
+    setTimeout(()=> invoiceMsg.textContent="", 1200);
+  };
+
+  refreshSelect();
+  renderOrder();
 }
