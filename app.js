@@ -1,71 +1,85 @@
-const doors = document.getElementById("doors")
-const sheets = document.getElementById("sheets")
-
-function addDoor(){
-const div = document.createElement("div")
-div.className="block"
-div.innerHTML=`
-<div class="row">
-<input placeholder="الارتفاع cm">
-<input placeholder="العرض cm">
-</div>
-
-<select>
-<option>باب مفرد</option>
-<option>باب دبل</option>
-<option>باب ونص</option>
-</select>
-
-<div class="dir">
-<button onclick="setDir(this)">يمين</button>
-<button onclick="setDir(this)">يسار</button>
-</div>
-
-<label>فكس فوق الباب</label>
-<div class="row">
-<input placeholder="عرض الفكس cm">
-<input placeholder="ارتفاع الفكس cm">
-</div>
-`
-doors.appendChild(div)
+function logout(){
+localStorage.removeItem("pd_session");
+location.href="index.html";
 }
 
-function setDir(btn){
-const parent = btn.parentElement.querySelectorAll("button")
-parent.forEach(b=>b.classList.remove("active"))
-btn.classList.add("active")
+function getOrders(){
+return JSON.parse(localStorage.getItem("pd_orders")||"[]");
+}
+function saveOrders(o){
+localStorage.setItem("pd_orders",JSON.stringify(o));
+}
+
+const session=JSON.parse(localStorage.getItem("pd_session")||"null");
+
+if(location.pathname.includes("client")){
+if(!session || session.role!=="client") location.href="index.html";
+company.innerText=session.company;
+}
+
+if(location.pathname.includes("admin")){
+if(!session || session.role!=="admin") location.href="index.html";
+renderAdmin();
+}
+
+/* CLIENT */
+
+function addDoor(){
+doors.innerHTML+=`
+<div class="card">
+ارتفاع <input>
+عرض <input>
+اتجاه
+<select><option>يمين</option><option>يسار</option></select>
+</div>`;
 }
 
 function addSheet(){
-const div = document.createElement("div")
-div.className="block"
-div.innerHTML=`
+sheets.innerHTML+=`
+<div class="card">
+قياس
 <select>
 <option>122x244</option>
-<option>122x300</option>
 <option>150x300</option>
-<option>100x200</option>
-<option>122x350</option>
-<option>122x400</option>
-<option>150x400</option>
 </select>
-
+سماكة
 <select>
-<option>2 mm</option>
-<option>3 mm</option>
-<option>4 mm</option>
-<option>5 mm</option>
-<option>6 mm</option>
-<option>8 mm</option>
-<option>10 mm</option>
-<option>12 mm</option>
+<option>2</option><option>4</option><option>6</option><option>8</option>
 </select>
-
-<input type="number" placeholder="الكمية">
-`
-sheets.appendChild(div)
+كمية <input type="number" value="1">
+</div>`;
 }
 
 function sendOrder(){
-alert("✅ تم إرسال أمر التشغيل (نسخة تجريبية — جاهزة للربط بالأدمن)")
+const o=getOrders();
+o.push({
+client:session.company,
+date:new Date().toLocaleString(),
+status:"قيد التشغيل"
+});
+saveOrders(o);
+alert("تم إرسال الطلب");
+}
+
+/* ADMIN */
+
+function renderAdmin(){
+const list=getOrders();
+orders.innerHTML="";
+list.forEach((o,i)=>{
+orders.innerHTML+=`
+<div class="card">
+<b>${o.client}</b><br>
+${o.date}<br>
+الحالة: ${o.status}<br>
+<button class="btn btn-green" onclick="finish(${i})">تم التنفيذ</button>
+</div>`;
+});
+}
+
+function finish(i){
+const o=getOrders();
+o[i].status="جاهز";
+saveOrders(o);
+renderAdmin();
 }
