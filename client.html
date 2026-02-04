@@ -1,144 +1,44 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pro Design CNC - بوابة العميل</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .hidden{display:none!important;}
-    .twoCols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-    @media (max-width:520px){.twoCols{grid-template-columns:1fr;}}
-    .dividerSoft{height:1px;background:rgba(255,255,255,.06);margin:12px 0;}
-    .orderBar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      font-weight:800;font-size:13px;white-space:nowrap;
-    }
-    .miniBtn{width:auto!important;padding:10px 12px!important;border-radius:14px!important;font-size:14px!important;}
-    .dirBtns{display:flex;gap:10px;flex-wrap:wrap;width:100%;}
-    .dirBtn{
-      flex:1 1 160px;padding:10px 12px;border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      cursor:pointer;font-weight:900;color: var(--text);
-      transition:.15s ease;
-    }
-    .dirBtn.active{border-color: rgba(47,123,255,.55);background: rgba(47,123,255,.16);}
-    .fixBox{
-      border:1px dashed rgba(47,123,255,.35);
-      background: rgba(47,123,255,.08);
-      border-radius:16px;padding:12px;margin-top:10px;
-    }
-    .fixHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
-    .tinyHelp{font-size:12px;color: rgba(234,241,255,.60);margin-top:6px;}
-  </style>
+<meta charset="UTF-8">
+<title>طلبات CNC</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="topbar">
-    <div class="container">
-      <div class="brand">
-        <div class="logo"></div>
-        <div style="min-width:0">
-          <h1>Pro Design CNC</h1>
-          <p>بوابة العميل</p>
-        </div>
-      </div>
 
-      <div style="display:flex;gap:10px;align-items:center">
-        <span class="pill" id="clientCompanyTitle">👤 شركة العميل</span>
-        <button class="btn btn-ghost miniBtn" id="clientLogoutBtn">تسجيل خروج</button>
-      </div>
-    </div>
+<div class="topbar">
+  <div class="container">
+    <h1 id="company"></h1>
+    <button class="btn btn-ghost" onclick="logout()">خروج</button>
   </div>
+</div>
 
-  <div class="container" id="clientRoot">
+<div class="container">
 
-    <div class="card">
-      <div class="orderBar">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <div class="card-title" style="margin:0">
-            <h2 style="margin:0">📌 الطلبات</h2>
-          </div>
-          <span id="clientStatusBadge" class="badge working">⏳ قيد التشغيل</span>
-        </div>
+<div class="card">
+<h2>📏 القياسات</h2>
 
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <button class="btn btn-blue miniBtn" id="newOrderBtn">➕ طلب جديد</button>
-          <button class="btn btn-ghost miniBtn" id="copyOrderBtn">📋 نسخ</button>
-        </div>
-      </div>
+<div id="doors"></div>
 
-      <label>اختر الطلب</label>
-      <select id="clientOrderSelect"></select>
+<button class="btn btn-blue" onclick="addDoor()">➕ إضافة باب</button>
+</div>
 
-      <div class="dividerSoft"></div>
+<div class="card">
+<h2>🧾 الشيتات</h2>
 
-      <div class="twoCols">
-        <button class="btn btn-ghost" id="copyOrderTextBtn">📋 نسخ تفاصيل الطلب</button>
-        <button class="btn btn-blue" id="sendCncBtn">🚀 إرسال أمر تشغيل CNC</button>
-      </div>
+<div id="sheets"></div>
 
-      <div class="tinyHelp">
-        * نسخة MVP: يتم الحفظ داخل المتصفح (LocalStorage).
-      </div>
-    </div>
+<button class="btn btn-blue" onclick="addSheet()">➕ إضافة شيت</button>
+</div>
 
-    <div class="card">
-      <div class="card-title">
-        <h2>📏 القياسات والتفاصيل</h2>
-        <button class="btn btn-blue miniBtn" id="addMeasureBtn" style="width:auto">➕ إضافة قياس</button>
-      </div>
+<div class="card">
+<h2>📤 إرسال الطلب</h2>
+<button class="btn btn-green" onclick="sendOrder()">إرسال للأدمن</button>
+</div>
 
-      <div id="measurementsContainer"></div>
+</div>
 
-      <div class="dividerSoft"></div>
-
-      <label>عرض الخط (mm)</label>
-      <div class="twoCols">
-        <select id="lineWidthSelect">
-          <option value="">اختر</option>
-          <option value="4">4 mm</option>
-          <option value="6">6 mm</option>
-          <option value="8">8 mm</option>
-          <option value="10">10 mm</option>
-          <option value="12">12 mm</option>
-          <option value="15">15 mm</option>
-          <option value="20">20 mm</option>
-          <option value="25">25 mm</option>
-          <option value="30">3 cm</option>
-          <option value="40">4 cm</option>
-          <option value="other">أخرى</option>
-        </select>
-        <input id="lineWidthOther" disabled placeholder="اكتب عرض الخط (mm)"/>
-      </div>
-
-      <label style="margin-top:12px">تفاصيل القص / الحفر</label>
-      <textarea id="cutEngraveDetails" placeholder="مثال: قص + حفر شعار + تخريم..."></textarea>
-
-      <label>رفع ملفات (DXF / PDF / صور)</label>
-      <input id="fileInput" type="file" multiple />
-
-      <label>ملاحظات إضافية</label>
-      <textarea id="notesInput" placeholder="أي ملاحظات إضافية..."></textarea>
-
-      <div class="dividerSoft"></div>
-
-      <button class="btn btn-ghost" id="saveDraftBtn">💾 حفظ كمسودة</button>
-      <div class="help" id="clientMsg"></div>
-    </div>
-
-  </div>
-
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{
-      if(typeof initClient === "function") initClient();
-    });
-  </script>
+<script src="app.js"></script>
 </body>
 </html>
