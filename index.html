@@ -2,48 +2,51 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pro Design CNC</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="topbar">
-  <div class="container brand">
-    <div class="logo"></div>
-    <div>
-      <h1>Pro Design CNC</h1>
-      <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
-    </div>
+<div class="container">
+  <div class="card">
+    <h2>🏭 Pro Design CNC</h2>
+    <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
+
+    <label>اسم المستخدم</label>
+    <input id="user">
+
+    <label>كلمة المرور</label>
+    <input id="pass" type="password">
+
+    <button class="btn btn-blue" onclick="login()">تسجيل الدخول</button>
   </div>
 </div>
 
-<div class="container">
+<script>
+const users = {
+  admin:{pass:"1234",role:"admin"},
+  hajri:{pass:"1111",role:"client",company:"شركة الهاجري"},
+  babsaif:{pass:"2222",role:"client",company:"شركة باب السيف"}
+};
 
-<div class="card">
-<h2>📏 القياسات</h2>
-<div id="doors"></div>
-<button class="btn btn-blue" onclick="addDoor()">➕ إضافة باب</button>
-</div>
+function login(){
+  const u=user.value.trim();
+  const p=pass.value.trim();
 
-<div class="card">
-<h2>🧾 الشيتات</h2>
-<div id="sheets"></div>
-<button class="btn btn-blue" onclick="addSheet()">➕ إضافة شيت</button>
-</div>
+  if(!users[u] || users[u].pass!==p){
+    alert("بيانات غير صحيحة");
+    return;
+  }
 
-<div class="card">
-<h2>📝 ملاحظات</h2>
-<textarea id="notes"></textarea>
-</div>
+  localStorage.setItem("pd_session",JSON.stringify({
+    username:u,
+    role:users[u].role,
+    company:users[u].company||""
+  }));
 
-<div class="card">
-<button class="btn btn-green" onclick="sendOrder()">🚀 إرسال أمر تشغيل CNC</button>
-</div>
+  location.href = users[u].role==="admin" ? "admin.html" : "client.html";
+}
+</script>
 
-</div>
-
-<script src="app.js"></script>
 </body>
 </html>
