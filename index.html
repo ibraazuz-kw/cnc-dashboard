@@ -2,36 +2,21 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Pro Design CNC Orders</title>
-<style>
-body{font-family:tahoma;background:#0e1623;color:white;margin:0;padding:20px}
-.box{background:#162235;padding:15px;border-radius:12px;margin-bottom:15px}
-input,select,textarea,button{
-width:100%;padding:10px;border-radius:8px;border:none;margin-top:6px;font-size:15px
-}
-button{background:#2f81ff;color:white;font-weight:bold;cursor:pointer}
-h2{margin:0 0 10px}
-.row{display:flex;gap:10px}
-.small{flex:1}
-.add{background:#1abc9c}
-</style>
+<title>Pro Design CNC</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Pro Design CNC</h1>
+<h1>Pro Design CNC – طلب تشغيل</h1>
 
-<!-- MATERIAL -->
 <div class="box">
-<h2>المادة</h2>
+<h3>المادة</h3>
 <select id="material">
 <option>ألمنيوم</option>
 <option>ألكبوند</option>
 </select>
-</div>
 
-<!-- WORK TYPE -->
-<div class="box">
-<h2>نوع الشغل</h2>
+<h3>نوع الشغل</h3>
 <select id="work">
 <option>قص</option>
 <option>حفر</option>
@@ -39,67 +24,25 @@ h2{margin:0 0 10px}
 </select>
 </div>
 
-<!-- DOORS -->
 <div class="box">
-<h2>الأبواب (CM)</h2>
-
-<div class="row">
-<input class="small" placeholder="الارتفاع">
-<input class="small" placeholder="العرض">
+<h3>الأبواب (سم)</h3>
+<div id="doors"></div>
+<button onclick="addDoor()">➕ إضافة باب</button>
 </div>
 
-<select>
-<option>باب مفرد</option>
-<option>باب دبل</option>
-<option>باب ونص</option>
-</select>
-
-<select>
-<option>يمين</option>
-<option>يسار</option>
-</select>
-
-<div class="row">
-<input class="small" placeholder="فيكس علوي (CM)">
-<input class="small" placeholder="مكان القفل (إن وجد)">
-</div>
-
-<button class="add">إضافة باب</button>
-</div>
-
-<!-- SHEETS -->
 <div class="box">
-<h2>الشيتات (MM)</h2>
-
-<input placeholder="الطول × العرض مثال: 1220 × 2440">
-<input placeholder="السماكة mm">
-<input placeholder="الكمية">
-
-<button class="add">إضافة شيت</button>
+<h3>الشيتات (مم)</h3>
+<div id="sheets"></div>
+<button onclick="addSheet()">➕ إضافة شيت</button>
 </div>
 
-<!-- FILES -->
 <div class="box">
-<h2>الملفات</h2>
-<input type="file" multiple>
+<h3>ملاحظات</h3>
+<textarea id="notes"></textarea>
 </div>
 
-<!-- NOTES -->
-<div class="box">
-<h2>ملاحظات</h2>
-<textarea rows="4"></textarea>
-</div>
+<button onclick="sendOrder()">📤 إرسال الطلب</button>
 
-<!-- SEND -->
-<div class="box">
-<button onclick="send()">إرسال الطلب</button>
-</div>
-
-<script>
-function send(){
-alert("تم إرسال الطلب بنجاح ✔ جاهز للتسعير والفاتورة");
-}
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
