@@ -1,41 +1,80 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pro Design CNC - لوحة الأدمن</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Design CNC - الأدمن</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <div class="topbar">
-    <div class="container">
-      <div class="brand">
-        <div class="logo"></div>
-        <div>
-          <h1>Pro Design CNC</h1>
-          <p>لوحة الأدمن</p>
-        </div>
-      </div>
-      <button class="btn btn-ghost" id="adminLogoutBtn" style="width:auto">تسجيل خروج</button>
+<div class="topbar">
+  <div class="container brand">
+    <div class="logo"></div>
+    <div>
+      <h1>Pro Design CNC</h1>
+      <p>لوحة إدارة الطلبات</p>
     </div>
   </div>
+</div>
 
-  <div class="container" id="adminRoot">
-    <div class="card">
-      <div class="card-title">
-        <h2>📌 لوحة الأدمن (مبدئي)</h2>
-      </div>
-      <div class="help">هنا لاحقاً: إدارة الطلبات + الحالات + الفواتير</div>
-    </div>
-  </div>
+<div class="container">
 
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{
-      if(typeof initAdmin === "function") initAdmin();
-    });
-  </script>
+<div class="card">
+<h2>📦 الطلبات</h2>
+<div id="orders"></div>
+</div>
+
+</div>
+
+<script>
+
+function loadOrders(){
+  return JSON.parse(localStorage.getItem("orders")||"[]")
+}
+
+function saveOrders(o){
+  localStorage.setItem("orders",JSON.stringify(o))
+}
+
+function render(){
+  const box = document.getElementById("orders")
+  const orders = loadOrders()
+
+  if(!orders.length){
+    box.innerHTML="لا يوجد طلبات بعد"
+    return
+  }
+
+  box.innerHTML=""
+
+  orders.forEach((o,i)=>{
+    const div=document.createElement("div")
+    div.className="block"
+
+    div.innerHTML=`
+    <b>طلب #${i+1}</b><br>
+    الحالة:
+    <select onchange="changeStatus(${i},this.value)">
+      <option ${o.status=="قيد التشغيل"?"selected":""}>قيد التشغيل</option>
+      <option ${o.status=="جاهز"?"selected":""}>جاهز</option>
+    </select>
+
+    <pre style="white-space:pre-wrap">${JSON.stringify(o,null,2)}</pre>
+    `
+    box.appendChild(div)
+  })
+}
+
+function changeStatus(i,val){
+  const orders=loadOrders()
+  orders[i].status=val
+  saveOrders(orders)
+}
+
+render()
+</script>
 
 </body>
 </html>
