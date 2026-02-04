@@ -1,50 +1,103 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Pro Design CNC</title>
-<link rel="stylesheet" href="style.css">
+<title>Pro Design CNC Orders</title>
+<style>
+body{font-family:tahoma;background:#0e1623;color:white;margin:0;padding:20px}
+.box{background:#162235;padding:15px;border-radius:12px;margin-bottom:15px}
+input,select,textarea,button{
+width:100%;padding:10px;border-radius:8px;border:none;margin-top:6px;font-size:15px
+}
+button{background:#2f81ff;color:white;font-weight:bold;cursor:pointer}
+h2{margin:0 0 10px}
+.row{display:flex;gap:10px}
+.small{flex:1}
+.add{background:#1abc9c}
+</style>
 </head>
 <body>
 
-<div class="container">
-  <div class="card">
-    <h2>🏭 Pro Design CNC</h2>
-    <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
+<h1>Pro Design CNC</h1>
 
-    <label>اسم المستخدم</label>
-    <input id="user">
+<!-- MATERIAL -->
+<div class="box">
+<h2>المادة</h2>
+<select id="material">
+<option>ألمنيوم</option>
+<option>ألكبوند</option>
+</select>
+</div>
 
-    <label>كلمة المرور</label>
-    <input id="pass" type="password">
+<!-- WORK TYPE -->
+<div class="box">
+<h2>نوع الشغل</h2>
+<select id="work">
+<option>قص</option>
+<option>حفر</option>
+<option>قص + حفر</option>
+</select>
+</div>
 
-    <button class="btn btn-blue" onclick="login()">تسجيل الدخول</button>
-  </div>
+<!-- DOORS -->
+<div class="box">
+<h2>الأبواب (CM)</h2>
+
+<div class="row">
+<input class="small" placeholder="الارتفاع">
+<input class="small" placeholder="العرض">
+</div>
+
+<select>
+<option>باب مفرد</option>
+<option>باب دبل</option>
+<option>باب ونص</option>
+</select>
+
+<select>
+<option>يمين</option>
+<option>يسار</option>
+</select>
+
+<div class="row">
+<input class="small" placeholder="فيكس علوي (CM)">
+<input class="small" placeholder="مكان القفل (إن وجد)">
+</div>
+
+<button class="add">إضافة باب</button>
+</div>
+
+<!-- SHEETS -->
+<div class="box">
+<h2>الشيتات (MM)</h2>
+
+<input placeholder="الطول × العرض مثال: 1220 × 2440">
+<input placeholder="السماكة mm">
+<input placeholder="الكمية">
+
+<button class="add">إضافة شيت</button>
+</div>
+
+<!-- FILES -->
+<div class="box">
+<h2>الملفات</h2>
+<input type="file" multiple>
+</div>
+
+<!-- NOTES -->
+<div class="box">
+<h2>ملاحظات</h2>
+<textarea rows="4"></textarea>
+</div>
+
+<!-- SEND -->
+<div class="box">
+<button onclick="send()">إرسال الطلب</button>
 </div>
 
 <script>
-const users = {
-  admin:{pass:"1234",role:"admin"},
-  hajri:{pass:"1111",role:"client",company:"شركة الهاجري"},
-  babsaif:{pass:"2222",role:"client",company:"شركة باب السيف"}
-};
-
-function login(){
-  const u=user.value.trim();
-  const p=pass.value.trim();
-
-  if(!users[u] || users[u].pass!==p){
-    alert("بيانات غير صحيحة");
-    return;
-  }
-
-  localStorage.setItem("pd_session",JSON.stringify({
-    username:u,
-    role:users[u].role,
-    company:users[u].company||""
-  }));
-
-  location.href = users[u].role==="admin" ? "admin.html" : "client.html";
+function send(){
+alert("تم إرسال الطلب بنجاح ✔ جاهز للتسعير والفاتورة");
 }
 </script>
 
