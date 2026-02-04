@@ -1,85 +1,78 @@
-function logout(){
-localStorage.removeItem("pd_session");
-location.href="index.html";
-}
-
 function getOrders(){
-return JSON.parse(localStorage.getItem("pd_orders")||"[]");
+ return JSON.parse(localStorage.getItem("orders")||"[]");
 }
 function saveOrders(o){
-localStorage.setItem("pd_orders",JSON.stringify(o));
+ localStorage.setItem("orders",JSON.stringify(o));
 }
-
-const session=JSON.parse(localStorage.getItem("pd_session")||"null");
-
-if(location.pathname.includes("client")){
-if(!session || session.role!=="client") location.href="index.html";
-company.innerText=session.company;
-}
-
-if(location.pathname.includes("admin")){
-if(!session || session.role!=="admin") location.href="index.html";
-renderAdmin();
-}
-
-/* CLIENT */
 
 function addDoor(){
-doors.innerHTML+=`
-<div class="card">
-ارتفاع <input>
-عرض <input>
-اتجاه
-<select><option>يمين</option><option>يسار</option></select>
-</div>`;
+ doors.innerHTML+=`
+ <div class="card">
+ ارتفاع <input>
+ عرض <input>
+ اتجاه 
+ <select><option>يمين</option><option>يسار</option></select>
+ </div>`;
 }
 
 function addSheet(){
-sheets.innerHTML+=`
-<div class="card">
-قياس
-<select>
-<option>122x244</option>
-<option>150x300</option>
-</select>
-سماكة
-<select>
-<option>2</option><option>4</option><option>6</option><option>8</option>
-</select>
-كمية <input type="number" value="1">
-</div>`;
+ sheets.innerHTML+=`
+ <div class="card">
+ قياس <input placeholder="1220x2440">
+ سماكة <input>
+ كمية <input type="number" value="1">
+ </div>`;
 }
 
 function sendOrder(){
-const o=getOrders();
-o.push({
-client:session.company,
-date:new Date().toLocaleString(),
-status:"قيد التشغيل"
-});
-saveOrders(o);
-alert("تم إرسال الطلب");
+ const order={
+ material:material.value,
+ work:work.value,
+ notes:notes.value,
+ date:new Date().toLocaleString(),
+ status:"قيد التشغيل"
+ };
+
+ const list=getOrders();
+ list.push(order);
+ saveOrders(list);
+
+ alert("تم إرسال الطلب بنجاح ✔");
 }
 
-/* ADMIN */
+if(location.pathname.includes("admin")){
+ renderAdmin();
+}
 
 function renderAdmin(){
-const list=getOrders();
-orders.innerHTML="";
-list.forEach((o,i)=>{
-orders.innerHTML+=`
-<div class="card">
-<b>${o.client}</b><br>
-${o.date}<br>
-الحالة: ${o.status}<br>
-<button class="btn btn-green" onclick="finish(${i})">تم التنفيذ</button>
-</div>`;
-});
+ const list=getOrders();
+ orders.innerHTML="";
+ list.forEach((o,i)=>{
+ orders.innerHTML+=`
+ <div class="card">
+ <b>طلب ${i+1}</b><br>
+ المادة: ${o.material}<br>
+ الشغل: ${o.work}<br>
+ الحالة: ${o.status}<br>
+
+ السعر (د.ك)
+ <input type="number" onchange="setPrice(${i},this.value)">
+
+ <button onclick="makeInvoice(${i})">📄 فاتورة</button>
+ <button onclick="finish(${i})">✅ تم التنفيذ</button>
+ </div>`;
+ });
+}
+
+function setPrice(i,v){
+ const o=getOrders();
+ o[i].price=v;
+ saveOrders(o);
 }
 
 function finish(i){
-const o=getOrders();
-o[i].status="جاهز";
-saveOrders(o);
-renderAdmin();
+ const o=getOrders();
+ o[i].status="جاهز";
+ saveOrders(o);
+ renderAdmin();
 }
