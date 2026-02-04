@@ -2,42 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>طلبات CNC</title>
-<link rel="stylesheet" href="style.css">
+<title>بوابة العميل</title>
+<style>
+body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
+.card{background:#111b27;padding:15px;border-radius:16px;margin-bottom:15px}
+input,select,button{width:100%;padding:10px;border-radius:10px;border:none;margin:6px 0}
+button{background:#2f7bff;color:#fff;font-weight:bold}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="container">
-    <h1 id="company"></h1>
-    <button class="btn btn-ghost" onclick="logout()">خروج</button>
-  </div>
-</div>
-
-<div class="container">
+<h3 id="client"></h3>
 
 <div class="card">
-<h2>📏 القياسات</h2>
-
-<div id="doors"></div>
-
-<button class="btn btn-blue" onclick="addDoor()">➕ إضافة باب</button>
+<h4>قياس الباب</h4>
+<div class="row">
+<input id="h" placeholder="الارتفاع سم">
+<input id="w" placeholder="العرض سم">
 </div>
 
-<div class="card">
-<h2>🧾 الشيتات</h2>
+<select id="dir">
+<option>يمين</option>
+<option>يسار</option>
+</select>
 
-<div id="sheets"></div>
-
-<button class="btn btn-blue" onclick="addSheet()">➕ إضافة شيت</button>
+<button onclick="saveOrder()">حفظ الطلب</button>
 </div>
 
-<div class="card">
-<h2>📤 إرسال الطلب</h2>
-<button class="btn btn-green" onclick="sendOrder()">إرسال للأدمن</button>
-</div>
-
-</div>
+<div id="list"></div>
 
 <script src="app.js"></script>
 </body>
