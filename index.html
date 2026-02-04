@@ -1,71 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pro Design CNC - تسجيل الدخول</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Design CNC</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="topbar">
-    <div class="container">
-      <div class="brand">
-        <div class="logo"></div>
-        <div style="min-width:0">
-          <h1>Pro Design CNC</h1>
-          <p>تسجيل الدخول</p>
-        </div>
-      </div>
-      <div class="avatar"></div>
+<div class="topbar">
+  <div class="container brand">
+    <div class="logo"></div>
+    <div>
+      <h1>Pro Design CNC</h1>
+      <p>نظام واحد يرتّب لك الورشة ويختصر وقتك</p>
     </div>
   </div>
+</div>
 
-  <div class="container">
+<div class="container">
 
-    <div class="card">
-      <div class="card-title">
-        <h2>🔐 تسجيل الدخول</h2>
-      </div>
+<div class="card">
+<h2>📏 القياسات</h2>
+<div id="doors"></div>
+<button class="btn btn-blue" onclick="addDoor()">➕ إضافة باب</button>
+</div>
 
-      <label>نوع الحساب</label>
-      <select id="roleSelect">
-        <option value="client">عميل</option>
-        <option value="admin">أدمن</option>
-      </select>
+<div class="card">
+<h2>🧾 الشيتات</h2>
+<div id="sheets"></div>
+<button class="btn btn-blue" onclick="addSheet()">➕ إضافة شيت</button>
+</div>
 
-      <label>اسم المستخدم</label>
-      <input id="usernameInput" placeholder="مثال: client1 أو admin" />
+<div class="card">
+<h2>📝 ملاحظات</h2>
+<textarea id="notes"></textarea>
+</div>
 
-      <label>اسم الشركة (للعميل فقط)</label>
-      <input id="companyInput" placeholder="مثال: شركة العميل 1" />
+<div class="card">
+<button class="btn btn-green" onclick="sendOrder()">🚀 إرسال أمر تشغيل CNC</button>
+</div>
 
-      <div style="margin-top:12px"></div>
+</div>
 
-      <button class="btn btn-blue" id="loginBtn">دخول</button>
-
-      <div class="help" id="loginMsg"></div>
-
-      <div class="hr"></div>
-
-      <div class="help">
-        * النظام حالياً MVP: التخزين داخل المتصفح (LocalStorage)
-      </div>
-
-      <button class="btn btn-ghost" id="resetBtn" style="margin-top:10px">
-        🧹 تصفير النظام (حل مشاكل الدخول)
-      </button>
-    </div>
-
-  </div>
-
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{
-      if(typeof initIndex === "function") initIndex();
-    });
-  </script>
-
+<script src="app.js"></script>
 </body>
 </html>
