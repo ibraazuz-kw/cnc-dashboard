@@ -1,26 +1,45 @@
-const user = localStorage.getItem("pd_user");
-if(!user) location.href="/";
+const box = document.getElementById("sheetBox");
 
-document.getElementById("client").innerText="👤 "+user;
+function addSheet(){
+  const row = document.createElement("div");
+  row.className="card";
 
-function saveOrder(){
- const h=hInput=h=document.getElementById("h").value;
- const w=document.getElementById("w").value;
- const d=document.getElementById("dir").value;
+  row.innerHTML=`
+    <div class="row">
+      <select class="size"></select>
+      <select class="thick"></select>
+      <input type="number" min="1" value="1" class="qty">
+    </div>
+    <button onclick="this.parentElement.remove()">حذف</button>
+  `;
 
- const orders=JSON.parse(localStorage.getItem("pd_orders")||"[]");
- orders.push({user,h,w,d,time:new Date().toLocaleString()});
- localStorage.setItem("pd_orders",JSON.stringify(orders));
- show();
+  const sizeSel=row.querySelector(".size");
+  SHEET_SIZES.forEach(s=>{
+    sizeSel.innerHTML+=`<option>${s}</option>`;
+  });
+
+  const thickSel=row.querySelector(".thick");
+  THICKNESS.forEach(t=>{
+    thickSel.innerHTML+=`<option>${t}</option>`;
+  });
+
+  box.appendChild(row);
 }
 
-function show(){
- const list=JSON.parse(localStorage.getItem("pd_orders")||"[]");
- const box=document.getElementById("list");
- box.innerHTML="";
- list.filter(o=>o.user===user).forEach(o=>{
-   box.innerHTML+=`<div class="card">${o.h}×${o.w} سم — ${o.d}<br>${o.time}</div>`;
- });
-}
+addSheet();
 
-show();
+async function sendOrder(){
+  const sheets=[...document.querySelectorAll(".card")].map(c=>({
+    size:c.querySelector(".size").value,
+    thickness:c.querySelector(".thick").value,
+    qty:c.querySelector(".qty").value
+  }));
+
+  await fetch("/api/order",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({sheets})
+  });
+
+  alert("✅ تم إرسال الطلب");
+}
