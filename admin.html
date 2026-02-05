@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة تحكم Pro Design</title>
-<link rel="stylesheet" href="style.css">
+<title>أدمن CNC</title>
+<style>
+body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
+.card{background:#111b27;padding:15px;border-radius:16px;margin-bottom:12px}
+</style>
 </head>
 <body>
 
-<h1>لوحة الأدمن</h1>
+<h2>الطلبات الواردة</h2>
 <div id="orders"></div>
 
-<script src="app.js"></script>
-<script src="invoice.js"></script>
+<script>
+async function load(){
+ const res=await fetch("/api/orders");
+ const data=await res.json();
+ const box=document.getElementById("orders");
+ box.innerHTML="";
+ data.forEach(o=>{
+  box.innerHTML+=`<div class="card">${JSON.stringify(o)}</div>`;
+ });
+}
+load();
+</script>
+
 </body>
 </html>
