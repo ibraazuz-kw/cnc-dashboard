@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BBM Chat</title>
+<style>
+body {
+  background:black;
+  color:white;
+  font-family: Arial;
+}
+.chat-box {
+  border:1px solid #555;
+  padding:10px;
+  height:300px;
+  overflow-y:auto;
+}
+input {
+  width:100%;
+  padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>BBM Chat</h2>
+
+<div class="chat-box" id="chat"></div>
+
+<input type="text" id="msg" placeholder="Type message..."
+onkeypress="send(event)">
+
+<script>
+function send(e){
+ if(e.key==="Enter"){
+  let chat=document.getElementById("chat");
+  let msg=document.getElementById("msg");
+  chat.innerHTML+=`<p>🟢 You: ${msg.value}</p>`;
+  msg.value="";
+ }
+}
+</script>
+
+</body>
+</html>
