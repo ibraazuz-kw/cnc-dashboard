@@ -1,25 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>BBM Chat</title>
+
 <style>
-body {
+body{
   background:black;
   color:white;
-  font-family: Arial;
+  font-family:Arial;
+  margin:0;
 }
-.chat-box {
-  border:1px solid #555;
+
+h2{
+  text-align:center;
   padding:10px;
-  height:300px;
+  background:#111;
+  margin:0;
+}
+
+.chat-box{
+  height:350px;
   overflow-y:auto;
-}
-input {
-  width:100%;
   padding:10px;
+}
+
+.message{
+  margin:5px 0;
+}
+
+.you{
+  color:#00ff00;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:none;
+  outline:none;
+  background:#111;
+  color:white;
 }
 </style>
+
 </head>
 
 <body>
@@ -28,17 +51,20 @@ input {
 
 <div class="chat-box" id="chat"></div>
 
-<input type="text" id="msg" placeholder="Type message..."
-onkeypress="send(event)">
+<input type="text" id="msg" placeholder="Type message..." onkeydown="send(event)">
 
 <script>
 function send(e){
- if(e.key==="Enter"){
-  let chat=document.getElementById("chat");
-  let msg=document.getElementById("msg");
-  chat.innerHTML+=`<p>🟢 You: ${msg.value}</p>`;
-  msg.value="";
- }
+  if(e.key === "Enter"){
+    let chat = document.getElementById("chat");
+    let msg = document.getElementById("msg");
+
+    if(msg.value.trim() !== ""){
+      chat.innerHTML += "<div class='message you'>🟢 You: " + msg.value + "</div>";
+      msg.value = "";
+      chat.scrollTop = chat.scrollHeight;
+    }
+  }
 }
 </script>
 
