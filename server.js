@@ -9,13 +9,23 @@ app.use(express.static(path.join(__dirname, "public")));
 
 let ORDERS = [];
 
-app.post("/api/order", (req,res)=>{
-  ORDERS.push(req.body);
+app.post("/api/order",(req,res)=>{
+  ORDERS.push({
+    id:Date.now(),
+    ...req.body,
+    status:"قيد التشغيل"
+  });
   res.json({ok:true});
 });
 
-app.get("/api/orders", (req,res)=>{
+app.get("/api/orders",(req,res)=>{
   res.json(ORDERS);
 });
 
-app.listen(PORT, ()=>console.log("Running on",PORT));
+app.post("/api/status",(req,res)=>{
+  const o=ORDERS.find(x=>x.id==req.body.id);
+  if(o) o.status=req.body.status;
+  res.json({ok:true});
+});
+
+app.listen(PORT,()=>console.log("Running",PORT));
