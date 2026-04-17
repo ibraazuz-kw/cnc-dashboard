@@ -2,89 +2,142 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>طلب CNC</title>
+<title>Pro Design CNC</title>
 
 <style>
-body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
-.card{background:#111b27;padding:15px;border-radius:12px;margin-bottom:15px}
-input,select,button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:10px;
+body {
+    font-family: Arial;
+    background: #0b1b2b;
+    color: white;
+    padding: 15px;
 }
-button{background:#2f7bff;color:#fff;font-weight:bold}
-.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+.card {
+    background: #11263c;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #2f6fed;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.small-btn {
+    background: #444;
+}
+
 </style>
 </head>
 
 <body>
 
-<h2>🚀 طلب CNC</h2>
+<h2>🚀 طلب CNC - Pro Design</h2>
 
-<!-- نوع الشغل -->
-<div class="card">
-  <label>نوع المادة</label>
-  <select id="material">
-    <option>ألمنيوم</option>
-    <option>ألكبوند</option>
-  </select>
+<div id="doors"></div>
 
-  <label>نوع العملية</label>
-  <select id="type">
-    <option>قص</option>
-    <option>حفر</option>
-    <option>قص + حفر</option>
-  </select>
-</div>
+<button onclick="addDoor()">➕ إضافة باب</button>
 
-<!-- القياسات -->
-<div class="card">
-  <h3>📏 القياسات</h3>
-  <div id="doors"></div>
-  <button onclick="addDoor()">➕ إضافة قياس</button>
-</div>
-
-<button onclick="send()">🚀 جرب البيانات</button>
+<button onclick="sendData()">📤 إرسال الطلب</button>
 
 <script>
-const doorsBox=document.getElementById("doors");
 
-function addDoor(){
-  const d=document.createElement("div");
-  d.className="card";
+let doorCount = 0;
 
-  d.innerHTML=`
-    <div class="row">
-      <input placeholder="ارتفاع">
-      <input placeholder="عرض">
-      <select>
-        <option>يمين</option>
-        <option>يسار</option>
-      </select>
+function addDoor() {
+
+    doorCount++;
+
+    let html = `
+    <div class="card">
+        <h3>📦 باب ${doorCount}</h3>
+
+        <label>Inside (عرض × ارتفاع)</label>
+        <input placeholder="مثال: 100 × 220" class="inside">
+
+        <label>Outside (عرض × ارتفاع)</label>
+        <input placeholder="مثال: 98 × 218" class="outside">
+
+        <label>الاتجاه</label>
+        <select class="direction">
+            <option>يمين</option>
+            <option>يسار</option>
+        </select>
+
+        <label>تفاصيل إضافية</label>
+        <div class="details"></div>
+
+        <button class="small-btn" onclick="addDetail(this)">➕ إضافة تفصيلة</button>
+
+        <label>ملاحظات</label>
+        <textarea class="notes"></textarea>
     </div>
-  `;
+    `;
 
-  doorsBox.appendChild(d);
+    document.getElementById("doors").insertAdjacentHTML("beforeend", html);
 }
 
-addDoor();
+function addDetail(btn) {
 
-function send(){
+    let container = btn.previousElementSibling;
 
-  const doors=[...doorsBox.children].map(d=>({
-    h:d.children[0].children[0].value,
-    w:d.children[0].children[1].value,
-    dir:d.children[0].children[2].value
-  }));
+    let html = `
+    <div class="card">
+        <input placeholder="الوصف (مثال: فتحة / زخرفة)">
+        <input placeholder="القياس (مثال: 25 × 80)">
+    </div>
+    `;
 
-  alert(
-    "المادة: "+material.value+
-    "\nالعملية: "+type.value+
-    "\nعدد القياسات: "+doors.length
-  );
+    container.insertAdjacentHTML("beforeend", html);
 }
+
+function sendData() {
+
+    let doors = document.querySelectorAll(".card");
+
+    let result = "";
+
+    doors.forEach((door, i) => {
+
+        let inside = door.querySelector(".inside")?.value || "";
+        let outside = door.querySelector(".outside")?.value || "";
+        let direction = door.querySelector(".direction")?.value || "";
+        let notes = door.querySelector(".notes")?.value || "";
+
+        result += `باب ${i+1}\n`;
+        result += `Inside: ${inside}\n`;
+        result += `Outside: ${outside}\n`;
+        result += `الاتجاه: ${direction}\n`;
+
+        let details = door.querySelectorAll(".details .card");
+
+        details.forEach(d => {
+            let inputs = d.querySelectorAll("input");
+            result += `تفصيلة: ${inputs[0].value} - ${inputs[1].value}\n`;
+        });
+
+        result += `ملاحظات: ${notes}\n`;
+        result += `-------------------\n`;
+    });
+
+    alert(result);
+}
+
 </script>
 
 </body>
