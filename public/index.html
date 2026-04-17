@@ -2,238 +2,224 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pro Design CNC</title>
 
 <style>
-body {
-    font-family: Arial;
-    background: #0b1b2b;
-    color: white;
-    padding: 15px;
+body{
+  margin:0;
+  font-family:Tahoma;
+  background:#0b1e2d;
+  color:#fff;
 }
 
-.card {
-    background: #11263c;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 15px;
-    border: 1px solid #1f3b5c;
+.container{
+  max-width:500px;
+  margin:auto;
+  padding:15px;
 }
 
-input, select, textarea {
-    width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    border: 1px solid #2f3f55;
-    background: #0f253a;
-    color: white;
+h2{
+  text-align:center;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    background: #2f6fed;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    margin-top: 10px;
+.card{
+  background:#112b3c;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
 }
 
-.small-btn {
-    background: #444;
+input, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:8px;
 }
 
-canvas {
-    background: #0f253a;
-    border-radius: 10px;
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:16px;
+}
+
+.primary{
+  background:#2f80ed;
+  color:#fff;
+}
+
+.type-buttons button{
+  width:32%;
+  background:#1e3a4d;
+  color:#fff;
+}
+
+.active{
+  background:#2f80ed !important;
+}
+
+canvas{
+  background:#0e2433;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.lock-box{
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🚀 طلب CNC - Pro Design</h2>
+<div class="container">
 
-<div id="doors"></div>
+<h2>🚀 Pro Design CNC</h2>
 
-<button onclick="addDoor()">➕ إضافة باب</button>
-<button onclick="sendData()">📤 إرسال الطلب</button>
+<div class="card">
+
+<!-- نوع الباب -->
+<div class="type-buttons">
+  <button onclick="setDoorType('single')" id="btn_single">باب</button>
+  <button onclick="setDoorType('double')" id="btn_double">بابين</button>
+  <button onclick="setDoorType('onehalf')" id="btn_onehalf">باب وربع</button>
+</div>
+
+<!-- الرسم -->
+<canvas id="doorCanvas" width="260" height="200"></canvas>
+
+<!-- القفل -->
+<div id="lockBox" class="lock-box" style="display:none;">
+  🔐 مكان القفل:
+  <label><input type="radio" name="lock" value="right"> يمين</label>
+  <label><input type="radio" name="lock" value="left"> يسار</label>
+</div>
+
+<!-- القياسات -->
+<p>📏 المقاس الداخلي</p>
+<input id="in_w" placeholder="العرض">
+<input id="in_h" placeholder="الارتفاع">
+
+<p>📏 المقاس الخارجي</p>
+<input id="out_w" placeholder="العرض">
+<input id="out_h" placeholder="الارتفاع">
+
+<!-- التفاصيل -->
+<textarea id="details" placeholder="تفاصيل إضافية"></textarea>
+
+<!-- صورة -->
+<input type="file" id="imgInput">
+<img id="preview" style="width:100%;margin-top:10px;border-radius:10px;display:none;">
+
+<!-- زر -->
+<button class="primary" onclick="sendData()">إرسال الطلب</button>
+
+</div>
+</div>
 
 <script>
 
-let doorCount = 0;
+let doorType = "single";
+let ctx = document.getElementById("doorCanvas").getContext("2d");
 
-function addDoor(){
+function setDoorType(type){
+  doorType = type;
 
-    doorCount++;
+  document.getElementById("lockBox").style.display =
+    (type === "double") ? "block" : "none";
 
-    let html = `
-    <div class="card">
-        <h3>📦 باب ${doorCount}</h3>
+  document.querySelectorAll(".type-buttons button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("btn_"+type).classList.add("active");
 
-        <label>نوع الباب</label>
-        <select onchange="changeType(this, this.closest('.card'))">
-            <option value="single">باب واحد</option>
-            <option value="double">بابين</option>
-            <option value="side">باب + ربع</option>
-        </select>
-
-        <canvas width="300" height="180" class="canvas" onclick="toggleDir(this)"></canvas>
-
-        <input class="dir" type="hidden" value="right">
-        <input class="type" type="hidden" value="single">
-
-        <label>Inside (عرض × ارتفاع)</label>
-        <input class="inside" placeholder="مثال: 100 × 220">
-
-        <label>Outside (عرض × ارتفاع)</label>
-        <input class="outside" placeholder="مثال: 98 × 218">
-
-        <label>تفاصيل إضافية</label>
-        <div class="details"></div>
-        <button class="small-btn" onclick="addDetail(this)">➕ إضافة تفصيلة</button>
-
-        <label>📸 صورة الباب</label>
-        <input type="file" accept="image/*" onchange="previewImage(this)">
-        <img class="preview" style="width:100%;display:none;border-radius:10px;">
-
-        <label>ملاحظات</label>
-        <textarea class="notes"></textarea>
-
-    </div>
-    `;
-
-    document.getElementById("doors").insertAdjacentHTML("beforeend", html);
-
-    let card = document.querySelectorAll(".card")[doorCount-1];
-    drawDoor(card);
+  drawDoor();
 }
 
-function changeType(select, card){
-    card.querySelector(".type").value = select.value;
-    drawDoor(card);
-}
+function drawDoor(){
+  ctx.clearRect(0,0,260,200);
 
-function toggleDir(canvas){
-    let card = canvas.closest(".card");
-    let dirInput = card.querySelector(".dir");
+  if(doorType==="single"){
+    ctx.strokeRect(80,20,100,160);
+    ctx.beginPath();
+    ctx.moveTo(80,100);
+    ctx.lineTo(180,20);
+    ctx.moveTo(80,100);
+    ctx.lineTo(180,180);
+    ctx.stroke();
+  }
 
-    dirInput.value = dirInput.value === "right" ? "left" : "right";
+  if(doorType==="double"){
+    // يسار
+    ctx.strokeRect(20,20,90,160);
+    ctx.beginPath();
+    ctx.moveTo(110,100);
+    ctx.lineTo(20,20);
+    ctx.moveTo(110,100);
+    ctx.lineTo(20,180);
+    ctx.stroke();
 
-    drawDoor(card);
-}
+    // يمين
+    ctx.strokeRect(150,20,90,160);
+    ctx.beginPath();
+    ctx.moveTo(150,100);
+    ctx.lineTo(240,20);
+    ctx.moveTo(150,100);
+    ctx.lineTo(240,180);
+    ctx.stroke();
+  }
 
-function drawDoor(card){
-
-    let canvas = card.querySelector(".canvas");
-    let ctx = canvas.getContext("2d");
-
-    let type = card.querySelector(".type").value;
-    let dir = card.querySelector(".dir").value;
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 2;
-
-    if(type === "single"){
-        drawPanel(ctx,20,20,260,140,dir);
-    }
-
-    if(type === "double"){
-        drawPanel(ctx,20,20,120,140,dir);
-        drawPanel(ctx,160,20,120,140,dir);
-    }
-
-    if(type === "side"){
-        ctx.strokeRect(20,20,70,140);
-        drawPanel(ctx,110,20,170,140,dir);
-    }
-}
-
-function drawPanel(ctx,x,y,w,h,dir){
-
-    ctx.strokeRect(x,y,w,h);
+  if(doorType==="onehalf"){
+    ctx.strokeRect(20,20,70,160);
+    ctx.strokeRect(100,20,140,160);
 
     ctx.beginPath();
-
-    if(dir === "right"){
-        ctx.moveTo(x,y);
-        ctx.lineTo(x+w,y+h/2);
-        ctx.moveTo(x,y+h);
-        ctx.lineTo(x+w,y+h/2);
-    } else {
-        ctx.moveTo(x+w,y);
-        ctx.lineTo(x,y+h/2);
-        ctx.moveTo(x+w,y+h);
-        ctx.lineTo(x,y+h/2);
-    }
-
+    ctx.moveTo(100,100);
+    ctx.lineTo(240,20);
+    ctx.moveTo(100,100);
+    ctx.lineTo(240,180);
     ctx.stroke();
+  }
 }
 
-function addDetail(btn){
-    let container = btn.previousElementSibling;
+// صورة
+document.getElementById("imgInput").addEventListener("change", function(e){
+  let file = e.target.files[0];
+  let reader = new FileReader();
+  reader.onload = function(){
+    let img = document.getElementById("preview");
+    img.src = reader.result;
+    img.style.display = "block";
+  }
+  reader.readAsDataURL(file);
+});
 
-    let html = `
-    <div class="card">
-        <input placeholder="الوصف">
-        <input placeholder="القياس">
-    </div>
-    `;
-
-    container.insertAdjacentHTML("beforeend", html);
-}
-
-function previewImage(input){
-    let file = input.files[0];
-    if(!file) return;
-
-    let reader = new FileReader();
-
-    reader.onload = function(e){
-        let img = input.nextElementSibling;
-        img.src = e.target.result;
-        img.style.display = "block";
-    }
-
-    reader.readAsDataURL(file);
-}
-
+// إرسال
 function sendData(){
+  let text = `
+طلب CNC:
 
-    let cards = document.querySelectorAll(".card");
-    let result = "";
+نوع الباب: ${doorType}
 
-    cards.forEach((card,i)=>{
+المقاس الداخلي:
+${in_w.value} × ${in_h.value}
 
-        let inside = card.querySelector(".inside").value;
-        let outside = card.querySelector(".outside").value;
-        let dir = card.querySelector(".dir").value;
-        let type = card.querySelector(".type").value;
-        let notes = card.querySelector(".notes").value;
+المقاس الخارجي:
+${out_w.value} × ${out_h.value}
 
-        result += `باب ${i+1}\n`;
-        result += `النوع: ${type}\n`;
-        result += `الاتجاه: ${dir}\n`;
-        result += `Inside: ${inside}\n`;
-        result += `Outside: ${outside}\n`;
+القفل: ${document.querySelector('input[name="lock"]:checked')?.value || "-"}
 
-        let details = card.querySelectorAll(".details .card");
+تفاصيل:
+${details.value}
+`;
 
-        details.forEach(d=>{
-            let inputs = d.querySelectorAll("input");
-            result += `تفصيلة: ${inputs[0].value} - ${inputs[1].value}\n`;
-        });
-
-        result += `ملاحظات: ${notes}\n`;
-        result += `------------------\n`;
-    });
-
-    alert(result);
+  alert(text);
 }
+
+// تشغيل أولي
+setDoorType("single");
 
 </script>
 
