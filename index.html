@@ -2,23 +2,50 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Pro Design CNC</title>
+<title>CNC Order</title>
 <style>
-body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
-.card{background:#111b27;padding:15px;border-radius:16px;margin-bottom:12px}
-select,input,button{width:100%;padding:10px;border-radius:10px;border:none;margin:6px 0}
+body{background:#0b0f14;color:#fff;font-family:Arial;padding:15px}
+.card{background:#111b27;padding:12px;border-radius:14px;margin-bottom:10px}
+input,select,button,textarea{width:100%;padding:10px;border:none;border-radius:10px;margin:5px 0}
 button{background:#2f7bff;color:#fff;font-weight:bold}
-.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 </style>
 </head>
 <body>
 
-<h2>إضافة شيتات CNC</h2>
+<h2>طلب CNC</h2>
 
-<div id="sheetBox"></div>
+<div class="card">
+<select id="material">
+<option>ألمنيوم</option>
+<option>ألكبوند</option>
+</select>
+
+<select id="type">
+<option>قص</option>
+<option>حفر</option>
+<option>قص + حفر</option>
+</select>
+</div>
+
+<div class="card">
+<h4>القياسات</h4>
+<div id="doors"></div>
+<button onclick="addDoor()">➕ إضافة قياس</button>
+</div>
+
+<div class="card">
+<h4>الشيتات</h4>
+<div id="sheets"></div>
 <button onclick="addSheet()">➕ إضافة شيت</button>
+</div>
 
-<button onclick="sendOrder()">🚀 إرسال الطلب</button>
+<div class="card">
+<input type="file" multiple>
+<textarea id="notes" placeholder="ملاحظات"></textarea>
+</div>
+
+<button onclick="send()">🚀 إرسال</button>
 
 <script src="data.js"></script>
 <script src="app.js"></script>
