@@ -14,18 +14,21 @@ body {
 
 .card {
     background: #11263c;
-    padding: 15px;
-    border-radius: 12px;
+    padding: 18px;
+    border-radius: 14px;
     margin-bottom: 15px;
+    border: 1px solid #1f3b5c;
 }
 
 input, select, textarea {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border: none;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #2f3f55;
+    background: #0f253a;
+    color: white;
 }
 
 button {
@@ -42,6 +45,10 @@ button {
     background: #444;
 }
 
+canvas {
+    background: #0f253a;
+    border-radius: 10px;
+}
 </style>
 </head>
 
@@ -52,14 +59,13 @@ button {
 <div id="doors"></div>
 
 <button onclick="addDoor()">➕ إضافة باب</button>
-
 <button onclick="sendData()">📤 إرسال الطلب</button>
 
 <script>
 
 let doorCount = 0;
 
-function addDoor() {
+function addDoor(){
 
     doorCount++;
 
@@ -67,72 +73,163 @@ function addDoor() {
     <div class="card">
         <h3>📦 باب ${doorCount}</h3>
 
+        <label>نوع الباب</label>
+        <select onchange="changeType(this, this.closest('.card'))">
+            <option value="single">باب واحد</option>
+            <option value="double">بابين</option>
+            <option value="side">باب + ربع</option>
+        </select>
+
+        <canvas width="300" height="180" class="canvas" onclick="toggleDir(this)"></canvas>
+
+        <input class="dir" type="hidden" value="right">
+        <input class="type" type="hidden" value="single">
+
         <label>Inside (عرض × ارتفاع)</label>
-        <input placeholder="مثال: 100 × 220" class="inside">
+        <input class="inside" placeholder="مثال: 100 × 220">
 
         <label>Outside (عرض × ارتفاع)</label>
-        <input placeholder="مثال: 98 × 218" class="outside">
-
-        <label>الاتجاه</label>
-        <select class="direction">
-            <option>يمين</option>
-            <option>يسار</option>
-        </select>
+        <input class="outside" placeholder="مثال: 98 × 218">
 
         <label>تفاصيل إضافية</label>
         <div class="details"></div>
-
         <button class="small-btn" onclick="addDetail(this)">➕ إضافة تفصيلة</button>
+
+        <label>📸 صورة الباب</label>
+        <input type="file" accept="image/*" onchange="previewImage(this)">
+        <img class="preview" style="width:100%;display:none;border-radius:10px;">
 
         <label>ملاحظات</label>
         <textarea class="notes"></textarea>
+
     </div>
     `;
 
     document.getElementById("doors").insertAdjacentHTML("beforeend", html);
+
+    let card = document.querySelectorAll(".card")[doorCount-1];
+    drawDoor(card);
 }
 
-function addDetail(btn) {
+function changeType(select, card){
+    card.querySelector(".type").value = select.value;
+    drawDoor(card);
+}
 
+function toggleDir(canvas){
+    let card = canvas.closest(".card");
+    let dirInput = card.querySelector(".dir");
+
+    dirInput.value = dirInput.value === "right" ? "left" : "right";
+
+    drawDoor(card);
+}
+
+function drawDoor(card){
+
+    let canvas = card.querySelector(".canvas");
+    let ctx = canvas.getContext("2d");
+
+    let type = card.querySelector(".type").value;
+    let dir = card.querySelector(".dir").value;
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+
+    if(type === "single"){
+        drawPanel(ctx,20,20,260,140,dir);
+    }
+
+    if(type === "double"){
+        drawPanel(ctx,20,20,120,140,dir);
+        drawPanel(ctx,160,20,120,140,dir);
+    }
+
+    if(type === "side"){
+        ctx.strokeRect(20,20,70,140);
+        drawPanel(ctx,110,20,170,140,dir);
+    }
+}
+
+function drawPanel(ctx,x,y,w,h,dir){
+
+    ctx.strokeRect(x,y,w,h);
+
+    ctx.beginPath();
+
+    if(dir === "right"){
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+w,y+h/2);
+        ctx.moveTo(x,y+h);
+        ctx.lineTo(x+w,y+h/2);
+    } else {
+        ctx.moveTo(x+w,y);
+        ctx.lineTo(x,y+h/2);
+        ctx.moveTo(x+w,y+h);
+        ctx.lineTo(x,y+h/2);
+    }
+
+    ctx.stroke();
+}
+
+function addDetail(btn){
     let container = btn.previousElementSibling;
 
     let html = `
     <div class="card">
-        <input placeholder="الوصف (مثال: فتحة / زخرفة)">
-        <input placeholder="القياس (مثال: 25 × 80)">
+        <input placeholder="الوصف">
+        <input placeholder="القياس">
     </div>
     `;
 
     container.insertAdjacentHTML("beforeend", html);
 }
 
-function sendData() {
+function previewImage(input){
+    let file = input.files[0];
+    if(!file) return;
 
-    let doors = document.querySelectorAll(".card");
+    let reader = new FileReader();
 
+    reader.onload = function(e){
+        let img = input.nextElementSibling;
+        img.src = e.target.result;
+        img.style.display = "block";
+    }
+
+    reader.readAsDataURL(file);
+}
+
+function sendData(){
+
+    let cards = document.querySelectorAll(".card");
     let result = "";
 
-    doors.forEach((door, i) => {
+    cards.forEach((card,i)=>{
 
-        let inside = door.querySelector(".inside")?.value || "";
-        let outside = door.querySelector(".outside")?.value || "";
-        let direction = door.querySelector(".direction")?.value || "";
-        let notes = door.querySelector(".notes")?.value || "";
+        let inside = card.querySelector(".inside").value;
+        let outside = card.querySelector(".outside").value;
+        let dir = card.querySelector(".dir").value;
+        let type = card.querySelector(".type").value;
+        let notes = card.querySelector(".notes").value;
 
         result += `باب ${i+1}\n`;
+        result += `النوع: ${type}\n`;
+        result += `الاتجاه: ${dir}\n`;
         result += `Inside: ${inside}\n`;
         result += `Outside: ${outside}\n`;
-        result += `الاتجاه: ${direction}\n`;
 
-        let details = door.querySelectorAll(".details .card");
+        let details = card.querySelectorAll(".details .card");
 
-        details.forEach(d => {
+        details.forEach(d=>{
             let inputs = d.querySelectorAll("input");
             result += `تفصيلة: ${inputs[0].value} - ${inputs[1].value}\n`;
         });
 
         result += `ملاحظات: ${notes}\n`;
-        result += `-------------------\n`;
+        result += `------------------\n`;
     });
 
     alert(result);
