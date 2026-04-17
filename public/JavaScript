@@ -1,0 +1,60 @@
+let type = "single";
+let direction = "right";
+
+function changeType(val){
+    type = val;
+    drawDoor();
+}
+
+function toggleDir(){
+    direction = direction === "right" ? "left" : "right";
+    drawDoor();
+}
+
+function drawDoor(){
+    let c = document.getElementById("doorCanvas");
+    let ctx = c.getContext("2d");
+
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 3;
+
+    if(type === "single"){
+        drawPanel(ctx,20,20,260,360);
+    }
+
+    if(type === "double"){
+        drawPanel(ctx,20,20,130,360);
+        drawPanel(ctx,150,20,130,360);
+    }
+
+    if(type === "side"){
+        // ربع
+        ctx.strokeRect(20,20,80,360);
+
+        // الباب
+        drawPanel(ctx,110,20,170,360);
+    }
+}
+
+function drawPanel(ctx,x,y,w,h){
+    ctx.strokeRect(x,y,w,h);
+
+    ctx.beginPath();
+
+    if(direction === "right"){
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+w,y+h/2);
+        ctx.moveTo(x,y+h);
+        ctx.lineTo(x+w,y+h/2);
+    } else {
+        ctx.moveTo(x+w,y);
+        ctx.lineTo(x,y+h/2);
+        ctx.moveTo(x+w,y+h);
+        ctx.lineTo(x,y+h/2);
+    }
+
+    ctx.stroke();
+}
+
+drawDoor();
