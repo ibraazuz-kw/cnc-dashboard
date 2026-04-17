@@ -5,30 +5,17 @@
 <title>طلب CNC</title>
 
 <style>
-body{
-  background:#0b0f14;
-  color:#fff;
-  font-family:Arial;
-  padding:20px;
-}
-.card{
-  background:#111b27;
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:15px;
-}
-select,button{
+body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
+.card{background:#111b27;padding:15px;border-radius:12px;margin-bottom:15px}
+input,select,button{
   width:100%;
   padding:12px;
   margin-top:10px;
   border:none;
   border-radius:10px;
 }
-button{
-  background:#2f7bff;
-  color:#fff;
-  font-weight:bold;
-}
+button{background:#2f7bff;color:#fff;font-weight:bold}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 </style>
 </head>
 
@@ -36,6 +23,7 @@ button{
 
 <h2>🚀 طلب CNC</h2>
 
+<!-- نوع الشغل -->
 <div class="card">
   <label>نوع المادة</label>
   <select id="material">
@@ -51,13 +39,50 @@ button{
   </select>
 </div>
 
-<button onclick="send()">جرب البيانات</button>
+<!-- القياسات -->
+<div class="card">
+  <h3>📏 القياسات</h3>
+  <div id="doors"></div>
+  <button onclick="addDoor()">➕ إضافة قياس</button>
+</div>
+
+<button onclick="send()">🚀 جرب البيانات</button>
 
 <script>
+const doorsBox=document.getElementById("doors");
+
+function addDoor(){
+  const d=document.createElement("div");
+  d.className="card";
+
+  d.innerHTML=`
+    <div class="row">
+      <input placeholder="ارتفاع">
+      <input placeholder="عرض">
+      <select>
+        <option>يمين</option>
+        <option>يسار</option>
+      </select>
+    </div>
+  `;
+
+  doorsBox.appendChild(d);
+}
+
+addDoor();
+
 function send(){
+
+  const doors=[...doorsBox.children].map(d=>({
+    h:d.children[0].children[0].value,
+    w:d.children[0].children[1].value,
+    dir:d.children[0].children[2].value
+  }));
+
   alert(
-    "المادة: " + material.value +
-    "\nالعملية: " + type.value
+    "المادة: "+material.value+
+    "\nالعملية: "+type.value+
+    "\nعدد القياسات: "+doors.length
   );
 }
 </script>
