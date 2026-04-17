@@ -1,0 +1,7 @@
+<select onchange="changeType(this.value)">
+    <option value="single">باب واحد</option>
+    <option value="double">بابين</option>
+    <option value="side">باب + ربع</option>
+</select>
+
+<canvas id="doorCanvas" width="300" height="400" onclick="toggleDir()"></canvas>
