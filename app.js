@@ -1,45 +1,70 @@
-const box = document.getElementById("sheetBox");
+const doorsBox=document.getElementById("doors");
+const sheetsBox=document.getElementById("sheets");
 
-function addSheet(){
-  const row = document.createElement("div");
-  row.className="card";
-
-  row.innerHTML=`
-    <div class="row">
-      <select class="size"></select>
-      <select class="thick"></select>
-      <input type="number" min="1" value="1" class="qty">
-    </div>
-    <button onclick="this.parentElement.remove()">حذف</button>
-  `;
-
-  const sizeSel=row.querySelector(".size");
-  SHEET_SIZES.forEach(s=>{
-    sizeSel.innerHTML+=`<option>${s}</option>`;
-  });
-
-  const thickSel=row.querySelector(".thick");
-  THICKNESS.forEach(t=>{
-    thickSel.innerHTML+=`<option>${t}</option>`;
-  });
-
-  box.appendChild(row);
+function addDoor(){
+ const d=document.createElement("div");
+ d.className="card";
+ d.innerHTML=`
+ <input placeholder="ارتفاع">
+ <input placeholder="عرض">
+ <select><option>يمين</option><option>يسار</option></select>
+ `;
+ doorsBox.appendChild(d);
 }
 
+function addSheet(){
+ const s=document.createElement("div");
+ s.className="card";
+
+ let sizeOptions=SIZES.map(x=>`<option>${x}</option>`).join("");
+ let thickOptions=THICK.map(x=>`<option>${x}</option>`).join("");
+
+ s.innerHTML=`
+ <div class="row">
+  <select class="size">${sizeOptions}</select>
+  <select class="thick">${thickOptions}</select>
+  <input type="number" value="1" class="qty">
+ </div>
+ `;
+ sheetsBox.appendChild(s);
+}
+
+addDoor();
 addSheet();
 
-async function sendOrder(){
-  const sheets=[...document.querySelectorAll(".card")].map(c=>({
-    size:c.querySelector(".size").value,
-    thickness:c.querySelector(".thick").value,
-    qty:c.querySelector(".qty").value
-  }));
+async function send(){
 
-  await fetch("/api/order",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({sheets})
-  });
+ const doors=[...doorsBox.children].map(d=>({
+  h:d.children[0].value,
+  w:d.children[1].value,
+  dir:d.children[2].value
+ }));
 
-  alert("✅ تم إرسال الطلب");
+ const sheets=[...sheetsBox.children].map(s=>({
+  size:s.querySelector(".size").value,
+  thick:s.querySelector(".thick").value,
+  qty:s.querySelector(".qty").value
+ }));
+
+ await fetch("/api/order",{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({
+    material:material.value,
+    type:type.value,
+    doors,
+    sheets,
+    notes:notes.value
+  })
+ });
+
+ alert("✅ تم إرسال الطلب");
+
+ // 🔥 يفضي الفورم (اختيارك A)
+ doorsBox.innerHTML="";
+ sheetsBox.innerHTML="";
+ notes.value="";
+
+ addDoor();
+ addSheet();
 }
