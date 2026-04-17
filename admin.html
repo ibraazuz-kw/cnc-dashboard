@@ -2,15 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>أدمن CNC</title>
+<title>Admin</title>
 <style>
-body{background:#0b0f14;color:#fff;font-family:Arial;padding:20px}
-.card{background:#111b27;padding:15px;border-radius:16px;margin-bottom:12px}
+body{background:#0b0f14;color:#fff;font-family:Arial;padding:15px}
+.card{background:#111b27;padding:12px;border-radius:14px;margin-bottom:10px}
+button{padding:8px;background:#2f7bff;color:#fff;border:none;border-radius:8px}
 </style>
 </head>
 <body>
 
-<h2>الطلبات الواردة</h2>
+<h2>الطلبات</h2>
 <div id="orders"></div>
 
 <script>
@@ -19,10 +20,26 @@ async function load(){
  const data=await res.json();
  const box=document.getElementById("orders");
  box.innerHTML="";
+
  data.forEach(o=>{
-  box.innerHTML+=`<div class="card">${JSON.stringify(o)}</div>`;
+  box.innerHTML+=`
+  <div class="card">
+   <b>${o.material} - ${o.type}</b><br>
+   الحالة: ${o.status}<br>
+   <button onclick="set(${o.id})">تم</button>
+  </div>`;
  });
 }
+
+async function set(id){
+ await fetch("/api/status",{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({id,status:"جاهز"})
+ });
+ load();
+}
+
 load();
 </script>
 
