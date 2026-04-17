@@ -1,60 +1,66 @@
-let type = "single";
-let direction = "right";
+<script>
+let doorType = "single";
+let ctx = document.getElementById("doorCanvas").getContext("2d");
 
-function changeType(val){
-    type = val;
-    drawDoor();
-}
+function setDoorType(type){
+  doorType = type;
 
-function toggleDir(){
-    direction = direction === "right" ? "left" : "right";
-    drawDoor();
+  // إظهار خيار القفل فقط للبابين
+  document.getElementById("lockSide").style.display =
+    (type === "double") ? "block" : "none";
+
+  drawDoor();
 }
 
 function drawDoor(){
-    let c = document.getElementById("doorCanvas");
-    let ctx = c.getContext("2d");
+  ctx.clearRect(0,0,200,200);
 
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 3;
+  if(doorType === "single"){
+    // باب واحد
+    ctx.strokeRect(50,20,100,160);
+    ctx.beginPath();
+    ctx.moveTo(50,100);
+    ctx.lineTo(150,20);
+    ctx.moveTo(50,100);
+    ctx.lineTo(150,180);
+    ctx.stroke();
+  }
 
-    if(type === "single"){
-        drawPanel(ctx,20,20,260,360);
-    }
+  if(doorType === "double"){
+    // بابين عكس بعض
+    // اليسار
+    ctx.strokeRect(20,20,70,160);
+    ctx.beginPath();
+    ctx.moveTo(90,100);
+    ctx.lineTo(20,20);
+    ctx.moveTo(90,100);
+    ctx.lineTo(20,180);
+    ctx.stroke();
 
-    if(type === "double"){
-        drawPanel(ctx,20,20,130,360);
-        drawPanel(ctx,150,20,130,360);
-    }
+    // اليمين
+    ctx.strokeRect(110,20,70,160);
+    ctx.beginPath();
+    ctx.moveTo(110,100);
+    ctx.lineTo(180,20);
+    ctx.moveTo(110,100);
+    ctx.lineTo(180,180);
+    ctx.stroke();
+  }
 
-    if(type === "side"){
-        // ربع
-        ctx.strokeRect(20,20,80,360);
-
-        // الباب
-        drawPanel(ctx,110,20,170,360);
-    }
-}
-
-function drawPanel(ctx,x,y,w,h){
-    ctx.strokeRect(x,y,w,h);
+  if(doorType === "onehalf"){
+    // باب وربع
+    ctx.strokeRect(20,20,50,160); // الربع
+    ctx.strokeRect(80,20,100,160); // الباب الرئيسي
 
     ctx.beginPath();
-
-    if(direction === "right"){
-        ctx.moveTo(x,y);
-        ctx.lineTo(x+w,y+h/2);
-        ctx.moveTo(x,y+h);
-        ctx.lineTo(x+w,y+h/2);
-    } else {
-        ctx.moveTo(x+w,y);
-        ctx.lineTo(x,y+h/2);
-        ctx.moveTo(x+w,y+h);
-        ctx.lineTo(x,y+h/2);
-    }
-
+    ctx.moveTo(80,100);
+    ctx.lineTo(180,20);
+    ctx.moveTo(80,100);
+    ctx.lineTo(180,180);
     ctx.stroke();
+  }
 }
 
+// أول تشغيل
 drawDoor();
+</script>
