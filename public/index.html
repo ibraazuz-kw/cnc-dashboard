@@ -10,7 +10,7 @@
 <style>
 body{
   background:#0b1e2d;
-  font-family:Tahoma;
+  font-family:Tahomа;
   color:#fff;
   padding:20px;
 }
@@ -33,7 +33,6 @@ input,select,textarea{
   border-radius:8px;
   border:none;
   margin-top:8px;
-  margin-bottom:10px;
 }
 
 button{
@@ -42,108 +41,80 @@ button{
   border:none;
   border-radius:10px;
   margin-top:10px;
-  font-size:16px;
 }
 
-.btn{
-  background:#2d6cdf;
-  color:#fff;
-}
-
+.btn{background:#2d6cdf;color:#fff;}
 .green{background:#28a745;}
 .whatsapp{background:#25D366;}
 
 .preview{
   width:100%;
+  border-radius:10px;
   margin-top:10px;
-  border-radius:10px;
 }
 
-.canvas-box{
-  background:#fff;
-  border-radius:10px;
-  padding:10px;
-  text-align:center;
-}
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h2>🚀 طلب CNC - Pro Design</h2>
+<h2>🚀 طلب CNC</h2>
 
 <div class="card">
 
-<label>نوع الباب</label>
-<select id="doorType" onchange="drawDoor()">
+<select id="doorType">
 <option value="single">باب مفرد</option>
 <option value="double">بابين</option>
 <option value="onehalf">باب وربع</option>
 </select>
 
-<label>المقاس الداخلي (عرض × ارتفاع)</label>
-<input id="in_w" placeholder="100">
-<input id="in_h" placeholder="220">
+<input id="in_w" placeholder="عرض داخلي">
+<input id="in_h" placeholder="ارتفاع داخلي">
 
-<label>المقاس الخارجي</label>
-<input id="out_w" placeholder="98">
-<input id="out_h" placeholder="218">
+<input id="out_w" placeholder="عرض خارجي">
+<input id="out_h" placeholder="ارتفاع خارجي">
 
-<label>القفل</label>
 <select id="lock">
 <option>يمين</option>
 <option>يسار</option>
 </select>
 
-<label>التفاصيل</label>
-<textarea id="details"></textarea>
+<textarea id="details" placeholder="تفاصيل"></textarea>
 
-<label>صورة الباب</label>
 <input type="file" onchange="previewImage(event)">
 <img id="preview" class="preview"/>
 
 </div>
 
-<div class="card canvas-box">
-<canvas id="doorCanvas" width="300" height="200"></canvas>
-</div>
-
-<button class="btn" onclick="generatePDF()">📄 إنشاء PDF</button>
-<button class="green" onclick="saveOrder()">💾 حفظ الطلب</button>
-<button class="whatsapp" onclick="sendWhatsApp()">📲 واتساب</button>
-
-<div id="ordersList"></div>
+<button class="btn" onclick="generatePDF()">📄 PDF</button>
 
 </div>
 
 <!-- PDF -->
-<div id="pdfContent" style="display:none; direction:rtl; font-family:Tahoma; padding:20px; background:#fff; color:#000;">
+<div id="pdfContent" style="display:none; direction:rtl; padding:20px; background:#fff; color:#000; font-family:Tahoma;">
 
-<h2 style="text-align:center;">Pro Design CNC</h2>
+<h1 style="text-align:center;">Pro Design CNC</h1>
 <hr>
 
 <p><b>رقم الطلب:</b> <span id="pdf_id"></span></p>
 <p><b>نوع الباب:</b> <span id="pdf_type"></span></p>
-<p><b>المقاس الداخلي:</b> <span id="pdf_in"></span></p>
-<p><b>المقاس الخارجي:</b> <span id="pdf_out"></span></p>
+<p><b>الداخل:</b> <span id="pdf_in"></span></p>
+<p><b>الخارج:</b> <span id="pdf_out"></span></p>
 <p><b>القفل:</b> <span id="pdf_lock"></span></p>
 
 <h3>اتجاه الباب</h3>
-<canvas id="pdfCanvas" width="300" height="200"></canvas>
+<canvas id="pdfCanvas" width="400" height="200" style="border:1px solid #ccc;"></canvas>
 
-<p><b>التفاصيل:</b></p>
+<h3>التفاصيل</h3>
 <p id="pdf_details"></p>
 
-<img id="pdf_img" style="width:100%; margin-top:10px;">
+<img id="pdf_img" style="width:100%; margin-top:15px; border-radius:10px;">
 
 </div>
 
 <script>
-
-let doorType = "single";
 
 function previewImage(e){
   let reader = new FileReader();
@@ -153,131 +124,103 @@ function previewImage(e){
   reader.readAsDataURL(e.target.files[0]);
 }
 
-function drawDoor(){
-  doorType = document.getElementById("doorType").value;
-  let c = document.getElementById("doorCanvas");
-  let ctx = c.getContext("2d");
-
-  ctx.clearRect(0,0,300,200);
-  ctx.strokeStyle="#000";
-
-  if(doorType==="single"){
-    ctx.strokeRect(100,20,100,160);
-    ctx.beginPath();
-    ctx.moveTo(100,100);
-    ctx.lineTo(200,20);
-    ctx.moveTo(100,100);
-    ctx.lineTo(200,180);
-    ctx.stroke();
-  }
-
-  if(doorType==="double"){
-    ctx.strokeRect(20,20,100,160);
-    ctx.strokeRect(180,20,100,160);
-
-    ctx.beginPath();
-    ctx.moveTo(120,100);
-    ctx.lineTo(20,20);
-    ctx.moveTo(120,100);
-    ctx.lineTo(20,180);
-
-    ctx.moveTo(180,100);
-    ctx.lineTo(280,20);
-    ctx.moveTo(180,100);
-    ctx.lineTo(280,180);
-    ctx.stroke();
-  }
-
-  if(doorType==="onehalf"){
-    ctx.strokeRect(20,20,80,160);
-    ctx.strokeRect(110,20,170,160);
-
-    ctx.beginPath();
-    ctx.moveTo(110,100);
-    ctx.lineTo(280,20);
-    ctx.moveTo(110,100);
-    ctx.lineTo(280,180);
-    ctx.stroke();
-  }
-}
-
-drawDoor();
-
 function generatePDF(){
+
+  let type = document.getElementById("doorType").value;
+  let lock = document.getElementById("lock").value;
 
   let id="PD-"+Date.now();
 
-  document.getElementById("pdf_id").innerText=id;
-  document.getElementById("pdf_type").innerText=doorType;
-  document.getElementById("pdf_in").innerText=in_w.value+"×"+in_h.value;
-  document.getElementById("pdf_out").innerText=out_w.value+"×"+out_h.value;
-  document.getElementById("pdf_lock").innerText=lock.value;
-  document.getElementById("pdf_details").innerText=details.value;
+  pdf_id.innerText=id;
+  pdf_type.innerText=type;
+  pdf_in.innerText=in_w.value+" × "+in_h.value;
+  pdf_out.innerText=out_w.value+" × "+out_h.value;
+  pdf_lock.innerText=lock;
+  pdf_details.innerText=details.value;
 
-  let preview=document.getElementById("preview").src;
-  if(preview) document.getElementById("pdf_img").src=preview;
+  if(preview.src) pdf_img.src=preview.src;
 
-  let c=document.getElementById("pdfCanvas");
-  let ctx=c.getContext("2d");
-  ctx.clearRect(0,0,300,200);
-
-  drawDoorToCanvas(ctx);
+  drawDoor(type,lock);
 
   let el=document.getElementById("pdfContent");
   el.style.display="block";
 
-  html2canvas(el).then(canvas=>{
+  html2canvas(el,{scale:2}).then(canvas=>{
     const { jsPDF } = window.jspdf;
-    let pdf=new jsPDF();
+    let pdf=new jsPDF("p","mm","a4");
+
     let img=canvas.toDataURL("image/png");
 
     pdf.addImage(img,"PNG",0,0,210,297);
-    pdf.save("ProDesign_Order.pdf");
+    pdf.save("ProDesign.pdf");
 
     el.style.display="none";
   });
 }
 
-function drawDoorToCanvas(ctx){
+function drawDoor(type,lock){
 
-  if(doorType==="single"){
-    ctx.strokeRect(100,20,100,160);
+  let c=document.getElementById("pdfCanvas");
+  let ctx=c.getContext("2d");
+
+  ctx.clearRect(0,0,400,200);
+
+  ctx.lineWidth=2;
+
+  if(type==="single"){
+    ctx.strokeRect(150,20,100,160);
+
+    ctx.beginPath();
+
+    if(lock==="يمين"){
+      ctx.moveTo(150,100);
+      ctx.lineTo(250,20);
+      ctx.moveTo(150,100);
+      ctx.lineTo(250,180);
+    }else{
+      ctx.moveTo(250,100);
+      ctx.lineTo(150,20);
+      ctx.moveTo(250,100);
+      ctx.lineTo(150,180);
+    }
+
+    ctx.stroke();
   }
 
-  if(doorType==="double"){
-    ctx.strokeRect(20,20,100,160);
-    ctx.strokeRect(180,20,100,160);
+  if(type==="double"){
+
+    ctx.strokeRect(80,20,100,160);
+    ctx.strokeRect(220,20,100,160);
+
+    ctx.beginPath();
+
+    ctx.moveTo(180,100);
+    ctx.lineTo(80,20);
+    ctx.moveTo(180,100);
+    ctx.lineTo(80,180);
+
+    ctx.moveTo(220,100);
+    ctx.lineTo(320,20);
+    ctx.moveTo(220,100);
+    ctx.lineTo(320,180);
+
+    ctx.stroke();
   }
 
-  if(doorType==="onehalf"){
-    ctx.strokeRect(20,20,80,160);
-    ctx.strokeRect(110,20,170,160);
+  if(type==="onehalf"){
+
+    ctx.strokeRect(80,20,80,160);
+    ctx.strokeRect(170,20,150,160);
+
+    ctx.beginPath();
+    ctx.moveTo(170,100);
+    ctx.lineTo(320,20);
+    ctx.moveTo(170,100);
+    ctx.lineTo(320,180);
+
+    ctx.stroke();
   }
-}
 
-function saveOrder(){
-
-  let orders=JSON.parse(localStorage.getItem("orders")||"[]");
-
-  orders.push({
-    id:"PD-"+Date.now(),
-    type:doorType
-  });
-
-  localStorage.setItem("orders",JSON.stringify(orders));
-
-  alert("تم الحفظ ✅");
-}
-
-function sendWhatsApp(){
-
-  let msg=`طلب CNC
-نوع الباب: ${doorType}
-داخل: ${in_w.value}×${in_h.value}
-خارج: ${out_w.value}×${out_h.value}
-القفل: ${lock.value}`;
-
-  window.open("https://wa.me/965XXXXXXXX?text="+encodeURIComponent(msg));
 }
 
 </script>
