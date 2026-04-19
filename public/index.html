@@ -2,37 +2,40 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Pro Design CNC</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body{
-  margin:0;
-  font-family:'Cairo', sans-serif;
   background:#0b1e2d;
+  font-family:Tahoma;
   color:#fff;
+  padding:20px;
 }
+
 .container{
   max-width:500px;
   margin:auto;
-  padding:15px;
 }
-h2{text-align:center;}
+
 .card{
-  background:#112b3c;
+  background:#132b3c;
   padding:15px;
   border-radius:12px;
+  margin-bottom:15px;
 }
-input, textarea{
+
+input,select,textarea{
   width:100%;
   padding:10px;
   border-radius:8px;
   border:none;
   margin-top:8px;
+  margin-bottom:10px;
 }
+
 button{
   width:100%;
   padding:12px;
@@ -41,204 +44,241 @@ button{
   margin-top:10px;
   font-size:16px;
 }
-.primary{background:#2f80ed;color:#fff;}
-.green{background:#25D366;color:#fff;}
-.type-buttons button{
-  width:32%;
-  background:#1e3a4d;
+
+.btn{
+  background:#2d6cdf;
+  color:#fff;
 }
-.active{background:#2f80ed !important;}
-canvas{
-  background:#0e2433;
-  border-radius:10px;
+
+.green{background:#28a745;}
+.whatsapp{background:#25D366;}
+
+.preview{
+  width:100%;
   margin-top:10px;
+  border-radius:10px;
+}
+
+.canvas-box{
+  background:#fff;
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
-<h2>🚀 Pro Design CNC</h2>
+
+<h2>🚀 طلب CNC - Pro Design</h2>
 
 <div class="card">
 
-<!-- نوع الباب -->
-<div class="type-buttons">
-<button onclick="setDoorType('single')" id="btn_single">باب</button>
-<button onclick="setDoorType('double')" id="btn_double">بابين</button>
-<button onclick="setDoorType('onehalf')" id="btn_onehalf">باب وربع</button>
-</div>
+<label>نوع الباب</label>
+<select id="doorType" onchange="drawDoor()">
+<option value="single">باب مفرد</option>
+<option value="double">بابين</option>
+<option value="onehalf">باب وربع</option>
+</select>
 
-<!-- الرسم -->
-<canvas id="doorCanvas" width="260" height="200"></canvas>
+<label>المقاس الداخلي (عرض × ارتفاع)</label>
+<input id="in_w" placeholder="100">
+<input id="in_h" placeholder="220">
 
-<!-- القفل -->
-<div id="lockBox" style="display:none;">
-🔐 القفل:
-<label><input type="radio" name="lock" value="يمين"> يمين</label>
-<label><input type="radio" name="lock" value="يسار"> يسار</label>
-</div>
+<label>المقاس الخارجي</label>
+<input id="out_w" placeholder="98">
+<input id="out_h" placeholder="218">
 
-<!-- القياسات -->
-<p>📏 الداخلي</p>
-<input id="in_w" placeholder="عرض">
-<input id="in_h" placeholder="ارتفاع">
+<label>القفل</label>
+<select id="lock">
+<option>يمين</option>
+<option>يسار</option>
+</select>
 
-<p>📏 الخارجي</p>
-<input id="out_w" placeholder="عرض">
-<input id="out_h" placeholder="ارتفاع">
+<label>التفاصيل</label>
+<textarea id="details"></textarea>
 
-<textarea id="details" placeholder="تفاصيل إضافية"></textarea>
-
-<!-- صورة -->
-<input type="file" id="imgInput">
-<img id="preview" style="width:100%;display:none;margin-top:10px;border-radius:10px;">
-
-<button class="primary" onclick="generatePDF()">تحميل PDF</button>
-<button class="green" onclick="sendWhatsApp()">إرسال واتساب</button>
+<label>صورة الباب</label>
+<input type="file" onchange="previewImage(event)">
+<img id="preview" class="preview"/>
 
 </div>
+
+<div class="card canvas-box">
+<canvas id="doorCanvas" width="300" height="200"></canvas>
 </div>
 
-<!-- محتوى PDF -->
-<div id="pdfContent" style="display:none; direction:rtl; font-family:Cairo; padding:20px; background:#fff; color:#000;">
+<button class="btn" onclick="generatePDF()">📄 إنشاء PDF</button>
+<button class="green" onclick="saveOrder()">💾 حفظ الطلب</button>
+<button class="whatsapp" onclick="sendWhatsApp()">📲 واتساب</button>
+
+<div id="ordersList"></div>
+
+</div>
+
+<!-- PDF -->
+<div id="pdfContent" style="display:none; direction:rtl; font-family:Tahoma; padding:20px; background:#fff; color:#000;">
 
 <h2 style="text-align:center;">Pro Design CNC</h2>
 <hr>
 
+<p><b>رقم الطلب:</b> <span id="pdf_id"></span></p>
 <p><b>نوع الباب:</b> <span id="pdf_type"></span></p>
 <p><b>المقاس الداخلي:</b> <span id="pdf_in"></span></p>
 <p><b>المقاس الخارجي:</b> <span id="pdf_out"></span></p>
 <p><b>القفل:</b> <span id="pdf_lock"></span></p>
 
+<h3>اتجاه الباب</h3>
+<canvas id="pdfCanvas" width="300" height="200"></canvas>
+
 <p><b>التفاصيل:</b></p>
 <p id="pdf_details"></p>
 
-<br>
-<img id="pdf_img" style="width:100%; border-radius:10px;">
+<img id="pdf_img" style="width:100%; margin-top:10px;">
 
 </div>
 
-<!-- مكتبات -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 
-let doorType="single";
-let ctx=document.getElementById("doorCanvas").getContext("2d");
+let doorType = "single";
 
-function setDoorType(type){
-  doorType=type;
-
-  document.getElementById("lockBox").style.display =
-    (type==="double")?"block":"none";
-
-  document.querySelectorAll(".type-buttons button")
-    .forEach(b=>b.classList.remove("active"));
-  document.getElementById("btn_"+type).classList.add("active");
-
-  drawDoor();
+function previewImage(e){
+  let reader = new FileReader();
+  reader.onload = function(){
+    document.getElementById("preview").src = reader.result;
+  }
+  reader.readAsDataURL(e.target.files[0]);
 }
 
 function drawDoor(){
-  ctx.clearRect(0,0,260,200);
+  doorType = document.getElementById("doorType").value;
+  let c = document.getElementById("doorCanvas");
+  let ctx = c.getContext("2d");
+
+  ctx.clearRect(0,0,300,200);
+  ctx.strokeStyle="#000";
 
   if(doorType==="single"){
-    ctx.strokeRect(80,20,100,160);
+    ctx.strokeRect(100,20,100,160);
     ctx.beginPath();
-    ctx.moveTo(80,100);
-    ctx.lineTo(180,20);
-    ctx.moveTo(80,100);
-    ctx.lineTo(180,180);
+    ctx.moveTo(100,100);
+    ctx.lineTo(200,20);
+    ctx.moveTo(100,100);
+    ctx.lineTo(200,180);
     ctx.stroke();
   }
 
   if(doorType==="double"){
-    ctx.strokeRect(20,20,90,160);
-    ctx.beginPath();
-    ctx.moveTo(110,100);
-    ctx.lineTo(20,20);
-    ctx.moveTo(110,100);
-    ctx.lineTo(20,180);
-    ctx.stroke();
+    ctx.strokeRect(20,20,100,160);
+    ctx.strokeRect(180,20,100,160);
 
-    ctx.strokeRect(150,20,90,160);
     ctx.beginPath();
-    ctx.moveTo(150,100);
-    ctx.lineTo(240,20);
-    ctx.moveTo(150,100);
-    ctx.lineTo(240,180);
+    ctx.moveTo(120,100);
+    ctx.lineTo(20,20);
+    ctx.moveTo(120,100);
+    ctx.lineTo(20,180);
+
+    ctx.moveTo(180,100);
+    ctx.lineTo(280,20);
+    ctx.moveTo(180,100);
+    ctx.lineTo(280,180);
     ctx.stroke();
   }
 
   if(doorType==="onehalf"){
-    ctx.strokeRect(20,20,70,160);
-    ctx.strokeRect(100,20,140,160);
+    ctx.strokeRect(20,20,80,160);
+    ctx.strokeRect(110,20,170,160);
 
     ctx.beginPath();
-    ctx.moveTo(100,100);
-    ctx.lineTo(240,20);
-    ctx.moveTo(100,100);
-    ctx.lineTo(240,180);
+    ctx.moveTo(110,100);
+    ctx.lineTo(280,20);
+    ctx.moveTo(110,100);
+    ctx.lineTo(280,180);
     ctx.stroke();
   }
 }
 
-// صورة
-document.getElementById("imgInput").addEventListener("change", function(e){
-  let file=e.target.files[0];
-  let reader=new FileReader();
-  reader.onload=function(){
-    let img=document.getElementById("preview");
-    img.src=reader.result;
-    img.style.display="block";
-  }
-  reader.readAsDataURL(file);
-});
+drawDoor();
 
-// PDF احترافي
-async function generatePDF(){
+function generatePDF(){
 
-  document.getElementById("pdf_type").innerText = doorType;
-  document.getElementById("pdf_in").innerText = in_w.value+" × "+in_h.value;
-  document.getElementById("pdf_out").innerText = out_w.value+" × "+out_h.value;
-  document.getElementById("pdf_lock").innerText =
-    document.querySelector('input[name="lock"]:checked')?.value || "-";
-  document.getElementById("pdf_details").innerText = details.value;
+  let id="PD-"+Date.now();
 
-  let preview = document.getElementById("preview");
-  if(preview.src){
-    document.getElementById("pdf_img").src = preview.src;
-  }
+  document.getElementById("pdf_id").innerText=id;
+  document.getElementById("pdf_type").innerText=doorType;
+  document.getElementById("pdf_in").innerText=in_w.value+"×"+in_h.value;
+  document.getElementById("pdf_out").innerText=out_w.value+"×"+out_h.value;
+  document.getElementById("pdf_lock").innerText=lock.value;
+  document.getElementById("pdf_details").innerText=details.value;
 
-  let element = document.getElementById("pdfContent");
-  element.style.display="block";
+  let preview=document.getElementById("preview").src;
+  if(preview) document.getElementById("pdf_img").src=preview;
 
-  const canvas = await html2canvas(element,{scale:2});
-  const imgData = canvas.toDataURL("image/png");
+  let c=document.getElementById("pdfCanvas");
+  let ctx=c.getContext("2d");
+  ctx.clearRect(0,0,300,200);
 
-  const { jsPDF } = window.jspdf;
-  let pdf = new jsPDF("p","mm","a4");
+  drawDoorToCanvas(ctx);
 
-  let width=210;
-  let height=(canvas.height*width)/canvas.width;
+  let el=document.getElementById("pdfContent");
+  el.style.display="block";
 
-  pdf.addImage(imgData,"PNG",0,0,width,height);
-  pdf.save("ProDesign_Order.pdf");
+  html2canvas(el).then(canvas=>{
+    const { jsPDF } = window.jspdf;
+    let pdf=new jsPDF();
+    let img=canvas.toDataURL("image/png");
 
-  element.style.display="none";
+    pdf.addImage(img,"PNG",0,0,210,297);
+    pdf.save("ProDesign_Order.pdf");
+
+    el.style.display="none";
+  });
 }
 
-// واتساب
+function drawDoorToCanvas(ctx){
+
+  if(doorType==="single"){
+    ctx.strokeRect(100,20,100,160);
+  }
+
+  if(doorType==="double"){
+    ctx.strokeRect(20,20,100,160);
+    ctx.strokeRect(180,20,100,160);
+  }
+
+  if(doorType==="onehalf"){
+    ctx.strokeRect(20,20,80,160);
+    ctx.strokeRect(110,20,170,160);
+  }
+}
+
+function saveOrder(){
+
+  let orders=JSON.parse(localStorage.getItem("orders")||"[]");
+
+  orders.push({
+    id:"PD-"+Date.now(),
+    type:doorType
+  });
+
+  localStorage.setItem("orders",JSON.stringify(orders));
+
+  alert("تم الحفظ ✅");
+}
+
 function sendWhatsApp(){
-  let phone="96596765547"; // غير الرقم
-  let msg="تم إنشاء الطلب، مرفق PDF جاهز";
-  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg));
-}
 
-setDoorType("single");
+  let msg=`طلب CNC
+نوع الباب: ${doorType}
+داخل: ${in_w.value}×${in_h.value}
+خارج: ${out_w.value}×${out_h.value}
+القفل: ${lock.value}`;
+
+  window.open("https://wa.me/965XXXXXXXX?text="+encodeURIComponent(msg));
+}
 
 </script>
 
