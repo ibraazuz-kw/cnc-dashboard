@@ -9,50 +9,57 @@
 
 <style>
 body{
-  background:#0b1e2d;
-  font-family:Tahomа;
+  background:#081a26;
+  font-family:Tahoma;
   color:#fff;
   padding:20px;
 }
 
 .container{
-  max-width:500px;
+  max-width:420px;
   margin:auto;
 }
 
 .card{
-  background:#132b3c;
+  background:#102a3b;
   padding:15px;
-  border-radius:12px;
+  border-radius:14px;
   margin-bottom:15px;
 }
 
 input,select,textarea{
   width:100%;
-  padding:10px;
-  border-radius:8px;
+  padding:12px;
+  border-radius:10px;
   border:none;
   margin-top:8px;
+  margin-bottom:10px;
 }
 
 button{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:none;
-  border-radius:10px;
+  border-radius:12px;
+  font-size:16px;
   margin-top:10px;
 }
 
 .btn{background:#2d6cdf;color:#fff;}
-.green{background:#28a745;}
-.whatsapp{background:#25D366;}
 
 .preview{
   width:100%;
   border-radius:10px;
-  margin-top:10px;
 }
 
+.canvas-box{
+  background:#fff;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+}
+
+h2{text-align:center;}
 </style>
 </head>
 
@@ -64,7 +71,7 @@ button{
 
 <div class="card">
 
-<select id="doorType">
+<select id="doorType" onchange="drawDoor()">
 <option value="single">باب مفرد</option>
 <option value="double">بابين</option>
 <option value="onehalf">باب وربع</option>
@@ -76,9 +83,9 @@ button{
 <input id="out_w" placeholder="عرض خارجي">
 <input id="out_h" placeholder="ارتفاع خارجي">
 
-<select id="lock">
-<option>يمين</option>
-<option>يسار</option>
+<select id="lock" onchange="drawDoor()">
+<option value="يمين">يمين</option>
+<option value="يسار">يسار</option>
 </select>
 
 <textarea id="details" placeholder="تفاصيل"></textarea>
@@ -88,139 +95,137 @@ button{
 
 </div>
 
-<button class="btn" onclick="generatePDF()">📄 PDF</button>
+<div class="card canvas-box">
+<canvas id="canvas" width="320" height="200"></canvas>
+</div>
+
+<button class="btn" onclick="generatePDF()">📄 إنشاء PDF</button>
 
 </div>
 
 <!-- PDF -->
-<div id="pdfContent" style="display:none; direction:rtl; padding:20px; background:#fff; color:#000; font-family:Tahoma;">
+<div id="pdfContent" style="display:none; background:#fff; color:#000; padding:20px;">
 
-<h1 style="text-align:center;">Pro Design CNC</h1>
+<h2 style="text-align:center;">Pro Design CNC</h2>
 <hr>
 
-<p><b>رقم الطلب:</b> <span id="pdf_id"></span></p>
-<p><b>نوع الباب:</b> <span id="pdf_type"></span></p>
-<p><b>الداخل:</b> <span id="pdf_in"></span></p>
-<p><b>الخارج:</b> <span id="pdf_out"></span></p>
-<p><b>القفل:</b> <span id="pdf_lock"></span></p>
+<p>رقم الطلب: <span id="pdf_id"></span></p>
+<p>نوع الباب: <span id="pdf_type"></span></p>
+<p>الداخل: <span id="pdf_in"></span></p>
+<p>الخارج: <span id="pdf_out"></span></p>
+<p>القفل: <span id="pdf_lock"></span></p>
 
-<h3>اتجاه الباب</h3>
-<canvas id="pdfCanvas" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+<canvas id="pdfCanvas" width="320" height="200"></canvas>
 
-<h3>التفاصيل</h3>
 <p id="pdf_details"></p>
 
-<img id="pdf_img" style="width:100%; margin-top:15px; border-radius:10px;">
+<img id="pdf_img" style="width:100%; margin-top:10px;">
 
 </div>
 
 <script>
 
 function previewImage(e){
-  let reader = new FileReader();
-  reader.onload = function(){
-    document.getElementById("preview").src = reader.result;
+  let reader=new FileReader();
+  reader.onload=function(){
+    preview.src=reader.result;
   }
   reader.readAsDataURL(e.target.files[0]);
 }
 
-function generatePDF(){
+function drawDoor(){
 
-  let type = document.getElementById("doorType").value;
-  let lock = document.getElementById("lock").value;
+  let type=doorType.value;
+  let lock=lockSelect.value;
 
-  let id="PD-"+Date.now();
-
-  pdf_id.innerText=id;
-  pdf_type.innerText=type;
-  pdf_in.innerText=in_w.value+" × "+in_h.value;
-  pdf_out.innerText=out_w.value+" × "+out_h.value;
-  pdf_lock.innerText=lock;
-  pdf_details.innerText=details.value;
-
-  if(preview.src) pdf_img.src=preview.src;
-
-  drawDoor(type,lock);
-
-  let el=document.getElementById("pdfContent");
-  el.style.display="block";
-
-  html2canvas(el,{scale:2}).then(canvas=>{
-    const { jsPDF } = window.jspdf;
-    let pdf=new jsPDF("p","mm","a4");
-
-    let img=canvas.toDataURL("image/png");
-
-    pdf.addImage(img,"PNG",0,0,210,297);
-    pdf.save("ProDesign.pdf");
-
-    el.style.display="none";
-  });
-}
-
-function drawDoor(type,lock){
-
-  let c=document.getElementById("pdfCanvas");
+  let c=document.getElementById("canvas");
   let ctx=c.getContext("2d");
 
-  ctx.clearRect(0,0,400,200);
-
+  ctx.clearRect(0,0,320,200);
   ctx.lineWidth=2;
 
   if(type==="single"){
-    ctx.strokeRect(150,20,100,160);
+    ctx.strokeRect(110,20,100,160);
 
     ctx.beginPath();
 
     if(lock==="يمين"){
-      ctx.moveTo(150,100);
-      ctx.lineTo(250,20);
-      ctx.moveTo(150,100);
-      ctx.lineTo(250,180);
+      ctx.moveTo(110,100);
+      ctx.lineTo(210,20);
+      ctx.moveTo(110,100);
+      ctx.lineTo(210,180);
     }else{
-      ctx.moveTo(250,100);
-      ctx.lineTo(150,20);
-      ctx.moveTo(250,100);
-      ctx.lineTo(150,180);
+      ctx.moveTo(210,100);
+      ctx.lineTo(110,20);
+      ctx.moveTo(210,100);
+      ctx.lineTo(110,180);
     }
 
     ctx.stroke();
   }
 
   if(type==="double"){
-
-    ctx.strokeRect(80,20,100,160);
-    ctx.strokeRect(220,20,100,160);
+    ctx.strokeRect(30,20,100,160);
+    ctx.strokeRect(190,20,100,160);
 
     ctx.beginPath();
 
-    ctx.moveTo(180,100);
-    ctx.lineTo(80,20);
-    ctx.moveTo(180,100);
-    ctx.lineTo(80,180);
+    ctx.moveTo(130,100);
+    ctx.lineTo(30,20);
+    ctx.moveTo(130,100);
+    ctx.lineTo(30,180);
 
-    ctx.moveTo(220,100);
-    ctx.lineTo(320,20);
-    ctx.moveTo(220,100);
-    ctx.lineTo(320,180);
+    ctx.moveTo(190,100);
+    ctx.lineTo(290,20);
+    ctx.moveTo(190,100);
+    ctx.lineTo(290,180);
 
     ctx.stroke();
   }
 
   if(type==="onehalf"){
-
-    ctx.strokeRect(80,20,80,160);
-    ctx.strokeRect(170,20,150,160);
+    ctx.strokeRect(30,20,80,160);
+    ctx.strokeRect(120,20,170,160);
 
     ctx.beginPath();
-    ctx.moveTo(170,100);
-    ctx.lineTo(320,20);
-    ctx.moveTo(170,100);
-    ctx.lineTo(320,180);
+    ctx.moveTo(120,100);
+    ctx.lineTo(290,20);
+    ctx.moveTo(120,100);
+    ctx.lineTo(290,180);
 
     ctx.stroke();
   }
+}
 
+drawDoor();
+
+function generatePDF(){
+
+  pdf_id.innerText="PD-"+Date.now();
+  pdf_type.innerText=doorType.value;
+  pdf_in.innerText=in_w.value+"×"+in_h.value;
+  pdf_out.innerText=out_w.value+"×"+out_h.value;
+  pdf_lock.innerText=lock.value;
+  pdf_details.innerText=details.value;
+
+  if(preview.src) pdf_img.src=preview.src;
+
+  let c=document.getElementById("pdfCanvas");
+  let ctx=c.getContext("2d");
+
+  let main=document.getElementById("canvas");
+  ctx.drawImage(main,0,0);
+
+  let el=document.getElementById("pdfContent");
+  el.style.display="block";
+
+  html2canvas(el).then(canvas=>{
+    const { jsPDF } = window.jspdf;
+    let pdf=new jsPDF();
+    pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,210,297);
+    pdf.save("order.pdf");
+    el.style.display="none";
+  });
 }
 
 </script>
