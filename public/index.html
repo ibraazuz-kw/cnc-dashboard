@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Pro Design CNC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
-  font-family:Tahoma;
+  font-family:'Cairo', sans-serif;
   background:#0b1e2d;
   color:#fff;
 }
@@ -22,7 +25,6 @@ h2{text-align:center;}
   background:#112b3c;
   padding:15px;
   border-radius:12px;
-  margin-bottom:15px;
 }
 input, textarea{
   width:100%;
@@ -57,16 +59,15 @@ canvas{
 <body>
 
 <div class="container">
-
 <h2>🚀 Pro Design CNC</h2>
 
 <div class="card">
 
 <!-- نوع الباب -->
 <div class="type-buttons">
-  <button onclick="setDoorType('single')" id="btn_single">باب</button>
-  <button onclick="setDoorType('double')" id="btn_double">بابين</button>
-  <button onclick="setDoorType('onehalf')" id="btn_onehalf">باب وربع</button>
+<button onclick="setDoorType('single')" id="btn_single">باب</button>
+<button onclick="setDoorType('double')" id="btn_double">بابين</button>
+<button onclick="setDoorType('onehalf')" id="btn_onehalf">باب وربع</button>
 </div>
 
 <!-- الرسم -->
@@ -74,9 +75,9 @@ canvas{
 
 <!-- القفل -->
 <div id="lockBox" style="display:none;">
-  🔐 القفل:
-  <label><input type="radio" name="lock" value="يمين"> يمين</label>
-  <label><input type="radio" name="lock" value="يسار"> يسار</label>
+🔐 القفل:
+<label><input type="radio" name="lock" value="يمين"> يمين</label>
+<label><input type="radio" name="lock" value="يسار"> يسار</label>
 </div>
 
 <!-- القياسات -->
@@ -94,14 +95,33 @@ canvas{
 <input type="file" id="imgInput">
 <img id="preview" style="width:100%;display:none;margin-top:10px;border-radius:10px;">
 
-<!-- الأزرار -->
 <button class="primary" onclick="generatePDF()">تحميل PDF</button>
 <button class="green" onclick="sendWhatsApp()">إرسال واتساب</button>
 
 </div>
 </div>
 
-<!-- مكتبة PDF -->
+<!-- محتوى PDF -->
+<div id="pdfContent" style="display:none; direction:rtl; font-family:Cairo; padding:20px; background:#fff; color:#000;">
+
+<h2 style="text-align:center;">Pro Design CNC</h2>
+<hr>
+
+<p><b>نوع الباب:</b> <span id="pdf_type"></span></p>
+<p><b>المقاس الداخلي:</b> <span id="pdf_in"></span></p>
+<p><b>المقاس الخارجي:</b> <span id="pdf_out"></span></p>
+<p><b>القفل:</b> <span id="pdf_lock"></span></p>
+
+<p><b>التفاصيل:</b></p>
+<p id="pdf_details"></p>
+
+<br>
+<img id="pdf_img" style="width:100%; border-radius:10px;">
+
+</div>
+
+<!-- مكتبات -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
@@ -178,56 +198,46 @@ document.getElementById("imgInput").addEventListener("change", function(e){
   reader.readAsDataURL(file);
 });
 
-// نص الطلب
-function buildText(){
-  return `طلب CNC
-
-نوع الباب: ${doorType}
-
-الداخلي:
-${in_w.value} × ${in_h.value}
-
-الخارجي:
-${out_w.value} × ${out_h.value}
-
-القفل:
-${document.querySelector('input[name="lock"]:checked')?.value || "-"}
-
-تفاصيل:
-${details.value}`;
-}
-
-// PDF
+// PDF احترافي
 async function generatePDF(){
-  const { jsPDF } = window.jspdf;
-  let doc = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text("Pro Design CNC", 10, 10);
+  document.getElementById("pdf_type").innerText = doorType;
+  document.getElementById("pdf_in").innerText = in_w.value+" × "+in_h.value;
+  document.getElementById("pdf_out").innerText = out_w.value+" × "+out_h.value;
+  document.getElementById("pdf_lock").innerText =
+    document.querySelector('input[name="lock"]:checked')?.value || "-";
+  document.getElementById("pdf_details").innerText = details.value;
 
-  let lines = doc.splitTextToSize(buildText(), 180);
-  doc.setFontSize(12);
-  doc.text(lines, 10, 30);
-
-  let img = document.getElementById("preview");
-
-  if(img.src){
-    try{
-      doc.addImage(img.src, "JPEG", 10, 120, 180, 80);
-    }catch(e){}
+  let preview = document.getElementById("preview");
+  if(preview.src){
+    document.getElementById("pdf_img").src = preview.src;
   }
 
-  doc.save("طلب_CNC.pdf");
+  let element = document.getElementById("pdfContent");
+  element.style.display="block";
+
+  const canvas = await html2canvas(element,{scale:2});
+  const imgData = canvas.toDataURL("image/png");
+
+  const { jsPDF } = window.jspdf;
+  let pdf = new jsPDF("p","mm","a4");
+
+  let width=210;
+  let height=(canvas.height*width)/canvas.width;
+
+  pdf.addImage(imgData,"PNG",0,0,width,height);
+  pdf.save("ProDesign_Order.pdf");
+
+  element.style.display="none";
 }
 
 // واتساب
 function sendWhatsApp(){
   let phone="96596765547"; // غير الرقم
-  let url="https://wa.me/"+phone+"?text="+encodeURIComponent("تم إنشاء الطلب، مرفق PDF");
-  window.open(url,"_blank");
+  let msg="تم إنشاء الطلب، مرفق PDF جاهز";
+  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg));
 }
 
-// تشغيل
 setDoorType("single");
 
 </script>
