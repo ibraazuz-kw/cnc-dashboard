@@ -12,22 +12,18 @@ body{
   background:#0b1e2d;
   color:#fff;
 }
-
 .container{
   max-width:500px;
   margin:auto;
   padding:15px;
 }
-
 h2{text-align:center;}
-
 .card{
   background:#112b3c;
   padding:15px;
   border-radius:12px;
   margin-bottom:15px;
 }
-
 input, textarea{
   width:100%;
   padding:10px;
@@ -35,7 +31,6 @@ input, textarea{
   border:none;
   margin-top:8px;
 }
-
 button{
   width:100%;
   padding:12px;
@@ -44,23 +39,18 @@ button{
   margin-top:10px;
   font-size:16px;
 }
-
 .primary{background:#2f80ed;color:#fff;}
 .green{background:#25D366;color:#fff;}
-
 .type-buttons button{
   width:32%;
   background:#1e3a4d;
 }
-
 .active{background:#2f80ed !important;}
-
 canvas{
   background:#0e2433;
   border-radius:10px;
   margin-top:10px;
 }
-
 </style>
 </head>
 
@@ -104,11 +94,15 @@ canvas{
 <input type="file" id="imgInput">
 <img id="preview" style="width:100%;display:none;margin-top:10px;border-radius:10px;">
 
-<button class="primary" onclick="previewData()">عرض الطلب</button>
+<!-- الأزرار -->
+<button class="primary" onclick="generatePDF()">تحميل PDF</button>
 <button class="green" onclick="sendWhatsApp()">إرسال واتساب</button>
 
 </div>
 </div>
+
+<!-- مكتبة PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 
@@ -142,7 +136,6 @@ function drawDoor(){
   }
 
   if(doorType==="double"){
-    // يسار
     ctx.strokeRect(20,20,90,160);
     ctx.beginPath();
     ctx.moveTo(110,100);
@@ -151,7 +144,6 @@ function drawDoor(){
     ctx.lineTo(20,180);
     ctx.stroke();
 
-    // يمين
     ctx.strokeRect(150,20,90,160);
     ctx.beginPath();
     ctx.moveTo(150,100);
@@ -188,33 +180,50 @@ document.getElementById("imgInput").addEventListener("change", function(e){
 
 // نص الطلب
 function buildText(){
-  return `🚀 طلب CNC
+  return `طلب CNC
 
 نوع الباب: ${doorType}
 
-📏 الداخلي:
+الداخلي:
 ${in_w.value} × ${in_h.value}
 
-📏 الخارجي:
+الخارجي:
 ${out_w.value} × ${out_h.value}
 
-🔐 القفل:
+القفل:
 ${document.querySelector('input[name="lock"]:checked')?.value || "-"}
 
-📝 التفاصيل:
-${details.value}
-`;
+تفاصيل:
+${details.value}`;
 }
 
-// عرض
-function previewData(){
-  alert(buildText());
+// PDF
+async function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  let doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Pro Design CNC", 10, 10);
+
+  let lines = doc.splitTextToSize(buildText(), 180);
+  doc.setFontSize(12);
+  doc.text(lines, 10, 30);
+
+  let img = document.getElementById("preview");
+
+  if(img.src){
+    try{
+      doc.addImage(img.src, "JPEG", 10, 120, 180, 80);
+    }catch(e){}
+  }
+
+  doc.save("طلب_CNC.pdf");
 }
 
-// واتساب (غير الرقم هنا 👇)
+// واتساب
 function sendWhatsApp(){
-  let phone="96596765547"; // حط رقمك
-  let url="https://wa.me/"+phone+"?text="+encodeURIComponent(buildText());
+  let phone="96596765547"; // غير الرقم
+  let url="https://wa.me/"+phone+"?text="+encodeURIComponent("تم إنشاء الطلب، مرفق PDF");
   window.open(url,"_blank");
 }
 
