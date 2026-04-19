@@ -19,9 +19,7 @@ body{
   padding:15px;
 }
 
-h2{
-  text-align:center;
-}
+h2{text-align:center;}
 
 .card{
   background:#112b3c;
@@ -47,20 +45,15 @@ button{
   font-size:16px;
 }
 
-.primary{
-  background:#2f80ed;
-  color:#fff;
-}
+.primary{background:#2f80ed;color:#fff;}
+.green{background:#25D366;color:#fff;}
 
 .type-buttons button{
   width:32%;
   background:#1e3a4d;
-  color:#fff;
 }
 
-.active{
-  background:#2f80ed !important;
-}
+.active{background:#2f80ed !important;}
 
 canvas{
   background:#0e2433;
@@ -68,9 +61,6 @@ canvas{
   margin-top:10px;
 }
 
-.lock-box{
-  margin-top:10px;
-}
 </style>
 </head>
 
@@ -93,46 +83,46 @@ canvas{
 <canvas id="doorCanvas" width="260" height="200"></canvas>
 
 <!-- القفل -->
-<div id="lockBox" class="lock-box" style="display:none;">
-  🔐 مكان القفل:
-  <label><input type="radio" name="lock" value="right"> يمين</label>
-  <label><input type="radio" name="lock" value="left"> يسار</label>
+<div id="lockBox" style="display:none;">
+  🔐 القفل:
+  <label><input type="radio" name="lock" value="يمين"> يمين</label>
+  <label><input type="radio" name="lock" value="يسار"> يسار</label>
 </div>
 
 <!-- القياسات -->
-<p>📏 المقاس الداخلي</p>
-<input id="in_w" placeholder="العرض">
-<input id="in_h" placeholder="الارتفاع">
+<p>📏 الداخلي</p>
+<input id="in_w" placeholder="عرض">
+<input id="in_h" placeholder="ارتفاع">
 
-<p>📏 المقاس الخارجي</p>
-<input id="out_w" placeholder="العرض">
-<input id="out_h" placeholder="الارتفاع">
+<p>📏 الخارجي</p>
+<input id="out_w" placeholder="عرض">
+<input id="out_h" placeholder="ارتفاع">
 
-<!-- التفاصيل -->
 <textarea id="details" placeholder="تفاصيل إضافية"></textarea>
 
 <!-- صورة -->
 <input type="file" id="imgInput">
-<img id="preview" style="width:100%;margin-top:10px;border-radius:10px;display:none;">
+<img id="preview" style="width:100%;display:none;margin-top:10px;border-radius:10px;">
 
-<!-- زر -->
-<button class="primary" onclick="sendData()">إرسال الطلب</button>
+<button class="primary" onclick="previewData()">عرض الطلب</button>
+<button class="green" onclick="sendWhatsApp()">إرسال واتساب</button>
 
 </div>
 </div>
 
 <script>
 
-let doorType = "single";
-let ctx = document.getElementById("doorCanvas").getContext("2d");
+let doorType="single";
+let ctx=document.getElementById("doorCanvas").getContext("2d");
 
 function setDoorType(type){
-  doorType = type;
+  doorType=type;
 
   document.getElementById("lockBox").style.display =
-    (type === "double") ? "block" : "none";
+    (type==="double")?"block":"none";
 
-  document.querySelectorAll(".type-buttons button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".type-buttons button")
+    .forEach(b=>b.classList.remove("active"));
   document.getElementById("btn_"+type).classList.add("active");
 
   drawDoor();
@@ -186,39 +176,49 @@ function drawDoor(){
 
 // صورة
 document.getElementById("imgInput").addEventListener("change", function(e){
-  let file = e.target.files[0];
-  let reader = new FileReader();
-  reader.onload = function(){
-    let img = document.getElementById("preview");
-    img.src = reader.result;
-    img.style.display = "block";
+  let file=e.target.files[0];
+  let reader=new FileReader();
+  reader.onload=function(){
+    let img=document.getElementById("preview");
+    img.src=reader.result;
+    img.style.display="block";
   }
   reader.readAsDataURL(file);
 });
 
-// إرسال
-function sendData(){
-  let text = `
-طلب CNC:
+// نص الطلب
+function buildText(){
+  return `🚀 طلب CNC
 
 نوع الباب: ${doorType}
 
-المقاس الداخلي:
+📏 الداخلي:
 ${in_w.value} × ${in_h.value}
 
-المقاس الخارجي:
+📏 الخارجي:
 ${out_w.value} × ${out_h.value}
 
-القفل: ${document.querySelector('input[name="lock"]:checked')?.value || "-"}
+🔐 القفل:
+${document.querySelector('input[name="lock"]:checked')?.value || "-"}
 
-تفاصيل:
+📝 التفاصيل:
 ${details.value}
 `;
-
-  alert(text);
 }
 
-// تشغيل أولي
+// عرض
+function previewData(){
+  alert(buildText());
+}
+
+// واتساب (غير الرقم هنا 👇)
+function sendWhatsApp(){
+  let phone="965XXXXXXXX"; // حط رقمك
+  let url="https://wa.me/"+phone+"?text="+encodeURIComponent(buildText());
+  window.open(url,"_blank");
+}
+
+// تشغيل
 setDoorType("single");
 
 </script>
