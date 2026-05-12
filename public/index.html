@@ -2,69 +2,202 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Pro Design CNC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Design ERP</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 body{
-    font-family:'Cairo',sans-serif;
+    margin:0;
     background:#0b1e2d;
-    color:#fff;
-    padding:20px;
+    font-family:'Cairo',sans-serif;
+    color:white;
 }
 
 .container{
-    max-width:420px;
+    max-width:1200px;
     margin:auto;
-    background:#112b3c;
     padding:20px;
-    border-radius:15px;
 }
 
-h2{
-    text-align:center;
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     margin-bottom:20px;
 }
 
-input,select{
-    width:100%;
-    padding:10px;
-    margin:6px 0;
-    border-radius:8px;
-    border:none;
+h1{
+    margin:0;
+    font-size:28px;
 }
 
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
+.add-btn{
+    background:#2563eb;
     border:none;
-    border-radius:10px;
-    background:#3b82f6;
     color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:#132b3c;
+    padding:20px;
+    border-radius:16px;
+}
+
+.stat h2{
+    margin:0;
+    font-size:26px;
+}
+
+.stat p{
+    margin:5px 0 0;
+    color:#9fb3c8;
+}
+
+.orders{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#132b3c;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.client{
+    font-size:20px;
     font-weight:bold;
 }
 
-.canvasBox{
-    background:#0b1e2d;
-    border:2px solid #3b82f6;
-    border-radius:10px;
+.info{
     margin-top:10px;
-    text-align:center;
+    line-height:2;
+    color:#d6e2ee;
 }
 
-canvas{
+.status{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:10px;
+    font-size:14px;
+    margin-top:10px;
+}
+
+.new{background:#2563eb;}
+.work{background:#f59e0b;}
+.ready{background:#10b981;}
+.done{background:#64748b;}
+
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.actions button{
+    flex:1;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+    color:white;
+}
+
+.edit{
+    background:#2563eb;
+}
+
+.pdf{
+    background:#10b981;
+}
+
+.delete{
+    background:#ef4444;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal-box{
+    background:#132b3c;
     width:100%;
+    max-width:500px;
+    border-radius:16px;
+    padding:20px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.modal-box input,
+.modal-box select,
+.modal-box textarea{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:10px;
+    background:#0b1e2d;
+    color:white;
+}
+
+.modal-box button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
 }
 
 .preview{
     width:100%;
-    margin-top:10px;
-    border-radius:10px;
+    border-radius:12px;
+    margin-bottom:10px;
+    display:none;
 }
+
+@media(max-width:768px){
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+}
+
 </style>
 </head>
 
@@ -72,202 +205,268 @@ canvas{
 
 <div class="container">
 
-<h2>🚀 طلب CNC - Pro Design</h2>
+<div class="topbar">
+<h1>🚀 Pro Design ERP</h1>
 
-<select id="type">
-<option value="single">باب مفرد</option>
-<option value="double">باب دبل</option>
-<option value="half">باب وربع</option>
+<button class="add-btn" onclick="openModal()">
+➕ إضافة شغل
+</button>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h2 id="totalOrders">0</h2>
+<p>إجمالي الطلبات</p>
+</div>
+
+<div class="stat">
+<h2 id="totalMoney">0 KD</h2>
+<p>إجمالي المبالغ</p>
+</div>
+
+<div class="stat">
+<h2 id="remainingMoney">0 KD</h2>
+<p>المتبقي</p>
+</div>
+
+<div class="stat">
+<h2 id="sheetCount">0</h2>
+<p>طلبات الشيتات</p>
+</div>
+
+</div>
+
+<div class="orders" id="orders"></div>
+
+</div>
+
+<!-- Modal -->
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<h2>إضافة شغل جديد</h2>
+
+<input id="client" placeholder="اسم العميل">
+
+<input id="workName" placeholder="اسم الشغل">
+
+<input id="size" placeholder="المقاس">
+
+<select id="material">
+<option>ألمنيوم</option>
+<option>حديد</option>
+<option>ستانلس</option>
+<option>ألكبوند</option>
 </select>
 
-<input id="w_in" placeholder="عرض داخلي">
-<input id="h_in" placeholder="ارتفاع داخلي">
+<input id="sheetType" placeholder="نوع الشيت">
 
-<input id="w_out" placeholder="عرض خارجي">
-<input id="h_out" placeholder="ارتفاع خارجي">
+<input id="thickness" placeholder="السماكة">
 
-<select id="direction">
-<option value="right">يمين</option>
-<option value="left">يسار</option>
+<input id="quantity" placeholder="الكمية">
+
+<input id="price" placeholder="السعر الكلي">
+
+<input id="paid" placeholder="المدفوع">
+
+<select id="status">
+<option value="جديد">جديد</option>
+<option value="تحت التصنيع">تحت التصنيع</option>
+<option value="جاهز">جاهز</option>
+<option value="تم التسليم">تم التسليم</option>
 </select>
 
-<select id="lock">
-<option value="right">القفل يمين</option>
-<option value="left">القفل يسار</option>
-</select>
-
-<input id="details" placeholder="تفاصيل">
+<textarea id="notes" placeholder="ملاحظات"></textarea>
 
 <input type="file" id="imageInput">
 
-<img id="preview" class="preview"/>
+<img id="preview" class="preview">
 
-<div class="canvasBox">
-<canvas id="draw" height="200"></canvas>
+<button onclick="saveOrder()">💾 حفظ</button>
+
 </div>
-
-<button onclick="drawDoor()">تحديث الرسم</button>
-
-<button onclick="makePDF()">📄 إنشاء PDF</button>
 
 </div>
 
 <script>
 
-const canvas = document.getElementById("draw");
-const ctx = canvas.getContext("2d");
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-function drawDoor(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    let type = document.getElementById("type").value;
-    let dir = document.getElementById("direction").value;
-    let lock = document.getElementById("lock").value;
-
-    if(type === "single"){
-        drawSingle(dir,lock);
-    }
-
-    if(type === "double"){
-        drawDouble(lock);
-    }
-
-    if(type === "half"){
-        drawHalf(dir,lock);
-    }
+function openModal(){
+document.getElementById("modal").style.display="flex";
 }
 
-function drawSingle(dir,lock){
-    ctx.strokeStyle="white";
-    ctx.strokeRect(80,20,120,160);
-
-    ctx.beginPath();
-
-    if(dir==="right"){
-        ctx.moveTo(80,100);
-        ctx.lineTo(200,40);
-        ctx.moveTo(80,100);
-        ctx.lineTo(200,160);
-    }else{
-        ctx.moveTo(200,100);
-        ctx.lineTo(80,40);
-        ctx.moveTo(200,100);
-        ctx.lineTo(80,160);
-    }
-
-    ctx.stroke();
-
-    // القفل
-    ctx.fillStyle="red";
-    if(lock==="right"){
-        ctx.fillRect(195,95,5,10);
-    }else{
-        ctx.fillRect(80,95,5,10);
-    }
+window.onclick=function(e){
+if(e.target.id==="modal"){
+document.getElementById("modal").style.display="none";
+}
 }
 
-function drawDouble(lock){
-
-    // بابين
-    ctx.strokeRect(50,20,80,160);
-    ctx.strokeRect(130,20,80,160);
-
-    // الأسهم عكس بعض
-    ctx.beginPath();
-
-    // يسار
-    ctx.moveTo(50,100);
-    ctx.lineTo(130,40);
-    ctx.moveTo(50,100);
-    ctx.lineTo(130,160);
-
-    // يمين
-    ctx.moveTo(210,100);
-    ctx.lineTo(130,40);
-    ctx.moveTo(210,100);
-    ctx.lineTo(130,160);
-
-    ctx.stroke();
-
-    // القفل
-    ctx.fillStyle="red";
-    if(lock==="right"){
-        ctx.fillRect(130,95,5,10);
-    }else{
-        ctx.fillRect(125,95,5,10);
-    }
-}
-
-function drawHalf(dir,lock){
-
-    // كبير
-    ctx.strokeRect(80,20,120,160);
-    // ربع
-    ctx.strokeRect(40,20,40,160);
-
-    ctx.beginPath();
-
-    if(dir==="right"){
-        ctx.moveTo(80,100);
-        ctx.lineTo(200,40);
-        ctx.moveTo(80,100);
-        ctx.lineTo(200,160);
-    }else{
-        ctx.moveTo(200,100);
-        ctx.lineTo(80,40);
-        ctx.moveTo(200,100);
-        ctx.lineTo(80,160);
-    }
-
-    ctx.stroke();
-
-    ctx.fillStyle="red";
-    if(lock==="right"){
-        ctx.fillRect(195,95,5,10);
-    }else{
-        ctx.fillRect(80,95,5,10);
-    }
-}
-
-
-// صورة
 document.getElementById("imageInput").addEventListener("change",function(e){
-    const file = e.target.files[0];
-    if(file){
-        document.getElementById("preview").src = URL.createObjectURL(file);
-    }
+
+const file=e.target.files[0];
+
+if(file){
+
+const reader=new FileReader();
+
+reader.onload=function(){
+
+preview.src=reader.result;
+preview.style.display="block";
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
 });
 
+function saveOrder(){
 
-// PDF
-function makePDF(){
+const order={
 
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
+id:Date.now(),
 
-    pdf.setFont("Helvetica");
+client:client.value,
 
-    pdf.text("Pro Design CNC", 80, 15);
+workName:workName.value,
 
-    pdf.text("نوع الباب: " + document.getElementById("type").value, 10, 30);
-    pdf.text("داخل: " + document.getElementById("w_in").value + " x " + document.getElementById("h_in").value, 10, 40);
-    pdf.text("خارج: " + document.getElementById("w_out").value + " x " + document.getElementById("h_out").value, 10, 50);
-    pdf.text("الاتجاه: " + document.getElementById("direction").value, 10, 60);
-    pdf.text("القفل: " + document.getElementById("lock").value, 10, 70);
+size:size.value,
 
-    // الرسم
-    const img = canvas.toDataURL("image/png");
-    pdf.addImage(img,'PNG',10,80,180,80);
+material:material.value,
 
-    // الصورة
-    const preview = document.getElementById("preview");
-    if(preview.src){
-        pdf.addImage(preview.src,'JPEG',10,170,180,100);
-    }
+sheetType:sheetType.value,
 
-    pdf.save("ProDesign_Order.pdf");
+thickness:thickness.value,
+
+quantity:quantity.value,
+
+price:Number(price.value),
+
+paid:Number(paid.value),
+
+remaining:Number(price.value)-Number(paid.value),
+
+status:status.value,
+
+notes:notes.value,
+
+image:preview.src
+
+};
+
+orders.push(order);
+
+localStorage.setItem("orders",JSON.stringify(orders));
+
+document.getElementById("modal").style.display="none";
+
+renderOrders();
+
 }
+
+function renderOrders(){
+
+const container=document.getElementById("orders");
+
+container.innerHTML="";
+
+let total=0;
+let remaining=0;
+
+orders.forEach(order=>{
+
+total+=order.price;
+remaining+=order.remaining;
+
+container.innerHTML+=`
+
+<div class="card">
+
+<img src="${order.image || 'https://via.placeholder.com/400x250'}">
+
+<div class="card-content">
+
+<div class="client">${order.client}</div>
+
+<div class="info">
+
+📌 ${order.workName}<br>
+
+📏 ${order.size}<br>
+
+🧱 ${order.material}<br>
+
+📦 ${order.sheetType} - ${order.thickness}<br>
+
+🔢 الكمية: ${order.quantity}<br>
+
+💰 ${order.price} KD<br>
+
+💵 المدفوع: ${order.paid} KD<br>
+
+❗ المتبقي: ${order.remaining} KD
+
+</div>
+
+<div class="status ${
+order.status==="جديد" ? "new" :
+order.status==="تحت التصنيع" ? "work" :
+order.status==="جاهز" ? "ready" :
+"done"
+}">
+
+${order.status}
+
+</div>
+
+<div class="actions">
+
+<button class="edit">
+تعديل
+</button>
+
+<button class="pdf">
+PDF
+</button>
+
+<button class="delete" onclick="deleteOrder(${order.id})">
+حذف
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+totalOrders.innerText=orders.length;
+totalMoney.innerText=total+" KD";
+remainingMoney.innerText=remaining+" KD";
+sheetCount.innerText=orders.length;
+
+}
+
+function deleteOrder(id){
+
+orders=orders.filter(o=>o.id!==id);
+
+localStorage.setItem("orders",JSON.stringify(orders));
+
+renderOrders();
+
+}
+
+renderOrders();
 
 </script>
 
