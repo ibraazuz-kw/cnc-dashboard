@@ -1,3 +1,13 @@
+/* =========================
+   حماية النظام
+========================= */
+
+if(localStorage.getItem("isLoggedIn") !== "true"){
+
+window.location.href = "login.html";
+
+}
+
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 const modal = document.getElementById("modal");
@@ -364,6 +374,21 @@ document.getElementById(
 "totalRevenue"
 ).innerText =
 revenue + " KD";
+
+}
+
+/* =========================
+   Logout
+========================= */
+
+function logout(){
+
+localStorage.removeItem(
+"isLoggedIn"
+);
+
+window.location.href =
+"login.html";
 
 }
 
