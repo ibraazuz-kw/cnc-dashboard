@@ -1,21 +1,45 @@
 let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
 const modal = document.getElementById("modal");
-const ordersBox = document.getElementById("orders");
+
+const ordersContainer =
+document.getElementById("ordersContainer");
+
+/* =========================
+   Modal
+========================= */
 
 function openModal(){
+
 modal.style.display = "flex";
+
+}
+
+function closeModal(){
+
+modal.style.display = "none";
+
+clearForm();
+
 }
 
 window.onclick = function(e){
+
 if(e.target === modal){
-modal.style.display = "none";
-}
+
+closeModal();
+
 }
 
-// رفع الصورة / PDF
+}
 
-document.getElementById("projectFile").addEventListener("change", function(e){
+/* =========================
+   Upload Preview
+========================= */
+
+document
+.getElementById("projectImage")
+.addEventListener("change", function(e){
 
 const file = e.target.files[0];
 
@@ -25,9 +49,11 @@ const reader = new FileReader();
 
 reader.onload = function(){
 
-const preview = document.getElementById("preview");
+const preview =
+document.getElementById("previewImage");
 
 preview.src = reader.result;
+
 preview.style.display = "block";
 
 }
@@ -36,7 +62,9 @@ reader.readAsDataURL(file);
 
 });
 
-// حفظ الطلب
+/* =========================
+   Save Order
+========================= */
 
 function saveOrder(){
 
@@ -44,76 +72,96 @@ const order = {
 
 id: Date.now(),
 
-clientName: document.getElementById("clientName").value,
+clientName:
+document.getElementById("clientName").value,
 
-projectName: document.getElementById("projectName").value,
+clientPhone:
+document.getElementById("clientPhone").value,
 
-projectDetails: document.getElementById("projectDetails").value,
+projectName:
+document.getElementById("projectName").value,
 
-projectStatus: document.getElementById("projectStatus").value,
+projectDetails:
+document.getElementById("projectDetails").value,
 
-file: document.getElementById("preview").src,
+projectStatus:
+document.getElementById("projectStatus").value,
 
-createdAt: new Date().toLocaleDateString()
+image:
+document.getElementById("previewImage").src,
+
+price: 0,
+
+createdAt:
+new Date().toLocaleDateString()
 
 };
 
-orders.push(order);
+orders.unshift(order);
 
-localStorage.setItem("orders", JSON.stringify(orders));
+localStorage.setItem(
+"orders",
+JSON.stringify(orders)
+);
 
-modal.style.display = "none";
+closeModal();
 
 renderOrders();
 
-clearForm();
+updateStats();
 
 }
 
-// تنظيف الفورم
+/* =========================
+   Render Orders
+========================= */
 
-function clearForm(){
+function renderOrders(list = orders){
 
-clientName.value = "";
-projectName.value = "";
-projectDetails.value = "";
-preview.style.display = "none";
+ordersContainer.innerHTML = "";
 
-}
-
-// عرض الطلبات
-
-function renderOrders(){
-
-ordersBox.innerHTML = "";
-
-orders.reverse().forEach(order => {
+list.forEach(order => {
 
 let statusClass = "";
 
-if(order.projectStatus === "جديد"){
-statusClass = "new";
-}
-
-if(order.projectStatus === "تحت التصميم"){
-statusClass = "design";
-}
-
 if(order.projectStatus === "بانتظار الاعتماد"){
-statusClass = "wait";
+
+statusClass = "pending";
+
 }
 
-if(order.projectStatus === "جاهز للتصنيع"){
-statusClass = "ready";
+if(order.projectStatus === "قيد التصميم"){
+
+statusClass = "design";
+
 }
 
-ordersBox.innerHTML += `
+if(order.projectStatus === "يوجد تعديل"){
 
-<div class="card">
+statusClass = "edit";
 
-<img src="${order.file || 'https://via.placeholder.com/400x300'}">
+}
 
-<div class="card-content">
+if(order.projectStatus === "تم الاعتماد"){
+
+statusClass = "approved";
+
+}
+
+ordersContainer.innerHTML += `
+
+<div class="order-card">
+
+<img
+src="${order.image || 'https://via.placeholder.com/600x400'}"
+class="order-image"
+>
+
+<div class="order-content">
+
+<div class="order-top">
+
+<div>
 
 <div class="client-name">
 ${order.clientName}
@@ -123,30 +171,68 @@ ${order.clientName}
 ${order.projectName}
 </div>
 
-<div class="project-details">
-${order.projectDetails}
 </div>
 
-<div class="status ${statusClass}">
+<div class="order-status ${statusClass}">
 ${order.projectStatus}
 </div>
 
-<div class="project-details">
-📅 ${order.createdAt}
 </div>
 
-<div class="actions">
+<div class="order-details">
 
-<button class="client-btn" onclick="openClient(${order.id})">
+📱 ${order.clientPhone}<br>
+
+📅 ${order.createdAt}<br>
+
+📝 ${order.projectDetails}
+
+</div>
+
+<div class="order-footer">
+
+<div class="order-price">
+${order.price || 0} KD
+</div>
+
+</div>
+
+<div class="order-actions">
+
+<button
+class="client-btn"
+onclick="openClient(${order.id})"
+>
+
 👤 العميل
+
 </button>
 
-<button class="price-btn" onclick="openPricing(${order.id})">
+<button
+class="price-btn"
+onclick="openPricing(${order.id})"
+>
+
 💰 التسعير
+
 </button>
 
-<button class="delete-btn" onclick="deleteOrder(${order.id})">
-🗑 حذف
+<button
+class="invoice-btn"
+onclick="openInvoice(${order.id})"
+>
+
+🧾 الفاتورة
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteOrder(${order.id})"
+>
+
+🗑
+
 </button>
 
 </div>
@@ -161,32 +247,148 @@ ${order.projectStatus}
 
 }
 
-// حذف الطلب
+/* =========================
+   Delete
+========================= */
 
 function deleteOrder(id){
 
+if(!confirm("حذف الطلب؟")) return;
+
 orders = orders.filter(order => order.id !== id);
 
-localStorage.setItem("orders", JSON.stringify(orders));
+localStorage.setItem(
+"orders",
+JSON.stringify(orders)
+);
 
 renderOrders();
 
+updateStats();
+
 }
 
-// صفحة العميل
+/* =========================
+   Open Pages
+========================= */
 
 function openClient(id){
 
-window.location.href = `client.html?id=${id}`;
+window.location.href =
+`client.html?id=${id}`;
 
 }
-
-// صفحة التسعير
 
 function openPricing(id){
 
-window.location.href = `pricing.html?id=${id}`;
+window.location.href =
+`pricing.html?id=${id}`;
 
 }
 
+function openInvoice(id){
+
+window.location.href =
+`invoice.html?id=${id}`;
+
+}
+
+/* =========================
+   Search
+========================= */
+
+document
+.getElementById("searchInput")
+.addEventListener("input", function(){
+
+const value =
+this.value.toLowerCase();
+
+const filtered = orders.filter(order =>
+
+order.clientName
+.toLowerCase()
+.includes(value)
+
+||
+
+order.projectName
+.toLowerCase()
+.includes(value)
+
+);
+
+renderOrders(filtered);
+
+});
+
+/* =========================
+   Stats
+========================= */
+
+function updateStats(){
+
+document.getElementById(
+"totalOrders"
+).innerText = orders.length;
+
+const pending =
+orders.filter(order =>
+order.projectStatus ===
+"بانتظار الاعتماد"
+).length;
+
+document.getElementById(
+"pendingOrders"
+).innerText = pending;
+
+const approved =
+orders.filter(order =>
+order.projectStatus ===
+"تم الاعتماد"
+).length;
+
+document.getElementById(
+"approvedOrders"
+).innerText = approved;
+
+let revenue = 0;
+
+orders.forEach(order => {
+
+revenue += Number(order.price || 0);
+
+});
+
+document.getElementById(
+"totalRevenue"
+).innerText =
+revenue + " KD";
+
+}
+
+/* =========================
+   Clear Form
+========================= */
+
+function clearForm(){
+
+clientName.value = "";
+
+clientPhone.value = "";
+
+projectName.value = "";
+
+projectDetails.value = "";
+
+previewImage.style.display = "none";
+
+}
+
+/* =========================
+   Init
+========================= */
+
 renderOrders();
+
+updateStats();
