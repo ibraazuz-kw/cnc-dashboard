@@ -1,137 +1,190 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>تسعير المشروع</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-.pricing-page{
-max-width:900px;
-margin:auto;
-padding:20px;
+body{
+overflow:auto;
+display:block;
+padding:30px;
 }
 
-.price-card{
-background:#102235;
-border-radius:20px;
+.pricing-page{
+max-width:1100px;
+margin:auto;
+}
+
+.pricing-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.pricing-header h1{
+font-size:34px;
+font-weight:800;
+}
+
+.project-card{
+background:#0d1724;
+border-radius:24px;
 padding:25px;
-margin-top:20px;
+margin-bottom:25px;
 border:1px solid rgba(255,255,255,.05);
 }
 
-.price-title{
+.project-top{
+display:flex;
+gap:25px;
+align-items:center;
+}
+
+.project-image{
+width:260px;
+height:220px;
+border-radius:20px;
+object-fit:cover;
+background:#08111c;
+}
+
+.project-info h2{
 font-size:30px;
-font-weight:700;
 margin-bottom:10px;
 }
 
-.project-name{
-font-size:20px;
-color:#9ec5ff;
-margin-bottom:25px;
+.project-info p{
+color:#94a3b8;
+line-height:2;
 }
 
-.inputs-grid{
+.pricing-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
+gap:20px;
+margin-top:25px;
+}
+
+.input-box{
+background:#08111c;
+padding:18px;
+border-radius:18px;
+}
+
+.input-box label{
+display:block;
+margin-bottom:12px;
+font-size:15px;
+color:#94a3b8;
+}
+
+.input-box input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:#0d1724;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+.sheet-section{
+margin-top:30px;
+}
+
+.sheet-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
 margin-bottom:20px;
 }
 
-.inputs-grid input,
-.inputs-grid select{
-width:100%;
-padding:14px;
-border:none;
-border-radius:14px;
-background:#081420;
-color:white;
-font-size:15px;
-}
-
-.sheet-box{
-background:#081420;
-padding:20px;
-border-radius:16px;
-margin-top:20px;
-}
-
-.sheet-box h3{
-margin-bottom:15px;
-}
-
-.sheet-item{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:10px;
-margin-bottom:12px;
-}
-
-.sheet-item input{
-padding:12px;
-border:none;
-border-radius:12px;
-background:#102235;
-color:white;
-}
-
-.add-sheet{
-width:100%;
-padding:14px;
+.add-sheet-btn{
+padding:12px 18px;
 border:none;
 border-radius:14px;
 background:#2563eb;
 color:white;
-font-size:16px;
 font-weight:700;
 cursor:pointer;
-margin-top:10px;
 }
 
-.summary{
-background:#081420;
-padding:20px;
-border-radius:16px;
-margin-top:25px;
+.sheet-item{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr;
+gap:15px;
+background:#08111c;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+}
+
+.sheet-item input{
+padding:14px;
+border:none;
+border-radius:12px;
+background:#0d1724;
+color:white;
+}
+
+.summary-card{
+background:#0d1724;
+padding:25px;
+border-radius:24px;
+margin-top:30px;
+border:1px solid rgba(255,255,255,.05);
+}
+
+.summary-card h2{
+margin-bottom:20px;
+font-size:28px;
 }
 
 .summary-line{
 display:flex;
 justify-content:space-between;
-padding:14px 0;
-border-bottom:1px solid rgba(255,255,255,.08);
+padding:18px 0;
+border-bottom:1px solid rgba(255,255,255,.06);
 font-size:17px;
 }
 
-.total{
-font-size:24px;
-font-weight:700;
+.summary-total{
+font-size:30px;
+font-weight:800;
 color:#10b981;
 }
 
-.save-price{
+.save-pricing-btn{
 width:100%;
-padding:16px;
+padding:18px;
 border:none;
-border-radius:16px;
+border-radius:20px;
 background:#10b981;
 color:white;
 font-size:18px;
-font-weight:700;
+font-weight:800;
 cursor:pointer;
-margin-top:25px;
+margin-top:30px;
 }
 
-@media(max-width:768px){
+@media(max-width:900px){
 
-.inputs-grid{
+.project-top{
+flex-direction:column;
+}
+
+.pricing-grid{
 grid-template-columns:1fr;
 }
 
@@ -149,68 +202,168 @@ grid-template-columns:1fr;
 
 <div class="pricing-page">
 
-<div class="price-card">
+<div class="pricing-header">
 
-<div class="price-title">
+<h1>
 💰 تسعير المشروع
-</div>
-
-<div class="project-name" id="projectName"></div>
-
-<div class="inputs-grid">
-
-<input id="unitPrice" type="number" placeholder="سعر الوحدة">
-
-<input id="quantity" type="number" placeholder="الكمية">
-
-<input id="extraCost" type="number" placeholder="تكلفة إضافية">
-
-<input id="discount" type="number" placeholder="خصم">
+</h1>
 
 </div>
 
-<!-- الشيتات -->
+<div class="project-card">
 
-<div class="sheet-box">
+<div class="project-top">
 
-<h3>📦 الشيتات المطلوبة</h3>
+<img
+id="projectImage"
+class="project-image"
+>
 
-<div id="sheets"></div>
+<div class="project-info">
 
-<button class="add-sheet" onclick="addSheet()">
+<h2 id="projectName"></h2>
+
+<p id="projectDetails"></p>
+
+</div>
+
+</div>
+
+<!-- Inputs -->
+
+<div class="pricing-grid">
+
+<div class="input-box">
+
+<label>
+سعر الوحدة
+</label>
+
+<input
+type="number"
+id="unitPrice"
+placeholder="0"
+>
+
+</div>
+
+<div class="input-box">
+
+<label>
+الكمية
+</label>
+
+<input
+type="number"
+id="quantity"
+placeholder="0"
+>
+
+</div>
+
+<div class="input-box">
+
+<label>
+تكلفة إضافية
+</label>
+
+<input
+type="number"
+id="extraCost"
+placeholder="0"
+>
+
+</div>
+
+<div class="input-box">
+
+<label>
+الخصم
+</label>
+
+<input
+type="number"
+id="discount"
+placeholder="0"
+>
+
+</div>
+
+</div>
+
+<!-- Sheets -->
+
+<div class="sheet-section">
+
+<div class="sheet-header">
+
+<h2>
+📦 الشيتات المطلوبة
+</h2>
+
+<button
+class="add-sheet-btn"
+onclick="addSheet()"
+>
+
 ➕ إضافة شيت
+
 </button>
 
 </div>
 
-<!-- الملخص -->
+<div id="sheetContainer"></div>
 
-<div class="summary">
+</div>
+
+</div>
+
+<!-- Summary -->
+
+<div class="summary-card">
+
+<h2>
+🧾 ملخص الفاتورة
+</h2>
 
 <div class="summary-line">
 <span>سعر الوحدات</span>
-<span id="itemsPrice">0 KD</span>
+<span id="itemsTotal">0 KD</span>
 </div>
 
 <div class="summary-line">
 <span>الإضافات</span>
-<span id="extraPrice">0 KD</span>
+<span id="extraTotal">0 KD</span>
 </div>
 
 <div class="summary-line">
 <span>الخصم</span>
-<span id="discountPrice">0 KD</span>
+<span id="discountTotal">0 KD</span>
 </div>
 
-<div class="summary-line total">
-<span>الإجمالي</span>
-<span id="finalTotal">0 KD</span>
-</div>
+<div class="summary-line">
+<span class="summary-total">
+الإجمالي
+</span>
+
+<span
+class="summary-total"
+id="finalTotal"
+>
+
+0 KD
+
+</span>
 
 </div>
 
-<button class="save-price" onclick="savePricing()">
-💾 حفظ وإرسال الفاتورة
+<button
+class="save-pricing-btn"
+onclick="savePricing()"
+>
+
+💾 حفظ التسعير
+
 </button>
 
 </div>
@@ -219,26 +372,58 @@ grid-template-columns:1fr;
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
+const params =
+new URLSearchParams(window.location.search);
 
-const id = Number(params.get("id"));
+const id =
+Number(params.get("id"));
 
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
+let orders =
+JSON.parse(localStorage.getItem("orders")) || [];
 
-let order = orders.find(o => o.id === id);
+let order =
+orders.find(o => o.id === id);
+
+/* =========================
+   Load Data
+========================= */
 
 if(order){
 
-document.getElementById("projectName").innerText =
-order.projectName;
+projectImage.src = order.image;
+
+projectName.innerText = order.projectName;
+
+projectDetails.innerText =
+order.projectDetails;
+
+if(order.pricing){
+
+unitPrice.value =
+order.pricing.unitPrice || 0;
+
+quantity.value =
+order.pricing.quantity || 0;
+
+extraCost.value =
+order.pricing.extraCost || 0;
+
+discount.value =
+order.pricing.discount || 0;
+
+calculate();
 
 }
 
-// إضافة شيت
+}
+
+/* =========================
+   Add Sheet
+========================= */
 
 function addSheet(){
 
-document.getElementById("sheets").innerHTML += `
+sheetContainer.innerHTML += `
 
 <div class="sheet-item">
 
@@ -248,15 +433,21 @@ document.getElementById("sheets").innerHTML += `
 
 <input placeholder="الكمية">
 
+<input placeholder="التكلفة">
+
 </div>
 
 `;
 
 }
 
-// الحساب التلقائي
+/* =========================
+   Calculate
+========================= */
 
-document.querySelectorAll("input").forEach(input => {
+document
+.querySelectorAll("input")
+.forEach(input => {
 
 input.addEventListener("input", calculate);
 
@@ -264,72 +455,83 @@ input.addEventListener("input", calculate);
 
 function calculate(){
 
-const unitPrice =
-Number(document.getElementById("unitPrice").value) || 0;
+const unit =
+Number(unitPrice.value) || 0;
 
-const quantity =
-Number(document.getElementById("quantity").value) || 0;
+const qty =
+Number(quantity.value) || 0;
 
 const extra =
-Number(document.getElementById("extraCost").value) || 0;
+Number(extraCost.value) || 0;
 
-const discount =
-Number(document.getElementById("discount").value) || 0;
+const dis =
+Number(discount.value) || 0;
 
-const items = unitPrice * quantity;
+const items =
+unit * qty;
 
-const total = items + extra - discount;
+const total =
+items + extra - dis;
 
-document.getElementById("itemsPrice").innerText =
+itemsTotal.innerText =
 items + " KD";
 
-document.getElementById("extraPrice").innerText =
+extraTotal.innerText =
 extra + " KD";
 
-document.getElementById("discountPrice").innerText =
-discount + " KD";
+discountTotal.innerText =
+dis + " KD";
 
-document.getElementById("finalTotal").innerText =
+finalTotal.innerText =
 total + " KD";
 
 }
 
-// حفظ التسعير
+/* =========================
+   Save Pricing
+========================= */
 
 function savePricing(){
 
-const pricing = {
-
-unitPrice:
-Number(document.getElementById("unitPrice").value),
-
-quantity:
-Number(document.getElementById("quantity").value),
-
-extra:
-Number(document.getElementById("extraCost").value),
-
-discount:
-Number(document.getElementById("discount").value),
-
-total:
+const total =
 (
-(Number(unitPrice.value) * Number(quantity.value))
+(Number(unitPrice.value) *
+Number(quantity.value))
 +
 Number(extraCost.value)
 -
 Number(discount.value)
-)
+);
+
+order.price = total;
+
+order.pricing = {
+
+unitPrice:
+Number(unitPrice.value),
+
+quantity:
+Number(quantity.value),
+
+extraCost:
+Number(extraCost.value),
+
+discount:
+Number(discount.value),
+
+total
 
 };
 
-order.pricing = pricing;
+localStorage.setItem(
+"orders",
+JSON.stringify(orders)
+);
 
-localStorage.setItem("orders", JSON.stringify(orders));
+alert("✅ تم حفظ التسعير");
 
-alert("✅ تم حفظ الفاتورة وإرسالها للعميل");
-
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 }
 
