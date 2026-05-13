@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>فاتورة Pro Design</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+body{
+background:#081420;
+font-family:'Cairo',sans-serif;
+padding:20px;
+}
+
+.invoice-page{
+max-width:900px;
+margin:auto;
+}
+
+.invoice-box{
+background:white;
+border-radius:20px;
+padding:40px;
+color:#000;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:40px;
+}
+
+.logo{
+font-size:34px;
+font-weight:700;
+color:#2563eb;
+}
+
+.invoice-title{
+font-size:28px;
+font-weight:700;
+}
+
+.client-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-bottom:30px;
+}
+
+.info-box{
+background:#f5f7fb;
+padding:18px;
+border-radius:14px;
+}
+
+.info-box h3{
+margin-bottom:10px;
+font-size:18px;
+}
+
+.design-preview{
+margin-bottom:30px;
+}
+
+.design-preview img{
+width:100%;
+max-height:450px;
+object-fit:contain;
+border-radius:16px;
+border:1px solid #ddd;
+}
+
+.table{
+width:100%;
+border-collapse:collapse;
+margin-bottom:30px;
+}
+
+.table th{
+background:#2563eb;
+color:white;
+padding:14px;
+font-size:15px;
+}
+
+.table td{
+padding:14px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+.summary{
+margin-top:30px;
+margin-right:auto;
+width:320px;
+}
+
+.summary-line{
+display:flex;
+justify-content:space-between;
+padding:14px 0;
+border-bottom:1px solid #ddd;
+font-size:16px;
+}
+
+.total{
+font-size:24px;
+font-weight:700;
+color:#10b981;
+}
+
+.actions{
+display:flex;
+gap:15px;
+margin-top:30px;
+}
+
+.actions button{
+flex:1;
+padding:16px;
+border:none;
+border-radius:16px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+color:white;
+}
+
+.pdf-btn{
+background:#2563eb;
+}
+
+.print-btn{
+background:#10b981;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="invoice-page">
+
+<div class="invoice-box" id="invoiceContent">
+
+<div class="top">
+
+<div class="logo">
+🚀 Pro Design
+</div>
+
+<div class="invoice-title">
+فاتورة رسمية
+</div>
+
+</div>
+
+<!-- بيانات -->
+
+<div class="client-info">
+
+<div class="info-box">
+
+<h3>بيانات العميل</h3>
+
+<p id="clientName"></p>
+<p id="projectName"></p>
+
+</div>
+
+<div class="info-box">
+
+<h3>تفاصيل الطلب</h3>
+
+<p id="invoiceDate"></p>
+<p id="invoiceNumber"></p>
+
+</div>
+
+</div>
+
+<!-- التصميم -->
+
+<div class="design-preview">
+
+<img id="projectImage">
+
+</div>
+
+<!-- الجدول -->
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>الوصف</th>
+<th>الكمية</th>
+<th>السعر</th>
+<th>الإجمالي</th>
+
+</tr>
+
+</thead>
+
+<tbody id="invoiceTable"></tbody>
+
+</table>
+
+<!-- الملخص -->
+
+<div class="summary">
+
+<div class="summary-line">
+<span>المجموع</span>
+<span id="subTotal"></span>
+</div>
+
+<div class="summary-line">
+<span>الإضافات</span>
+<span id="extraTotal"></span>
+</div>
+
+<div class="summary-line">
+<span>الخصم</span>
+<span id="discountTotal"></span>
+</div>
+
+<div class="summary-line total">
+<span>الإجمالي النهائي</span>
+<span id="finalTotal"></span>
+</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="pdf-btn" onclick="downloadPDF()">
+📄 تحميل PDF
+</button>
+
+<button class="print-btn" onclick="window.print()">
+🖨 طباعة
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const id = Number(params.get("id"));
+
+const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+const order = orders.find(o => o.id === id);
+
+if(order){
+
+document.getElementById("clientName").innerText =
+"العميل: " + order.clientName;
+
+document.getElementById("projectName").innerText =
+"المشروع: " + order.projectName;
+
+document.getElementById("invoiceDate").innerText =
+"التاريخ: " + new Date().toLocaleDateString();
+
+document.getElementById("invoiceNumber").innerText =
+"رقم الفاتورة: INV-" + order.id;
+
+document.getElementById("projectImage").src =
+order.file;
+
+if(order.pricing){
+
+const pricing = order.pricing;
+
+document.getElementById("invoiceTable").innerHTML += `
+
+<tr>
+
+<td>${order.projectName}</td>
+
+<td>${pricing.quantity}</td>
+
+<td>${pricing.unitPrice} KD</td>
+
+<td>${pricing.total} KD</td>
+
+</tr>
+
+`;
+
+document.getElementById("subTotal").innerText =
+(pricing.unitPrice * pricing.quantity) + " KD";
+
+document.getElementById("extraTotal").innerText =
+pricing.extra + " KD";
+
+document.getElementById("discountTotal").innerText =
+pricing.discount + " KD";
+
+document.getElementById("finalTotal").innerText =
+pricing.total + " KD";
+
+}
+
+}
+
+// تحميل PDF
+
+async function downloadPDF(){
+
+const element = document.getElementById("invoiceContent");
+
+const canvas = await html2canvas(element,{scale:2});
+
+const imgData = canvas.toDataURL("image/png");
+
+const { jsPDF } = window.jspdf;
+
+const pdf = new jsPDF("p","mm","a4");
+
+const width = 210;
+
+const height = (canvas.height * width) / canvas.width;
+
+pdf.addImage(imgData,"PNG",0,0,width,height);
+
+pdf.save("Invoice.pdf");
+
+}
+
+</script>
+
+</body>
+</html>
