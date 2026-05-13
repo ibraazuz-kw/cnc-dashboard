@@ -1,460 +1,345 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pro Design - أمر تشغيل CNC</title>
-  <style>
-    body{font-family:Arial;background:#f5f6fa;margin:0}
-    .wrap{max-width:900px;margin:20px auto;padding:12px}
-    .card{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 6px 22px rgba(0,0,0,.08)}
-    h1{margin:0}
-    .sub{color:#666;margin-top:4px}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{font-weight:800;display:block;margin:6px 0}
-    input,select,textarea{width:100%;padding:12px;border-radius:14px;border:1px solid #ddd;font-size:16px}
-    textarea{min-height:90px}
-    .btn{padding:14px;border:0;border-radius:14px;font-size:18px;font-weight:900;cursor:pointer}
-    .blue{background:#1f6feb;color:#fff}
-    .black{background:#111;color:#fff}
-    .mini{padding:10px 12px;border-radius:12px;font-weight:800;border:1px solid #ddd;background:#fafafa;cursor:pointer}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .sheetRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
-    .muted{color:#777;font-size:13px}
-    canvas{width:100%;max-width:420px;border-radius:16px;border:1px solid #ddd;background:#fff}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>اعتماد التصميم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.client-page{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.client-card{
+background:#102235;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+border:1px solid rgba(255,255,255,.05);
+}
+
+.client-card img{
+width:100%;
+max-height:600px;
+object-fit:contain;
+background:#081420;
+}
+
+.client-content{
+padding:25px;
+}
+
+.client-title{
+font-size:30px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.client-project{
+font-size:20px;
+color:#9ec5ff;
+margin-bottom:20px;
+}
+
+.client-details{
+line-height:2;
+color:#d4dce5;
+margin-bottom:20px;
+}
+
+.client-status{
+display:inline-block;
+padding:10px 18px;
+border-radius:12px;
+background:#9333ea;
+margin-bottom:20px;
+font-weight:700;
+}
+
+.action-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-top:25px;
+}
+
+.approve-btn{
+background:#10b981;
+}
+
+.edit-btn{
+background:#f59e0b;
+}
+
+.action-buttons button{
+padding:15px;
+border:none;
+border-radius:14px;
+font-size:16px;
+font-weight:700;
+color:white;
+cursor:pointer;
+}
+
+.edit-box{
+margin-top:25px;
+display:none;
+}
+
+.edit-box textarea{
+width:100%;
+height:140px;
+background:#081420;
+border:none;
+border-radius:14px;
+padding:15px;
+color:white;
+margin-bottom:15px;
+resize:none;
+}
+
+.edit-box input{
+width:100%;
+padding:14px;
+background:#081420;
+border:none;
+border-radius:14px;
+color:white;
+}
+
+.preview-edit{
+width:100%;
+border-radius:14px;
+margin-top:15px;
+display:none;
+}
+
+.send-edit{
+margin-top:15px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:#2563eb;
+color:white;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+}
+
+.invoice-box{
+margin-top:25px;
+padding:20px;
+background:#081420;
+border-radius:16px;
+display:none;
+}
+
+.invoice-box h2{
+margin-bottom:15px;
+}
+
+.invoice-line{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.download-btn{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#2563eb;
+color:white;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+}
+
+</style>
+
 </head>
+
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>Pro Design</h1>
-    <div class="sub">إرسال أمر تشغيل CNC (مع مخطط رسم دقيق)</div>
-  </div>
 
-  <div class="card">
-    <div class="grid2">
-      <div>
-        <label>اسم العميل</label>
-        <input id="customerName" placeholder="اسم الشركة / العميل">
-      </div>
-      <div>
-        <label>رقم الهاتف</label>
-        <input id="phone" placeholder="مثال: 94016181">
-      </div>
-    </div>
+<div class="client-page">
 
-    <div class="grid2">
-      <div>
-        <label>العملية</label>
-        <select id="jobType">
-          <option>قص</option>
-          <option>حفر</option>
-          <option>قص + حفر</option>
-        </select>
-      </div>
-      <div>
-        <label>نوع المادة</label>
-        <select id="materialType">
-          <option>الألمنيوم</option>
-          <option>الالكبوند</option>
-          <option>اكريليك</option>
-          <option>حديد</option>
-          <option>استيل</option>
-        </select>
-      </div>
-    </div>
+<div class="client-card">
 
-    <div class="grid2">
-      <div>
-        <label>اتجاه فتحة الباب</label>
-        <select id="doorOpenDirection">
-          <option>يمين</option>
-          <option>يسار</option>
-        </select>
-      </div>
-      <div>
-        <label>عرض خط الحفر</label>
-        <select id="lineWidth">
-          <option>4mm</option><option>6mm</option><option>8mm</option><option>10mm</option>
-          <option>12mm</option><option>15mm</option><option>20mm</option><option>25mm</option>
-          <option>3cm</option><option>4cm</option>
-        </select>
-      </div>
-    </div>
+<img id="projectImage">
 
-    <div class="card" style="background:#fafafa">
-      <h3 style="margin:0 0 10px">تفاصيل الشيت (أكثر من قياس + سماكة + كمية)</h3>
-      <div id="sheetsBox"></div>
-      <div class="row">
-        <button class="btn black" type="button" onclick="addSheetRow()">+ إضافة قياس شيت</button>
-        <button class="btn black" type="button" onclick="clearSheets()">مسح</button>
-      </div>
-      <div class="muted">كل سطر = قياس + سماكة + كمية</div>
-    </div>
+<div class="client-content">
 
-    <div class="card" style="background:#fafafa">
-      <h3 style="margin:0 0 10px">📐 المخطط البياني (حسب القياسات)</h3>
+<div class="client-title" id="clientName"></div>
 
-      <div class="grid2">
-        <div>
-          <label>عرض الباب (سم)</label>
-          <input id="doorW" type="number" value="100">
-        </div>
-        <div>
-          <label>ارتفاع الباب (سم)</label>
-          <input id="doorH" type="number" value="220">
-        </div>
-      </div>
+<div class="client-project" id="projectName"></div>
 
-      <div class="grid2">
-        <div>
-          <label>جهة المفصلات</label>
-          <select id="hingeSide">
-            <option>يمين</option>
-            <option>يسار</option>
-          </select>
-        </div>
-        <div>
-          <label>شكل التصميم</label>
-          <select id="designType">
-            <option value="horizontal">خطوط عرضية</option>
-            <option value="vertical">خطوط طولية</option>
-          </select>
-        </div>
-      </div>
+<div class="client-details" id="projectDetails"></div>
 
-      <div class="grid2">
-        <div>
-          <label>المسافة بين الخطوط (سم)</label>
-          <input id="lineGap" type="number" value="20">
-        </div>
-        <div>
-          <label>سماكة الخط (mm)</label>
-          <input id="lineThickness" type="number" value="10">
-        </div>
-      </div>
+<div class="client-status" id="projectStatus"></div>
 
-      <hr style="margin:14px 0;border:0;border-top:1px solid #e5e7eb">
+<div class="action-buttons">
 
-      <h4 style="margin:0 0 8px">🪟 الجام (اختياري)</h4>
-      <div class="grid2">
-        <div>
-          <label>تفعيل الجام</label>
-          <select id="glassEnabled">
-            <option value="no">لا</option>
-            <option value="yes">نعم</option>
-          </select>
-        </div>
-        <div>
-          <label>مكان الجام (عمودي)</label>
-          <select id="glassVPos">
-            <option value="top">من فوق</option>
-            <option value="middle">وسط</option>
-            <option value="bottom">من تحت</option>
-          </select>
-        </div>
-      </div>
+<button class="approve-btn" onclick="approveDesign()">
+✅ اعتماد التصميم
+</button>
 
-      <div class="grid2">
-        <div>
-          <label>عرض الجام (سم)</label>
-          <input id="glassW" type="number" value="20">
-        </div>
-        <div>
-          <label>ارتفاع الجام (سم)</label>
-          <input id="glassH" type="number" value="60">
-        </div>
-      </div>
+<button class="edit-btn" onclick="showEditBox()">
+✏️ يوجد تعديل
+</button>
 
-      <div class="grid2">
-        <div>
-          <label>بعد الجام من فوق (سم)</label>
-          <input id="glassTop" type="number" value="15">
-        </div>
-        <div>
-          <label>بعد الجام من تحت (سم)</label>
-          <input id="glassBottom" type="number" value="15">
-        </div>
-      </div>
+</div>
 
-      <div class="grid2">
-        <div>
-          <label>المرجع الجانبي للجام</label>
-          <select id="glassSideRef">
-            <option value="lock">طرف القفل</option>
-            <option value="hinge">طرف المفصلات</option>
-          </select>
-        </div>
-        <div>
-          <label>بعد الجام عن الطرف المختار (سم)</label>
-          <input id="glassSideOffset" type="number" value="10">
-        </div>
-      </div>
+<!-- التعديلات -->
 
-      <hr style="margin:14px 0;border:0;border-top:1px solid #e5e7eb">
+<div class="edit-box" id="editBox">
 
-      <h4 style="margin:0 0 8px">🧲 المسكة المخفية (اختياري)</h4>
-      <div class="grid2">
-        <div>
-          <label>نوع المسكة</label>
-          <select id="handleType">
-            <option value="hidden">مخفية</option>
-            <option value="normal">عادية</option>
-          </select>
-        </div>
-        <div>
-          <label>جهة المسكة</label>
-          <select id="handleSide">
-            <option value="lock">طرف القفل</option>
-            <option value="hinge">طرف المفصلات</option>
-          </select>
-        </div>
-      </div>
+<textarea id="editNotes" placeholder="اكتب التعديلات المطلوبة"></textarea>
 
-      <div class="grid2">
-        <div>
-          <label>طول المسكة (سم)</label>
-          <input id="handleH" type="number" value="30">
-        </div>
-        <div>
-          <label>عرض المسكة (سم)</label>
-          <input id="handleW" type="number" value="4">
-        </div>
-      </div>
+<input type="file" id="editImage">
 
-      <div class="grid2">
-        <div>
-          <label>بعد المسكة من فوق (سم)</label>
-          <input id="handleTop" type="number" value="90">
-        </div>
-        <div>
-          <label>بعد المسكة عن الطرف المختار (سم)</label>
-          <input id="handleSideOffset" type="number" value="6">
-        </div>
-      </div>
+<img id="editPreview" class="preview-edit">
 
-      <div class="row">
-        <button class="btn black" type="button" onclick="drawDoorAdvanced()">🎨 تحديث الرسم</button>
-      </div>
+<button class="send-edit" onclick="sendEdit()">
+📩 إرسال التعديل
+</button>
 
-      <div style="margin-top:10px">
-        <canvas id="doorCanvas" width="420" height="650"></canvas>
-      </div>
+</div>
 
-      <hr style="margin:14px 0;border:0;border-top:1px solid #e5e7eb">
+<!-- الفاتورة -->
 
-      <h4 style="margin:0 0 8px">📌 قياسات الطلب (كما كتبها العميل)</h4>
-      <textarea id="orderMeasurements"
-        placeholder="مثال: باب 100x220 / درفه 90x210 / فيكس 70x50 ..."></textarea>
-    </div>
+<div class="invoice-box" id="invoiceBox">
 
-    <label>ملف / صورة (اختياري)</label>
-    <input id="file" type="file" accept="image/*,.pdf,.dxf,.dwg">
+<h2>🧾 الفاتورة</h2>
 
-    <button class="btn blue" style="width:100%;margin-top:12px" onclick="sendOrder()">🚀 إرسال أمر التشغيل</button>
-    <div class="muted">بعد الإرسال يعطيك رقم الطلب (بدون تحويل لصفحة ثانية)</div>
-  </div>
+<div class="invoice-line">
+<span>سعر الوحدة</span>
+<span id="unitPrice"></span>
+</div>
 
-  <div class="card">
-    <a href="/admin.html">فتح الأدمن</a>
-  </div>
+<div class="invoice-line">
+<span>الكمية</span>
+<span id="quantity"></span>
+</div>
+
+<div class="invoice-line">
+<span>الإجمالي</span>
+<span id="totalPrice"></span>
+</div>
+
+<button class="download-btn">
+📄 تحميل الفاتورة PDF
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
-let sheets = [];
 
-function addSheetRow(size="122x244", thickness="3mm", qty="1"){
-  sheets.push({size, thickness, qty});
-  renderSheets();
-}
-function clearSheets(){
-  sheets = [];
-  renderSheets();
-}
-function renderSheets(){
-  const box = document.getElementById("sheetsBox");
-  box.innerHTML = "";
-  sheets.forEach((s, i)=>{
-    const row = document.createElement("div");
-    row.className = "sheetRow";
-    row.innerHTML = `
-      <div>
-        <label>القياس</label>
-        <input value="${s.size}" oninput="sheets[${i}].size=this.value">
-      </div>
-      <div>
-        <label>السماكة</label>
-        <select onchange="sheets[${i}].thickness=this.value">
-          ${["2mm","3mm","4mm","5mm","6mm","8mm","10mm","12mm"].map(x=>`<option ${x===s.thickness?"selected":""}>${x}</option>`).join("")}
-        </select>
-      </div>
-      <div>
-        <label>الكمية</label>
-        <input type="number" value="${s.qty}" oninput="sheets[${i}].qty=this.value">
-      </div>
-    `;
-    const del = document.createElement("button");
-    del.className="mini";
-    del.textContent="حذف";
-    del.onclick=()=>{ sheets.splice(i,1); renderSheets(); };
-    box.appendChild(row);
-    box.appendChild(del);
-    box.appendChild(document.createElement("hr"));
-  });
-}
-addSheetRow();
+const params = new URLSearchParams(window.location.search);
 
-function cmToPx(cm, scale){ return cm * scale; }
+const id = Number(params.get("id"));
 
-function drawDoorAdvanced(){
-  const doorW = Number(document.getElementById("doorW").value || 100);
-  const doorH = Number(document.getElementById("doorH").value || 220);
+const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  const hingeSide = document.getElementById("hingeSide").value;
-  const designType = document.getElementById("designType").value;
-  const lineGap = Number(document.getElementById("lineGap").value || 20);
-  const lineThickness = Number(document.getElementById("lineThickness").value || 10);
+const order = orders.find(o => o.id === id);
 
-  const glassEnabled = document.getElementById("glassEnabled").value;
-  const glassVPos = document.getElementById("glassVPos").value;
-  const glassW = Number(document.getElementById("glassW").value || 20);
-  const glassH = Number(document.getElementById("glassH").value || 60);
-  const glassTop = Number(document.getElementById("glassTop").value || 15);
-  const glassBottom = Number(document.getElementById("glassBottom").value || 15);
-  const glassSideRef = document.getElementById("glassSideRef").value;
-  const glassSideOffset = Number(document.getElementById("glassSideOffset").value || 10);
+if(order){
 
-  const handleType = document.getElementById("handleType").value;
-  const handleSide = document.getElementById("handleSide").value;
-  const handleH = Number(document.getElementById("handleH").value || 30);
-  const handleW = Number(document.getElementById("handleW").value || 4);
-  const handleTop = Number(document.getElementById("handleTop").value || 90);
-  const handleSideOffset = Number(document.getElementById("handleSideOffset").value || 6);
+document.getElementById("projectImage").src = order.file;
 
-  const c = document.getElementById("doorCanvas");
-  const ctx = c.getContext("2d");
-  ctx.clearRect(0,0,c.width,c.height);
+document.getElementById("clientName").innerText = order.clientName;
 
-  const pad = 50;
-  const scale = Math.min((c.width - pad*2)/doorW, (c.height - pad*2)/doorH);
+document.getElementById("projectName").innerText = order.projectName;
 
-  const x0 = (c.width - doorW*scale)/2;
-  const y0 = (c.height - doorH*scale)/2;
-  const dw = doorW*scale;
-  const dh = doorH*scale;
+document.getElementById("projectDetails").innerText = order.projectDetails;
 
-  ctx.lineWidth = 4;
-  ctx.strokeRect(x0, y0, dw, dh);
+document.getElementById("projectStatus").innerText = order.projectStatus;
 
-  ctx.font = "14px Arial";
-  ctx.fillText(`باب: ${doorW}x${doorH} سم`, 10, 18);
-  ctx.fillText(`مفصلات: ${hingeSide}`, 10, 36);
+// الفاتورة إذا موجودة
 
-  const lockSide = hingeSide === "يمين" ? "يسار" : "يمين";
-  ctx.fillText(`قفل: ${lockSide}`, 10, 54);
+if(order.pricing){
 
-  ctx.lineWidth = Math.max(1, lineThickness * 0.08);
-  const gapPx = cmToPx(lineGap, scale);
+document.getElementById("invoiceBox").style.display = "block";
 
-  if(designType === "horizontal"){
-    for(let y = y0 + gapPx; y < y0 + dh - gapPx; y += gapPx){
-      ctx.beginPath();
-      ctx.moveTo(x0 + 10, y);
-      ctx.lineTo(x0 + dw - 10, y);
-      ctx.stroke();
-    }
-  }else{
-    for(let x = x0 + gapPx; x < x0 + dw - gapPx; x += gapPx){
-      ctx.beginPath();
-      ctx.moveTo(x, y0 + 10);
-      ctx.lineTo(x, y0 + dh - 10);
-      ctx.stroke();
-    }
-  }
+document.getElementById("unitPrice").innerText =
+order.pricing.unitPrice + " KD";
 
-  function sideX(ref, offsetCm){
-    const side = (ref === "hinge") ? hingeSide : lockSide;
-    const off = cmToPx(offsetCm, scale);
-    if(side === "يسار"){
-      return x0 + off;
-    }else{
-      return x0 + dw - off;
-    }
-  }
+document.getElementById("quantity").innerText =
+order.pricing.quantity;
 
-  if(glassEnabled === "yes"){
-    const gw = cmToPx(glassW, scale);
-    const gh = cmToPx(glassH, scale);
+document.getElementById("totalPrice").innerText =
+order.pricing.total + " KD";
 
-    let gy = y0 + cmToPx(glassTop, scale);
-    if(glassVPos === "bottom"){
-      gy = y0 + dh - cmToPx(glassBottom, scale) - gh;
-    }
-    if(glassVPos === "middle"){
-      gy = y0 + (dh - gh)/2;
-    }
-
-    const anchorX = sideX(glassSideRef, glassSideOffset);
-    const sideUsed = (glassSideRef === "hinge") ? hingeSide : lockSide;
-    const gx = (sideUsed === "يسار") ? anchorX : anchorX - gw;
-
-    ctx.setLineDash([8,6]);
-    ctx.lineWidth = 2;
-    ctx.strokeRect(gx, gy, gw, gh);
-    ctx.setLineDash([]);
-    ctx.font = "12px Arial";
-    ctx.fillText("جام", gx + 6, gy - 6);
-  }
-
-  if(handleType === "hidden"){
-    const hw = cmToPx(handleW, scale);
-    const hh = cmToPx(handleH, scale);
-    const hy = y0 + cmToPx(handleTop, scale);
-
-    const anchorX = sideX(handleSide, handleSideOffset);
-    const sideUsed = (handleSide === "hinge") ? hingeSide : lockSide;
-    const hx = (sideUsed === "يسار") ? anchorX : anchorX - hw;
-
-    ctx.lineWidth = 2;
-    ctx.strokeRect(hx, hy, hw, hh);
-    ctx.font = "12px Arial";
-    ctx.fillText("مسكة مخفية", hx - 10, hy - 6);
-  }
-
-  window.doorSketch = c.toDataURL("image/png");
 }
 
-["doorW","doorH","hingeSide","designType","lineGap","lineThickness",
- "glassEnabled","glassVPos","glassW","glassH","glassTop","glassBottom","glassSideRef","glassSideOffset",
- "handleType","handleSide","handleW","handleH","handleTop","handleSideOffset"
-].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el){ el.addEventListener("input", drawDoorAdvanced); el.addEventListener("change", drawDoorAdvanced); }
+}
+
+// اعتماد التصميم
+
+function approveDesign(){
+
+alert("✅ تم اعتماد التصميم");
+
+}
+
+// اظهار التعديل
+
+function showEditBox(){
+
+document.getElementById("editBox").style.display = "block";
+
+}
+
+// رفع صورة تعديل
+
+document.getElementById("editImage").addEventListener("change", function(e){
+
+const file = e.target.files[0];
+
+if(file){
+
+const reader = new FileReader();
+
+reader.onload = function(){
+
+editPreview.src = reader.result;
+
+editPreview.style.display = "block";
+
+}
+
+reader.readAsDataURL(file);
+
+}
+
 });
-setTimeout(drawDoorAdvanced, 200);
 
-async function sendOrder(){
-  const fd = new FormData();
-  fd.append("customerName", document.getElementById("customerName").value || "");
-  fd.append("phone", document.getElementById("phone").value || "");
-  fd.append("jobType", document.getElementById("jobType").value || "");
-  fd.append("materialType", document.getElementById("materialType").value || "");
-  fd.append("doorOpenDirection", document.getElementById("doorOpenDirection").value || "");
-  fd.append("lineWidth", document.getElementById("lineWidth").value || "");
+// ارسال التعديل
 
-  fd.append("orderMeasurements", document.getElementById("orderMeasurements").value || "");
-  fd.append("sheets", JSON.stringify(sheets));
-  fd.append("doorSketch", window.doorSketch || "");
+function sendEdit(){
 
-  const f = document.getElementById("file").files[0];
-  if(f) fd.append("file", f);
+alert("📩 تم إرسال التعديل للإدارة");
 
-  const r = await fetch("/api/orders", { method:"POST", body: fd });
-  const j = await r.json();
-  if(!j.ok){ alert("صار خطأ بالإرسال"); return; }
-  alert("تم الإرسال ✅ رقم الطلب: " + j.id);
-  // لا تحويل لأي صفحة ثانية
 }
+
 </script>
+
 </body>
 </html>
