@@ -3,202 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Pro Design ERP</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-<style>
+<link rel="stylesheet" href="style.css">
 
-body{
-    margin:0;
-    background:#0b1e2d;
-    font-family:'Cairo',sans-serif;
-    color:white;
-}
-
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-}
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-h1{
-    margin:0;
-    font-size:28px;
-}
-
-.add-btn{
-    background:#2563eb;
-    border:none;
-    color:white;
-    padding:12px 20px;
-    border-radius:12px;
-    font-size:16px;
-    cursor:pointer;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.stat{
-    background:#132b3c;
-    padding:20px;
-    border-radius:16px;
-}
-
-.stat h2{
-    margin:0;
-    font-size:26px;
-}
-
-.stat p{
-    margin:5px 0 0;
-    color:#9fb3c8;
-}
-
-.orders{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:15px;
-}
-
-.card{
-    background:#132b3c;
-    border-radius:16px;
-    overflow:hidden;
-}
-
-.card img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-}
-
-.card-content{
-    padding:15px;
-}
-
-.client{
-    font-size:20px;
-    font-weight:bold;
-}
-
-.info{
-    margin-top:10px;
-    line-height:2;
-    color:#d6e2ee;
-}
-
-.status{
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:10px;
-    font-size:14px;
-    margin-top:10px;
-}
-
-.new{background:#2563eb;}
-.work{background:#f59e0b;}
-.ready{background:#10b981;}
-.done{background:#64748b;}
-
-.actions{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
-
-.actions button{
-    flex:1;
-    border:none;
-    padding:10px;
-    border-radius:10px;
-    cursor:pointer;
-    color:white;
-}
-
-.edit{
-    background:#2563eb;
-}
-
-.pdf{
-    background:#10b981;
-}
-
-.delete{
-    background:#ef4444;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.7);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
-
-.modal-box{
-    background:#132b3c;
-    width:100%;
-    max-width:500px;
-    border-radius:16px;
-    padding:20px;
-    max-height:90vh;
-    overflow:auto;
-}
-
-.modal-box input,
-.modal-box select,
-.modal-box textarea{
-    width:100%;
-    padding:12px;
-    margin-top:8px;
-    margin-bottom:12px;
-    border:none;
-    border-radius:10px;
-    background:#0b1e2d;
-    color:white;
-}
-
-.modal-box button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-}
-
-.preview{
-    width:100%;
-    border-radius:12px;
-    margin-bottom:10px;
-    display:none;
-}
-
-@media(max-width:768px){
-
-.stats{
-grid-template-columns:1fr 1fr;
-}
-
-}
-
-</style>
 </head>
 
 <body>
@@ -206,38 +17,16 @@ grid-template-columns:1fr 1fr;
 <div class="container">
 
 <div class="topbar">
+
 <h1>🚀 Pro Design ERP</h1>
 
-<button class="add-btn" onclick="openModal()">
-➕ إضافة شغل
+<button onclick="openModal()" class="main-btn">
+➕ إضافة طلب
 </button>
-</div>
-
-<div class="stats">
-
-<div class="stat">
-<h2 id="totalOrders">0</h2>
-<p>إجمالي الطلبات</p>
-</div>
-
-<div class="stat">
-<h2 id="totalMoney">0 KD</h2>
-<p>إجمالي المبالغ</p>
-</div>
-
-<div class="stat">
-<h2 id="remainingMoney">0 KD</h2>
-<p>المتبقي</p>
-</div>
-
-<div class="stat">
-<h2 id="sheetCount">0</h2>
-<p>طلبات الشيتات</p>
-</div>
 
 </div>
 
-<div class="orders" id="orders"></div>
+<div id="orders" class="orders"></div>
 
 </div>
 
@@ -247,228 +36,40 @@ grid-template-columns:1fr 1fr;
 
 <div class="modal-box">
 
-<h2>إضافة شغل جديد</h2>
+<h2>إضافة طلب جديد</h2>
 
-<input id="client" placeholder="اسم العميل">
+<input id="clientName" placeholder="اسم العميل">
 
-<input id="workName" placeholder="اسم الشغل">
+<input id="projectName" placeholder="اسم المشروع">
 
-<input id="size" placeholder="المقاس">
+<textarea id="projectDetails" placeholder="تفاصيل المشروع"></textarea>
 
-<select id="material">
-<option>ألمنيوم</option>
-<option>حديد</option>
-<option>ستانلس</option>
-<option>ألكبوند</option>
-</select>
-
-<input id="sheetType" placeholder="نوع الشيت">
-
-<input id="thickness" placeholder="السماكة">
-
-<input id="quantity" placeholder="الكمية">
-
-<input id="price" placeholder="السعر الكلي">
-
-<input id="paid" placeholder="المدفوع">
-
-<select id="status">
+<select id="projectStatus">
 <option value="جديد">جديد</option>
-<option value="تحت التصنيع">تحت التصنيع</option>
-<option value="جاهز">جاهز</option>
-<option value="تم التسليم">تم التسليم</option>
+<option value="تحت التصميم">تحت التصميم</option>
+<option value="بانتظار الاعتماد">بانتظار الاعتماد</option>
+<option value="جاهز للتصنيع">جاهز للتصنيع</option>
 </select>
 
-<textarea id="notes" placeholder="ملاحظات"></textarea>
+<label class="upload-box">
 
-<input type="file" id="imageInput">
+رفع التصميم / PDF
+
+<input type="file" id="projectFile" hidden>
+
+</label>
 
 <img id="preview" class="preview">
 
-<button onclick="saveOrder()">💾 حفظ</button>
-
-</div>
-
-</div>
-
-<script>
-
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-function openModal(){
-document.getElementById("modal").style.display="flex";
-}
-
-window.onclick=function(e){
-if(e.target.id==="modal"){
-document.getElementById("modal").style.display="none";
-}
-}
-
-document.getElementById("imageInput").addEventListener("change",function(e){
-
-const file=e.target.files[0];
-
-if(file){
-
-const reader=new FileReader();
-
-reader.onload=function(){
-
-preview.src=reader.result;
-preview.style.display="block";
-
-}
-
-reader.readAsDataURL(file);
-
-}
-
-});
-
-function saveOrder(){
-
-const order={
-
-id:Date.now(),
-
-client:client.value,
-
-workName:workName.value,
-
-size:size.value,
-
-material:material.value,
-
-sheetType:sheetType.value,
-
-thickness:thickness.value,
-
-quantity:quantity.value,
-
-price:Number(price.value),
-
-paid:Number(paid.value),
-
-remaining:Number(price.value)-Number(paid.value),
-
-status:status.value,
-
-notes:notes.value,
-
-image:preview.src
-
-};
-
-orders.push(order);
-
-localStorage.setItem("orders",JSON.stringify(orders));
-
-document.getElementById("modal").style.display="none";
-
-renderOrders();
-
-}
-
-function renderOrders(){
-
-const container=document.getElementById("orders");
-
-container.innerHTML="";
-
-let total=0;
-let remaining=0;
-
-orders.forEach(order=>{
-
-total+=order.price;
-remaining+=order.remaining;
-
-container.innerHTML+=`
-
-<div class="card">
-
-<img src="${order.image || 'https://via.placeholder.com/400x250'}">
-
-<div class="card-content">
-
-<div class="client">${order.client}</div>
-
-<div class="info">
-
-📌 ${order.workName}<br>
-
-📏 ${order.size}<br>
-
-🧱 ${order.material}<br>
-
-📦 ${order.sheetType} - ${order.thickness}<br>
-
-🔢 الكمية: ${order.quantity}<br>
-
-💰 ${order.price} KD<br>
-
-💵 المدفوع: ${order.paid} KD<br>
-
-❗ المتبقي: ${order.remaining} KD
-
-</div>
-
-<div class="status ${
-order.status==="جديد" ? "new" :
-order.status==="تحت التصنيع" ? "work" :
-order.status==="جاهز" ? "ready" :
-"done"
-}">
-
-${order.status}
-
-</div>
-
-<div class="actions">
-
-<button class="edit">
-تعديل
-</button>
-
-<button class="pdf">
-PDF
-</button>
-
-<button class="delete" onclick="deleteOrder(${order.id})">
-حذف
+<button onclick="saveOrder()" class="save-btn">
+💾 حفظ الطلب
 </button>
 
 </div>
 
 </div>
 
-</div>
-
-`;
-
-});
-
-totalOrders.innerText=orders.length;
-totalMoney.innerText=total+" KD";
-remainingMoney.innerText=remaining+" KD";
-sheetCount.innerText=orders.length;
-
-}
-
-function deleteOrder(id){
-
-orders=orders.filter(o=>o.id!==id);
-
-localStorage.setItem("orders",JSON.stringify(orders));
-
-renderOrders();
-
-}
-
-renderOrders();
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
