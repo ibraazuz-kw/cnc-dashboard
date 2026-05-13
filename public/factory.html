@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>قسم المصنع</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+overflow:auto;
+display:block;
+padding:30px;
+}
+
+.factory-page{
+max-width:1400px;
+margin:auto;
+}
+
+.factory-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.factory-header h1{
+font-size:36px;
+font-weight:800;
+}
+
+.factory-header p{
+color:#94a3b8;
+margin-top:5px;
+}
+
+.factory-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+gap:24px;
+}
+
+.factory-card{
+background:#0d1724;
+border-radius:26px;
+overflow:hidden;
+border:1px solid rgba(255,255,255,.05);
+transition:.3s;
+}
+
+.factory-card:hover{
+transform:translateY(-5px);
+}
+
+.factory-image{
+width:100%;
+height:250px;
+object-fit:cover;
+background:#08111c;
+}
+
+.factory-content{
+padding:22px;
+}
+
+.factory-top{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+margin-bottom:15px;
+}
+
+.client-name{
+font-size:24px;
+font-weight:800;
+}
+
+.project-name{
+font-size:15px;
+color:#60a5fa;
+margin-top:5px;
+}
+
+.production-status{
+padding:10px 16px;
+border-radius:14px;
+font-size:13px;
+font-weight:700;
+}
+
+.waiting{
+background:#854d0e;
+}
+
+.processing{
+background:#1e3a8a;
+}
+
+.ready{
+background:#065f46;
+}
+
+.delivered{
+background:#4b5563;
+}
+
+.factory-details{
+line-height:2;
+color:#cbd5e1;
+margin-top:18px;
+font-size:14px;
+}
+
+.sheet-box{
+background:#08111c;
+padding:16px;
+border-radius:18px;
+margin-top:20px;
+}
+
+.sheet-box h3{
+margin-bottom:12px;
+font-size:17px;
+}
+
+.sheet-item{
+padding:10px 0;
+border-bottom:1px solid rgba(255,255,255,.05);
+font-size:14px;
+color:#dbe4ee;
+}
+
+.status-select{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#08111c;
+color:white;
+font-size:15px;
+margin-top:22px;
+outline:none;
+}
+
+@media(max-width:900px){
+
+.factory-grid{
+grid-template-columns:1fr;
+}
+
+.factory-header{
+flex-direction:column;
+align-items:flex-start;
+gap:15px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="factory-page">
+
+<div class="factory-header">
+
+<div>
+
+<h1>
+👨‍🏭 قسم المصنع
+</h1>
+
+<p>
+إدارة التصنيع والتشغيل والشيتات
+</p>
+
+</div>
+
+</div>
+
+<div class="factory-grid" id="factoryContainer">
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   حماية المصنع
+========================= */
+
+if(localStorage.getItem("isLoggedIn") !== "true"){
+
+window.location.href = "login.html";
+
+}
+
+const role =
+localStorage.getItem("userRole");
+
+if(role !== "factory" && role !== "admin"){
+
+window.location.href = "login.html";
+
+}
+
+/* =========================
+   Load Orders
+========================= */
+
+let orders =
+JSON.parse(localStorage.getItem("orders")) || [];
+
+const container =
+document.getElementById("factoryContainer");
+
+/* =========================
+   Render
+========================= */
+
+function renderFactory(){
+
+container.innerHTML = "";
+
+orders.forEach(order => {
+
+let status =
+order.productionStatus ||
+"بانتظار التصنيع";
+
+let statusClass = "";
+
+if(status === "بانتظار التصنيع"){
+
+statusClass = "waiting";
+
+}
+
+if(status === "قيد التصنيع"){
+
+statusClass = "processing";
+
+}
+
+if(status === "جاهز"){
+
+statusClass = "ready";
+
+}
+
+if(status === "تم التسليم"){
+
+statusClass = "delivered";
+
+}
+
+container.innerHTML += `
+
+<div class="factory-card">
+
+<img
+src="${order.image || 'https://via.placeholder.com/500x400'}"
+class="factory-image"
+>
+
+<div class="factory-content">
+
+<div class="factory-top">
+
+<div>
+
+<div class="client-name">
+${order.clientName}
+</div>
+
+<div class="project-name">
+${order.projectName}
+</div>
+
+</div>
+
+<div class="production-status ${statusClass}">
+${status}
+</div>
+
+</div>
+
+<div class="factory-details">
+
+📅 ${order.createdAt}<br>
+
+📝 ${order.projectDetails}
+
+</div>
+
+<!-- الشيتات -->
+
+<div class="sheet-box">
+
+<h3>
+📦 الشيتات المطلوبة
+</h3>
+
+<div class="sheet-item">
+ألمنيوم 4mm - عدد 2
+</div>
+
+<div class="sheet-item">
+ستانلس ذهبي - عدد 1
+</div>
+
+</div>
+
+<!-- الحالة -->
+
+<select
+class="status-select"
+onchange="updateStatus(${order.id}, this.value)"
+>
+
+<option
+${status === "بانتظار التصنيع" ? "selected" : ""}
+>
+
+بانتظار التصنيع
+
+</option>
+
+<option
+${status === "قيد التصنيع" ? "selected" : ""}
+>
+
+قيد التصنيع
+
+</option>
+
+<option
+${status === "جاهز" ? "selected" : ""}
+>
+
+جاهز
+
+</option>
+
+<option
+${status === "تم التسليم" ? "selected" : ""}
+>
+
+تم التسليم
+
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* =========================
+   Update Status
+========================= */
+
+function updateStatus(id, value){
+
+orders = orders.map(order => {
+
+if(order.id === id){
+
+order.productionStatus = value;
+
+}
+
+return order;
+
+});
+
+localStorage.setItem(
+"orders",
+JSON.stringify(orders)
+);
+
+renderFactory();
+
+}
+
+/* =========================
+   Init
+========================= */
+
+renderFactory();
+
+</script>
+
+</body>
+</html>
