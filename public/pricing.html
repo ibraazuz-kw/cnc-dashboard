@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تسعير المشروع</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.pricing-page{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.price-card{
+background:#102235;
+border-radius:20px;
+padding:25px;
+margin-top:20px;
+border:1px solid rgba(255,255,255,.05);
+}
+
+.price-title{
+font-size:30px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.project-name{
+font-size:20px;
+color:#9ec5ff;
+margin-bottom:25px;
+}
+
+.inputs-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-bottom:20px;
+}
+
+.inputs-grid input,
+.inputs-grid select{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#081420;
+color:white;
+font-size:15px;
+}
+
+.sheet-box{
+background:#081420;
+padding:20px;
+border-radius:16px;
+margin-top:20px;
+}
+
+.sheet-box h3{
+margin-bottom:15px;
+}
+
+.sheet-item{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+margin-bottom:12px;
+}
+
+.sheet-item input{
+padding:12px;
+border:none;
+border-radius:12px;
+background:#102235;
+color:white;
+}
+
+.add-sheet{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#2563eb;
+color:white;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+margin-top:10px;
+}
+
+.summary{
+background:#081420;
+padding:20px;
+border-radius:16px;
+margin-top:25px;
+}
+
+.summary-line{
+display:flex;
+justify-content:space-between;
+padding:14px 0;
+border-bottom:1px solid rgba(255,255,255,.08);
+font-size:17px;
+}
+
+.total{
+font-size:24px;
+font-weight:700;
+color:#10b981;
+}
+
+.save-price{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#10b981;
+color:white;
+font-size:18px;
+font-weight:700;
+cursor:pointer;
+margin-top:25px;
+}
+
+@media(max-width:768px){
+
+.inputs-grid{
+grid-template-columns:1fr;
+}
+
+.sheet-item{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pricing-page">
+
+<div class="price-card">
+
+<div class="price-title">
+💰 تسعير المشروع
+</div>
+
+<div class="project-name" id="projectName"></div>
+
+<div class="inputs-grid">
+
+<input id="unitPrice" type="number" placeholder="سعر الوحدة">
+
+<input id="quantity" type="number" placeholder="الكمية">
+
+<input id="extraCost" type="number" placeholder="تكلفة إضافية">
+
+<input id="discount" type="number" placeholder="خصم">
+
+</div>
+
+<!-- الشيتات -->
+
+<div class="sheet-box">
+
+<h3>📦 الشيتات المطلوبة</h3>
+
+<div id="sheets"></div>
+
+<button class="add-sheet" onclick="addSheet()">
+➕ إضافة شيت
+</button>
+
+</div>
+
+<!-- الملخص -->
+
+<div class="summary">
+
+<div class="summary-line">
+<span>سعر الوحدات</span>
+<span id="itemsPrice">0 KD</span>
+</div>
+
+<div class="summary-line">
+<span>الإضافات</span>
+<span id="extraPrice">0 KD</span>
+</div>
+
+<div class="summary-line">
+<span>الخصم</span>
+<span id="discountPrice">0 KD</span>
+</div>
+
+<div class="summary-line total">
+<span>الإجمالي</span>
+<span id="finalTotal">0 KD</span>
+</div>
+
+</div>
+
+<button class="save-price" onclick="savePricing()">
+💾 حفظ وإرسال الفاتورة
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const id = Number(params.get("id"));
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+let order = orders.find(o => o.id === id);
+
+if(order){
+
+document.getElementById("projectName").innerText =
+order.projectName;
+
+}
+
+// إضافة شيت
+
+function addSheet(){
+
+document.getElementById("sheets").innerHTML += `
+
+<div class="sheet-item">
+
+<input placeholder="نوع الشيت">
+
+<input placeholder="السماكة">
+
+<input placeholder="الكمية">
+
+</div>
+
+`;
+
+}
+
+// الحساب التلقائي
+
+document.querySelectorAll("input").forEach(input => {
+
+input.addEventListener("input", calculate);
+
+});
+
+function calculate(){
+
+const unitPrice =
+Number(document.getElementById("unitPrice").value) || 0;
+
+const quantity =
+Number(document.getElementById("quantity").value) || 0;
+
+const extra =
+Number(document.getElementById("extraCost").value) || 0;
+
+const discount =
+Number(document.getElementById("discount").value) || 0;
+
+const items = unitPrice * quantity;
+
+const total = items + extra - discount;
+
+document.getElementById("itemsPrice").innerText =
+items + " KD";
+
+document.getElementById("extraPrice").innerText =
+extra + " KD";
+
+document.getElementById("discountPrice").innerText =
+discount + " KD";
+
+document.getElementById("finalTotal").innerText =
+total + " KD";
+
+}
+
+// حفظ التسعير
+
+function savePricing(){
+
+const pricing = {
+
+unitPrice:
+Number(document.getElementById("unitPrice").value),
+
+quantity:
+Number(document.getElementById("quantity").value),
+
+extra:
+Number(document.getElementById("extraCost").value),
+
+discount:
+Number(document.getElementById("discount").value),
+
+total:
+(
+(Number(unitPrice.value) * Number(quantity.value))
++
+Number(extraCost.value)
+-
+Number(discount.value)
+)
+
+};
+
+order.pricing = pricing;
+
+localStorage.setItem("orders", JSON.stringify(orders));
+
+alert("✅ تم حفظ الفاتورة وإرسالها للعميل");
+
+window.location.href = "index.html";
+
+}
+
+calculate();
+
+</script>
+
+</body>
+</html>
