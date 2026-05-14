@@ -3,7 +3,9 @@ localStorage.getItem("orders")
 ) || [
 
 {
-id:1,
+id:1001,
+
+date:"15 / 5 / 2026",
 
 company:"PRO DESIGN",
 
@@ -20,7 +22,9 @@ status:"بانتظار الاعتماد"
 },
 
 {
-id:2,
+id:1002,
+
+date:"15 / 5 / 2026",
 
 company:"PRO DESIGN",
 
