@@ -5,18 +5,98 @@
 
 <meta charset="UTF-8">
 
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
 <title>
-FACTORY
+FACTORY PANEL
 </title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
 
 body{
 
 background:#020617;
 color:white;
-font-family:Arial;
-padding:40px;
+padding:20px;
+
+}
+
+.title{
+
+font-size:34px;
+font-weight:800;
+margin-bottom:25px;
+
+}
+
+.orders{
+
+display:flex;
+flex-direction:column;
+gap:20px;
+
+}
+
+.order{
+
+background:#0f172a;
+padding:25px;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.05);
+
+}
+
+.client{
+
+font-size:24px;
+font-weight:700;
+margin-bottom:15px;
+
+}
+
+.info{
+
+line-height:2.2;
+font-size:18px;
+color:#e2e8f0;
+
+}
+
+.status{
+
+margin-top:20px;
+padding:12px;
+border:none;
+border-radius:14px;
+width:100%;
+font-size:16px;
+background:#1e293b;
+color:white;
+
+}
+
+.logout{
+
+margin-top:30px;
+width:100%;
+padding:16px;
+background:#dc2626;
+border:none;
+border-radius:16px;
+color:white;
+font-size:18px;
 
 }
 
@@ -26,13 +106,119 @@ padding:40px;
 
 <body>
 
-<h1>
+<div class="title">
 🏭 لوحة المصنع
-</h1>
+</div>
 
-<p>
-متابعة الطلبات والتصنيع
-</p>
+<div class="orders">
+
+<div class="order">
+
+<div class="client">
+شركة باب السيف
+</div>
+
+<div class="info">
+
+📐 التصميم:
+باب خارجي مودرن
+
+<br>
+
+📦 الشيتات:
+3 شيت ألمنيوم
+
+<br>
+
+📏 المقاس:
+300 × 100
+
+</div>
+
+<select class="status">
+
+<option>
+قيد القص
+</option>
+
+<option>
+قيد التصنيع
+</option>
+
+<option>
+جاهز للسنفرة
+</option>
+
+<option>
+تم التسليم
+</option>
+
+</select>
+
+</div>
+
+<div class="order">
+
+<div class="client">
+شركة الهاجري
+</div>
+
+<div class="info">
+
+📐 التصميم:
+بوابة CNC
+
+<br>
+
+📦 الشيتات:
+5 شيتات
+
+<br>
+
+📏 المقاس:
+400 × 220
+
+</div>
+
+<select class="status">
+
+<option>
+قيد التصنيع
+</option>
+
+<option>
+جاهز للسنفرة
+</option>
+
+<option>
+تم التسليم
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<button
+class="logout"
+onclick="logout()"
+>
+
+تسجيل خروج
+
+</button>
+
+<script>
+
+function logout(){
+
+window.location.href =
+"login.html";
+
+}
+
+</script>
 
 </body>
 </html>
