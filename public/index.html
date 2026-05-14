@@ -1,562 +1,125 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
-
-<title>
-PRO DESIGN ERP
-</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cairo',sans-serif;
-}
-
-body{
-
-background:#020617;
-color:white;
-padding:20px;
-
-}
-
-.header{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-gap:15px;
-
-}
-
-.logo{
-
-font-size:24px;
-font-weight:800;
-
-}
-
-.add-btn{
-
-background:#2563eb;
-border:none;
-padding:14px 22px;
-border-radius:14px;
-color:white;
-font-size:15px;
-cursor:pointer;
-
-}
-
-.stats{
-
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-margin-bottom:25px;
-
-}
-
-.card{
-
-background:#0f172a;
-padding:25px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,.05);
-text-align:center;
-
-}
-
-.card h2{
-
-font-size:42px;
-margin-bottom:10px;
-
-}
-
-.card p{
-
-color:#94a3b8;
-font-size:18px;
-
-}
-
-.section-title{
-
-font-size:22px;
-font-weight:700;
-
-}
-
-.orders{
-
-display:flex;
-flex-direction:column;
-gap:20px;
-
-}
-
-.order{
-
-background:#0f172a;
-padding:25px;
-border-radius:22px;
-border:1px solid rgba(255,255,255,.05);
-
-}
-
-.order-top{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-
-}
-
-.client{
-
-font-size:22px;
-font-weight:700;
-
-}
-
-.status{
-
-padding:10px 18px;
-border-radius:14px;
-font-size:14px;
-font-weight:700;
-
-}
-
-.pending{
-
-background:#854d0e;
-
-}
-
-.production{
-
-background:#1d4ed8;
-
-}
-
-.done{
-
-background:#166534;
-
-}
-
-.order-info{
-
-line-height:2.2;
-font-size:20px;
-color:#e2e8f0;
-
-}
-
-.price{
-
-margin-top:20px;
-font-size:48px;
-font-weight:800;
-color:#22c55e;
-
-}
-
-.buttons{
-
-display:flex;
-gap:15px;
-margin-top:25px;
-
-}
-
-.buttons button{
-
-flex:1;
-padding:16px;
-border:none;
-border-radius:16px;
-color:white;
-cursor:pointer;
-font-size:18px;
-
-}
-
-.edit{
-
-background:#2563eb;
-
-}
-
-.invoice{
-
-background:#16a34a;
-
-}
-
-.logout{
-
-background:#dc2626;
-border:none;
-padding:12px 18px;
-border-radius:12px;
-color:white;
-cursor:pointer;
-font-size:16px;
-
-}
-
-.modal{
-
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.7);
-display:none;
-justify-content:center;
-align-items:center;
-padding:20px;
-
-}
-
-.modal-box{
-
-background:#0f172a;
-padding:25px;
-border-radius:20px;
-width:100%;
-max-width:500px;
-
-}
-
-.modal-box h2{
-
-margin-bottom:20px;
-
-}
-
-.modal-box input,
-.modal-box select,
-.modal-box textarea{
-
-width:100%;
-padding:14px;
-margin-bottom:15px;
-border:none;
-border-radius:12px;
-background:#020617;
-color:white;
-font-size:16px;
-
-}
-
-.modal-box textarea{
-
-height:120px;
-resize:none;
-
-}
-
-.save-btn{
-
-width:100%;
-padding:15px;
-background:#2563eb;
-border:none;
-border-radius:14px;
-color:white;
-font-size:16px;
-cursor:pointer;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<div class="logo">
-👑 PRO DESIGN ERP
-</div>
-
-<button
-class="logout"
-onclick="logout()"
->
-
-تسجيل خروج
-
-</button>
-
-</div>
-
-<div class="stats">
-
-<div class="card">
-
-<h2>
-3
-</h2>
-
-<p>
-إجمالي الطلبات
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>
-1
-</h2>
-
-<p>
-بانتظار الاعتماد
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>
-1
-</h2>
-
-<p>
-تم التسليم
-</p>
-
-</div>
-
-<div class="card">
-
-<h2>
-1
-</h2>
-
-<p>
-قيد التصنيع
-</p>
-
-</div>
-
-</div>
-
-<div class="header">
-
-<div class="section-title">
-📁 الطلبات الحالية
-</div>
-
-<button
-class="add-btn"
-onclick="openModal()"
->
-
-➕ إضافة طلب
-
-</button>
-
-</div>
-
-<div class="orders">
-
-<div class="order">
-
-<div class="order-top">
-
-<div class="client">
-شركة باب السيف
-</div>
-
-<div class="status pending">
-بانتظار الاعتماد
-</div>
-
-</div>
-
-<div class="order-info">
-
-📐 التصميم:
-باب خارجي مودرن
-
-<br>
-
-📦 الشيتات:
-3 شيت ألمنيوم
-
-<br>
-
-📏 المقاس:
-300 × 100
-
-</div>
-
-<div class="price">
-KD 450
-</div>
-
-<div class="buttons">
-
-<button
-class="edit"
-onclick="editOrder()"
->
-
-تعديل
-
-</button>
-
-<button
-class="invoice"
-onclick="downloadInvoice()"
->
-
-فاتورة PDF
-
-</button>
-
-</div>
-
-</div>
-
-<div class="order">
-
-<div class="order-top">
-
-<div class="client">
-شركة الهاجري
-</div>
-
-<div class="status production">
-قيد التصنيع
-</div>
-
-</div>
-
-<div class="order-info">
-
-📐 التصميم:
-بوابة CNC
-
-<br>
-
-📦 الشيتات:
-5 شيتات
-
-<br>
-
-📏 المقاس:
-400 × 220
-
-</div>
-
-<div class="price">
-KD 780
-</div>
-
-<div class="buttons">
-
-<button
-class="edit"
-onclick="editOrder()"
->
-
-تعديل
-
-</button>
-
-<button
-class="invoice"
-onclick="downloadInvoice()"
->
-
-فاتورة PDF
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="modal" id="modal">
-
-<div class="modal-box">
-
-<h2>
-➕ إضافة طلب جديد
-</h2>
-
-<input
-type="text"
-placeholder="اسم العميل"
->
-
-<input
-type="text"
-placeholder="اسم المشروع"
->
-
-<input
-type="number"
-placeholder="السعر"
->
-
-<select>
-
-<option>
-بانتظار الاعتماد
-</option>
-
-<option>
-قيد التصنيع
-</option>
-
-<option>
-تم التسليم
-</option>
-
-</select>
-
-<textarea
-placeholder="تفاصيل المشروع"
-></textarea>
-
-<button
-class="save-btn"
-onclick="saveOrder()"
->
-
-💾 حفظ الطلب
-
-</button>
-
-</div>
-
-</div>
-
 <script>
+
+let orders = [
+
+{
+client:"شركة باب السيف",
+design:"باب خارجي مودرن",
+sheets:"3 شيت ألمنيوم",
+size:"300 × 100",
+price:"450 KD",
+status:"بانتظار الاعتماد",
+statusClass:"pending"
+},
+
+{
+client:"شركة الهاجري",
+design:"بوابة CNC",
+sheets:"5 شيتات",
+size:"400 × 220",
+price:"780 KD",
+status:"قيد التصنيع",
+statusClass:"production"
+}
+
+];
+
+/* =========================
+   Render Orders
+========================= */
+
+function renderOrders(){
+
+const container =
+document.querySelector(".orders");
+
+container.innerHTML = "";
+
+orders.forEach((order,index)=>{
+
+container.innerHTML += `
+
+<div class="order">
+
+<div class="order-top">
+
+<div class="client">
+${order.client}
+</div>
+
+<div class="status ${order.statusClass}">
+${order.status}
+</div>
+
+</div>
+
+<div class="order-info">
+
+📐 التصميم:
+${order.design}
+
+<br>
+
+📦 الشيتات:
+${order.sheets}
+
+<br>
+
+📏 المقاس:
+${order.size}
+
+</div>
+
+<div class="price">
+KD ${order.price}
+</div>
+
+<div class="buttons">
+
+<button
+class="edit"
+onclick="editOrder(${index})"
+>
+
+تعديل
+
+</button>
+
+<button
+class="invoice"
+onclick="downloadInvoice()"
+>
+
+فاتورة PDF
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+updateStats();
+
+}
+
+/* =========================
+   Stats
+========================= */
+
+function updateStats(){
+
+document.querySelectorAll(".card h2")[0]
+.innerText = orders.length;
+
+}
+
+/* =========================
+   Open Modal
+========================= */
 
 function openModal(){
 
@@ -564,6 +127,10 @@ document.getElementById("modal")
 .style.display = "flex";
 
 }
+
+/* =========================
+   Close Modal
+========================= */
 
 window.onclick = function(e){
 
@@ -578,22 +145,98 @@ modal.style.display = "none";
 
 }
 
-function logout(){
+/* =========================
+   Save Order
+========================= */
 
-localStorage.clear();
+function saveOrder(){
 
-window.location.href =
-"login.html";
+const inputs =
+document.querySelectorAll(".modal-box input");
+
+const selects =
+document.querySelectorAll(".modal-box select");
+
+const client =
+inputs[0].value;
+
+const design =
+inputs[1].value;
+
+const price =
+inputs[2].value;
+
+const status =
+selects[0].value;
+
+if(
+client == "" ||
+design == "" ||
+price == ""
+){
+
+alert("❌ عبّ جميع البيانات");
+
+return;
 
 }
 
-function editOrder(){
+let statusClass = "pending";
+
+if(status == "قيد التصنيع"){
+
+statusClass = "production";
+
+}
+
+if(status == "تم التسليم"){
+
+statusClass = "done";
+
+}
+
+orders.push({
+
+client:client,
+design:design,
+sheets:"غير محدد",
+size:"غير محدد",
+price:price,
+status:status,
+statusClass:statusClass
+
+});
+
+renderOrders();
+
+document.getElementById("modal")
+.style.display = "none";
+
+inputs[0].value = "";
+inputs[1].value = "";
+inputs[2].value = "";
+
+alert("✅ تم إضافة الطلب");
+
+}
+
+/* =========================
+   Edit
+========================= */
+
+function editOrder(index){
 
 alert(
-"🚧 صفحة التعديل قريباً"
+"🚧 تعديل الطلب رقم "
++
+(index + 1)
 );
 
 }
+
+/* =========================
+   Invoice
+========================= */
 
 function downloadInvoice(){
 
@@ -603,18 +246,21 @@ alert(
 
 }
 
-function saveOrder(){
+/* =========================
+   Logout
+========================= */
 
-alert(
-"✅ تم حفظ الطلب"
-);
+function logout(){
 
-document.getElementById("modal")
-.style.display = "none";
+window.location.href =
+"login.html";
 
 }
 
-</script>
+/* =========================
+   Start
+========================= */
 
-</body>
-</html>
+renderOrders();
+
+</script>
