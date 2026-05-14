@@ -1,6 +1,7 @@
 {
-  "name": "prodesign-erp",
+  "name": "cnc-dashboard",
   "version": "1.0.0",
+  "description": "PRO DESIGN ERP",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
