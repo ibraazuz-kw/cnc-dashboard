@@ -42,6 +42,33 @@ font-size:24px;
 border:1px solid #1f2d50;
 }
 
+.top-bar{
+display:flex;
+flex-direction:column;
+gap:15px;
+margin-bottom:30px;
+}
+
+.search{
+width:100%;
+padding:22px;
+border:none;
+border-radius:18px;
+font-size:24px;
+background:#0b1736;
+color:white;
+}
+
+.filter{
+width:100%;
+padding:22px;
+border:none;
+border-radius:18px;
+font-size:24px;
+background:#0b1736;
+color:white;
+}
+
 .add-btn{
 width:100%;
 padding:24px;
@@ -50,7 +77,6 @@ border-radius:20px;
 background:#2d63ff;
 color:white;
 font-size:30px;
-margin-bottom:40px;
 cursor:pointer;
 }
 
@@ -192,12 +218,52 @@ cursor:pointer;
 
 </div>
 
+<div class="top-bar">
+
+<input
+type="text"
+class="search"
+id="searchInput"
+placeholder="🔍 بحث باسم العميل"
+onkeyup="renderOrders()"
+>
+
+<select
+class="filter"
+id="statusFilter"
+onchange="renderOrders()"
+>
+
+<option value="all">
+كل الحالات
+</option>
+
+<option value="بانتظار الاعتماد">
+بانتظار الاعتماد
+</option>
+
+<option value="قيد التصميم">
+قيد التصميم
+</option>
+
+<option value="قيد التصنيع">
+قيد التصنيع
+</option>
+
+<option value="تم التسليم">
+تم التسليم
+</option>
+
+</select>
+
 <button class="add-btn"
 onclick="addOrder()">
 
 ➕ إضافة طلب
 
 </button>
+
+</div>
 
 <div class="section-title">
 📂 الطلبات الحالية
@@ -227,7 +293,34 @@ function renderOrders(){
 
 ordersContainer.innerHTML = "";
 
-orders.forEach(order => {
+const searchValue =
+document.getElementById("searchInput")
+.value
+.toLowerCase();
+
+const filterValue =
+document.getElementById("statusFilter")
+.value;
+
+let filteredOrders =
+orders.filter(order => {
+
+const matchSearch =
+order.company
+.toLowerCase()
+.includes(searchValue);
+
+const matchFilter =
+
+filterValue === "all"
+||
+order.status === filterValue;
+
+return matchSearch && matchFilter;
+
+});
+
+filteredOrders.forEach(order => {
 
 let statusClass = "pending";
 
@@ -258,8 +351,18 @@ ${order.status}
 </div>
 
 <h2>
-${order.company}
+#${order.id}
 </h2>
+
+<p>
+📅 التاريخ:
+${order.date}
+</p>
+
+<p>
+👤 العميل:
+${order.company}
+</p>
 
 <p>
 📐 التصميم:
@@ -404,9 +507,25 @@ prompt("السعر");
 
 if(!price) return;
 
+const today = new Date();
+
+const formattedDate =
+
+today.getDate()
++
+" / "
++
+(today.getMonth() + 1)
++
+" / "
++
+today.getFullYear();
+
 const newOrder = {
 
 id: Date.now(),
+
+date: formattedDate,
 
 company: company,
 
@@ -433,7 +552,7 @@ alert("✅ تم إضافة الطلب");
 }
 
 /* =========================
-   Edit Order
+   Edit
 ========================= */
 
 function editOrder(id){
@@ -496,7 +615,7 @@ alert("✅ تم تعديل الطلب");
 }
 
 /* =========================
-   Delete Order
+   Delete
 ========================= */
 
 function deleteOrder(id){
@@ -522,7 +641,7 @@ alert("🗑 تم حذف الطلب");
 }
 
 /* =========================
-   PDF Invoice
+   PDF
 ========================= */
 
 function pdfOrder(id){
@@ -598,6 +717,16 @@ color:#777;
 
 <div class="status">
 ${order.status}
+</div>
+
+<div class="line">
+📄 رقم الطلب:
+#${order.id}
+</div>
+
+<div class="line">
+📅 التاريخ:
+${order.date}
 </div>
 
 <div class="line">
