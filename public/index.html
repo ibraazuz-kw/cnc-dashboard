@@ -39,12 +39,13 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:25px;
+gap:15px;
 
 }
 
 .logo{
 
-font-size:28px;
+font-size:24px;
 font-weight:800;
 
 }
@@ -73,22 +74,24 @@ margin-bottom:25px;
 .card{
 
 background:#0f172a;
-padding:20px;
-border-radius:18px;
+padding:25px;
+border-radius:20px;
 border:1px solid rgba(255,255,255,.05);
+text-align:center;
 
 }
 
 .card h2{
 
-font-size:28px;
-margin-bottom:5px;
+font-size:42px;
+margin-bottom:10px;
 
 }
 
 .card p{
 
 color:#94a3b8;
+font-size:18px;
 
 }
 
@@ -96,7 +99,6 @@ color:#94a3b8;
 
 font-size:22px;
 font-weight:700;
-margin-bottom:15px;
 
 }
 
@@ -104,15 +106,15 @@ margin-bottom:15px;
 
 display:flex;
 flex-direction:column;
-gap:15px;
+gap:20px;
 
 }
 
 .order{
 
 background:#0f172a;
-padding:20px;
-border-radius:18px;
+padding:25px;
+border-radius:22px;
 border:1px solid rgba(255,255,255,.05);
 
 }
@@ -121,22 +123,24 @@ border:1px solid rgba(255,255,255,.05);
 
 display:flex;
 justify-content:space-between;
-margin-bottom:15px;
+align-items:center;
+margin-bottom:20px;
 
 }
 
 .client{
 
-font-size:18px;
+font-size:22px;
 font-weight:700;
 
 }
 
 .status{
 
-padding:8px 14px;
-border-radius:12px;
+padding:10px 18px;
+border-radius:14px;
 font-size:14px;
+font-weight:700;
 
 }
 
@@ -160,14 +164,16 @@ background:#166534;
 
 .order-info{
 
-line-height:2;
+line-height:2.2;
+font-size:20px;
+color:#e2e8f0;
 
 }
 
 .price{
 
-margin-top:15px;
-font-size:22px;
+margin-top:20px;
+font-size:48px;
 font-weight:800;
 color:#22c55e;
 
@@ -176,19 +182,20 @@ color:#22c55e;
 .buttons{
 
 display:flex;
-gap:10px;
-margin-top:15px;
+gap:15px;
+margin-top:25px;
 
 }
 
 .buttons button{
 
 flex:1;
-padding:12px;
+padding:16px;
 border:none;
-border-radius:12px;
+border-radius:16px;
 color:white;
 cursor:pointer;
+font-size:18px;
 
 }
 
@@ -212,6 +219,7 @@ padding:12px 18px;
 border-radius:12px;
 color:white;
 cursor:pointer;
+font-size:16px;
 
 }
 
@@ -254,6 +262,7 @@ border:none;
 border-radius:12px;
 background:#020617;
 color:white;
+font-size:16px;
 
 }
 
@@ -304,7 +313,7 @@ onclick="logout()"
 
 <div class="card">
 
-<h2 id="totalOrders">
+<h2>
 3
 </h2>
 
@@ -333,7 +342,7 @@ onclick="logout()"
 </h2>
 
 <p>
-قيد التصنيع
+تم التسليم
 </p>
 
 </div>
@@ -345,7 +354,7 @@ onclick="logout()"
 </h2>
 
 <p>
-تم التسليم
+قيد التصنيع
 </p>
 
 </div>
@@ -403,17 +412,27 @@ onclick="openModal()"
 </div>
 
 <div class="price">
-450 KD
+KD 450
 </div>
 
 <div class="buttons">
 
-<button class="edit">
+<button
+class="edit"
+onclick="editOrder()"
+>
+
 تعديل
+
 </button>
 
-<button class="invoice">
+<button
+class="invoice"
+onclick="downloadInvoice()"
+>
+
 فاتورة PDF
+
 </button>
 
 </div>
@@ -452,17 +471,27 @@ onclick="openModal()"
 </div>
 
 <div class="price">
-780 KD
+KD 780
 </div>
 
 <div class="buttons">
 
-<button class="edit">
+<button
+class="edit"
+onclick="editOrder()"
+>
+
 تعديل
+
 </button>
 
-<button class="invoice">
+<button
+class="invoice"
+onclick="downloadInvoice()"
+>
+
 فاتورة PDF
+
 </button>
 
 </div>
@@ -514,8 +543,13 @@ placeholder="السعر"
 placeholder="تفاصيل المشروع"
 ></textarea>
 
-<button class="save-btn">
+<button
+class="save-btn"
+onclick="saveOrder()"
+>
+
 💾 حفظ الطلب
+
 </button>
 
 </div>
@@ -550,6 +584,33 @@ localStorage.clear();
 
 window.location.href =
 "login.html";
+
+}
+
+function editOrder(){
+
+alert(
+"🚧 صفحة التعديل قريباً"
+);
+
+}
+
+function downloadInvoice(){
+
+alert(
+"📄 سيتم إنشاء PDF قريباً"
+);
+
+}
+
+function saveOrder(){
+
+alert(
+"✅ تم حفظ الطلب"
+);
+
+document.getElementById("modal")
+.style.display = "none";
 
 }
 
