@@ -1,97 +1,227 @@
-<script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-let orders = [
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{
-client:"شركة باب السيف",
-design:"باب خارجي مودرن",
-sheets:"3 شيت ألمنيوم",
-size:"300 × 100",
-price:"450 KD",
-status:"بانتظار الاعتماد",
-statusClass:"pending"
-},
+<title>PRO DESIGN ERP</title>
 
-{
-client:"شركة الهاجري",
-design:"بوابة CNC",
-sheets:"5 شيتات",
-size:"400 × 220",
-price:"780 KD",
-status:"قيد التصنيع",
-statusClass:"production"
+<style>
+
+body{
+margin:0;
+padding:20px;
+background:#020826;
+font-family:Tahoma;
+color:white;
 }
 
-];
+h1{
+text-align:center;
+font-size:55px;
+margin-bottom:40px;
+}
 
-/* =========================
-   Render Orders
-========================= */
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+margin-bottom:30px;
+}
+
+.box{
+background:#0b1736;
+padding:35px 20px;
+border-radius:25px;
+text-align:center;
+font-size:22px;
+border:1px solid #1f2d50;
+}
+
+.add-btn{
+width:100%;
+padding:22px;
+border:none;
+border-radius:20px;
+background:#2d63ff;
+color:white;
+font-size:28px;
+margin-bottom:30px;
+cursor:pointer;
+}
+
+.section-title{
+font-size:42px;
+margin-bottom:25px;
+font-weight:bold;
+}
+
+.card{
+background:#0b1736;
+padding:25px;
+border-radius:30px;
+margin-bottom:25px;
+border:1px solid #1f2d50;
+}
+
+.status{
+display:inline-block;
+padding:12px 22px;
+border-radius:15px;
+background:#8d5a10;
+font-size:22px;
+margin-bottom:20px;
+}
+
+.card h2{
+font-size:42px;
+margin-bottom:25px;
+}
+
+.card p{
+font-size:28px;
+line-height:2;
+color:#ddd;
+}
+
+.card h3{
+font-size:55px;
+color:#1dde67;
+margin-top:25px;
+}
+
+.buttons{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+
+.buttons button{
+flex:1;
+padding:22px;
+border:none;
+border-radius:18px;
+font-size:24px;
+color:white;
+cursor:pointer;
+}
+
+.edit-btn{
+background:#2d63ff;
+}
+
+.pdf-btn{
+background:#16a34a;
+}
+
+.logout{
+width:100%;
+padding:25px;
+background:#e61d2b;
+border:none;
+border-radius:22px;
+color:white;
+font-size:30px;
+margin-top:40px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>👑 PRO DESIGN ERP</h1>
+
+<div class="stats">
+
+<div class="box">
+3<br><br>
+إجمالي الطلبات
+</div>
+
+<div class="box">
+1<br><br>
+بانتظار الاعتماد
+</div>
+
+<div class="box">
+1<br><br>
+تم التسليم
+</div>
+
+<div class="box">
+1<br><br>
+قيد التصنيع
+</div>
+
+</div>
+
+<button class="add-btn" onclick="addOrder()">
+➕ إضافة طلب
+</button>
+
+<div class="section-title">
+📂 الطلبات الحالية
+</div>
+
+<div id="orders"></div>
+
+<button class="logout" onclick="logout()">
+تسجيل خروج
+</button>
+
+<script src="data.js"></script>
+
+<script>
+
+const ordersContainer = document.getElementById("orders");
 
 function renderOrders(){
 
-const container =
-document.querySelector(".orders");
+ordersContainer.innerHTML = "";
 
-container.innerHTML = "";
+orders.forEach(order => {
 
-orders.forEach((order,index)=>{
+ordersContainer.innerHTML += `
 
-container.innerHTML += `
+<div class="card">
 
-<div class="order">
-
-<div class="order-top">
-
-<div class="client">
-${order.client}
-</div>
-
-<div class="status ${order.statusClass}">
+<div class="status">
 ${order.status}
 </div>
 
-</div>
+<h2>
+${order.company}
+</h2>
 
-<div class="order-info">
+<p>
+📐 التصميم: ${order.design}
+</p>
 
-📐 التصميم:
-${order.design}
+<p>
+📦 الشيتات: ${order.sheets}
+</p>
 
-<br>
+<p>
+📏 المقاس: ${order.size}
+</p>
 
-📦 الشيتات:
-${order.sheets}
-
-<br>
-
-📏 المقاس:
-${order.size}
-
-</div>
-
-<div class="price">
+<h3>
 KD ${order.price}
-</div>
+</h3>
 
 <div class="buttons">
 
-<button
-class="edit"
-onclick="editOrder(${index})"
->
-
+<button class="edit-btn"
+onclick="editOrder(${order.id})">
 تعديل
-
 </button>
 
-<button
-class="invoice"
-onclick="downloadInvoice()"
->
-
+<button class="pdf-btn"
+onclick="pdfOrder(${order.id})">
 فاتورة PDF
-
 </button>
 
 </div>
@@ -102,165 +232,74 @@ onclick="downloadInvoice()"
 
 });
 
-updateStats();
-
 }
 
-/* =========================
-   Stats
-========================= */
+function addOrder(){
 
-function updateStats(){
+const company = prompt("اسم العميل");
+if(!company) return;
 
-document.querySelectorAll(".card h2")[0]
-.innerText = orders.length;
+const design = prompt("نوع التصميم");
+if(!design) return;
 
-}
+const sheets = prompt("عدد الشيتات");
+if(!sheets) return;
 
-/* =========================
-   Open Modal
-========================= */
+const size = prompt("المقاس");
+if(!size) return;
 
-function openModal(){
+const price = prompt("السعر");
+if(!price) return;
 
-document.getElementById("modal")
-.style.display = "flex";
+const newOrder = {
 
-}
+id: Date.now(),
 
-/* =========================
-   Close Modal
-========================= */
+company: company,
 
-window.onclick = function(e){
+design: design,
 
-const modal =
-document.getElementById("modal");
+sheets: sheets,
 
-if(e.target == modal){
+size: size,
 
-modal.style.display = "none";
+price: price,
 
-}
+status: "بانتظار الاعتماد"
 
-}
+};
 
-/* =========================
-   Save Order
-========================= */
+orders.push(newOrder);
 
-function saveOrder(){
-
-const inputs =
-document.querySelectorAll(".modal-box input");
-
-const selects =
-document.querySelectorAll(".modal-box select");
-
-const client =
-inputs[0].value;
-
-const design =
-inputs[1].value;
-
-const price =
-inputs[2].value;
-
-const status =
-selects[0].value;
-
-if(
-client == "" ||
-design == "" ||
-price == ""
-){
-
-alert("❌ عبّ جميع البيانات");
-
-return;
-
-}
-
-let statusClass = "pending";
-
-if(status == "قيد التصنيع"){
-
-statusClass = "production";
-
-}
-
-if(status == "تم التسليم"){
-
-statusClass = "done";
-
-}
-
-orders.push({
-
-client:client,
-design:design,
-sheets:"غير محدد",
-size:"غير محدد",
-price:price,
-status:status,
-statusClass:statusClass
-
-});
+saveOrders();
 
 renderOrders();
-
-document.getElementById("modal")
-.style.display = "none";
-
-inputs[0].value = "";
-inputs[1].value = "";
-inputs[2].value = "";
 
 alert("✅ تم إضافة الطلب");
 
 }
 
-/* =========================
-   Edit
-========================= */
+function editOrder(id){
 
-function editOrder(index){
-
-alert(
-"🚧 تعديل الطلب رقم "
-+
-(index + 1)
-);
+alert("✏️ صفحة التعديل قريباً");
 
 }
 
-/* =========================
-   Invoice
-========================= */
+function pdfOrder(id){
 
-function downloadInvoice(){
-
-alert(
-"📄 سيتم إنشاء PDF قريباً"
-);
+alert("📄 سيتم إنشاء PDF قريباً");
 
 }
-
-/* =========================
-   Logout
-========================= */
 
 function logout(){
 
-window.location.href =
-"login.html";
+window.location.href = "/login.html";
 
 }
-
-/* =========================
-   Start
-========================= */
 
 renderOrders();
 
 </script>
+
+</body>
+</html>
