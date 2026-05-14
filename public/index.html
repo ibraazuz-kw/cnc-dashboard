@@ -1,298 +1,38 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pro Design ERP</title>
+<title>
+ADMIN
+</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+body{
+
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-<!-- Sidebar -->
-
-<div class="sidebar">
-
-<div class="logo">
-🚀 PRO DESIGN
-</div>
-
-<div class="menu">
-
-<div class="menu-item active">
-📋 الطلبات
-</div>
-
-<div class="menu-item">
-💰 التسعير
-</div>
-
-<div class="menu-item">
-🧾 الفواتير
-</div>
-
-<div class="menu-item">
-📦 الشيتات
-</div>
-
-<div class="menu-item">
-👥 العملاء
-</div>
-
-<div class="menu-item">
-📊 التقارير
-</div>
-
-</div>
-
-</div>
-
-<!-- Main -->
-
-<div class="main">
-
-<!-- Topbar -->
-
-<div class="topbar">
-
-<div>
-
 <h1>
-لوحة الإدارة
+👑 لوحة الإدارة
 </h1>
 
 <p>
-إدارة الطلبات والتصنيع والفواتير
+PRO DESIGN ERP
 </p>
-
-</div>
-
-<div class="top-actions">
-
-<input
-type="text"
-placeholder="بحث عن عميل أو طلب..."
-class="search-input"
-id="searchInput"
->
-
-<button
-class="add-btn"
-onclick="openModal()"
->
-
-➕ إضافة طلب
-
-</button>
-
-<button
-class="add-btn"
-onclick="logout()"
-style="background:#dc2626;"
->
-
-🚪 تسجيل خروج
-
-</button>
-
-</div>
-
-</div>
-
-<!-- Stats -->
-
-<div class="stats-grid">
-
-<div class="stat-card">
-
-<div class="stat-icon blue">
-📋
-</div>
-
-<div>
-
-<h2 id="totalOrders">0</h2>
-
-<p>إجمالي الطلبات</p>
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="stat-icon yellow">
-🟡
-</div>
-
-<div>
-
-<h2 id="pendingOrders">0</h2>
-
-<p>بانتظار الاعتماد</p>
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="stat-icon green">
-🟢
-</div>
-
-<div>
-
-<h2 id="approvedOrders">0</h2>
-
-<p>تم الاعتماد</p>
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="stat-icon purple">
-💰
-</div>
-
-<div>
-
-<h2 id="totalRevenue">0 KD</h2>
-
-<p>الإيرادات</p>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- Orders -->
-
-<div class="orders-header">
-
-<h2>
-📁 الطلبات الحالية
-</h2>
-
-</div>
-
-<div class="orders-grid" id="ordersContainer">
-
-</div>
-
-</div>
-
-<!-- Modal -->
-
-<div class="modal" id="modal">
-
-<div class="modal-content">
-
-<div class="modal-header">
-
-<h2>
-إضافة طلب جديد
-</h2>
-
-<div class="close-btn" onclick="closeModal()">
-✕
-</div>
-
-</div>
-
-<div class="form-grid">
-
-<input
-id="clientName"
-placeholder="اسم العميل"
->
-
-<input
-id="clientPhone"
-placeholder="رقم الواتساب"
->
-
-<input
-id="projectName"
-placeholder="اسم المشروع"
->
-
-<select id="projectStatus">
-
-<option value="بانتظار الاعتماد">
-بانتظار الاعتماد
-</option>
-
-<option value="قيد التصميم">
-قيد التصميم
-</option>
-
-<option value="يوجد تعديل">
-يوجد تعديل
-</option>
-
-<option value="تم الاعتماد">
-تم الاعتماد
-</option>
-
-</select>
-
-</div>
-
-<textarea
-id="projectDetails"
-placeholder="تفاصيل المشروع"
-class="project-textarea"
-></textarea>
-
-<label class="upload-box">
-
-<input
-type="file"
-id="projectImage"
-hidden
->
-
-<div>
-
-📤 رفع التصميم / PDF
-
-<p>
-PNG - JPG - PDF - DXF
-</p>
-
-</div>
-
-</label>
-
-<img
-id="previewImage"
-class="preview-image"
->
-
-<button
-class="save-order-btn"
-onclick="saveOrder()"
->
-
-💾 حفظ الطلب
-
-</button>
-
-</div>
-
-</div>
-
-<script src="app.js"></script>
 
 </body>
 </html>
