@@ -3,39 +3,14 @@ const path = require("path");
 
 const app = express();
 
-/* =========================
-   Static Files
-========================= */
-
-app.use(
-express.static(
-path.join(__dirname, "public")
-)
-);
-
-/* =========================
-   Main Route
-========================= */
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-
-res.sendFile(
-path.join(__dirname, "public", "login.html")
-);
-
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
-/* =========================
-   Server
-========================= */
-
-const PORT =
-process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-
-console.log(
-"🚀 PRO DESIGN RUNNING"
-);
-
+  console.log("PRO DESIGN RUNNING");
 });
