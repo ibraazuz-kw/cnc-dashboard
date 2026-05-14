@@ -66,6 +66,8 @@ margin-bottom:22px;
 
 line-height:1.8;
 
+word-break:break-word;
+
 }
 
 .price{
@@ -170,47 +172,75 @@ cursor:pointer;
 👤 لوحة العميل
 </div>
 
+<div id="orders"></div>
+
+<button class="logout"
+onclick="logout()">
+
+تسجيل خروج
+
+</button>
+
+<script src="data.js"></script>
+
+<script>
+
+const ordersContainer =
+document.getElementById("orders");
+
+function renderOrders(){
+
+ordersContainer.innerHTML = "";
+
+orders.forEach(order => {
+
+ordersContainer.innerHTML += `
+
 <div class="card">
 
 <div class="status">
-بانتظار الاعتماد
+${order.status}
 </div>
 
 <div class="company">
-PRO DESIGN
+${order.company}
 </div>
 
 <div class="line">
-📐 التصميم: باب خارجي مودرن
+📐 التصميم:
+${order.design}
 </div>
 
 <div class="line">
-📦 الشيتات: 3 شيت ألمنيوم
+📦 الشيتات:
+${order.sheets}
 </div>
 
 <div class="line">
-📏 المقاس: 100 × 300
+📏 المقاس:
+${order.size}
 </div>
 
 <div class="line">
-💰 السعر: KD 450
+💰 السعر:
+KD ${order.price}
 </div>
 
 <div class="price">
-KD 450
+KD ${order.price}
 </div>
 
 <div class="buttons">
 
 <button class="btn green"
-onclick="approveDesign()">
+onclick="approveDesign(${order.id})">
 
 اعتماد التصميم
 
 </button>
 
 <button class="btn red"
-onclick="requestEdit()">
+onclick="requestEdit(${order.id})">
 
 طلب تعديل
 
@@ -220,22 +250,39 @@ onclick="requestEdit()">
 
 </div>
 
-<button class="logout"
-onclick="logout()">
+`;
 
-تسجيل خروج
+});
 
-</button>
+}
 
-<script>
+function approveDesign(id){
 
-function approveDesign(){
+const order =
+orders.find(o => o.id === id);
+
+order.status =
+"قيد التصميم";
+
+saveOrders();
+
+renderOrders();
 
 alert("✅ تم اعتماد التصميم");
 
 }
 
-function requestEdit(){
+function requestEdit(id){
+
+const order =
+orders.find(o => o.id === id);
+
+order.status =
+"يوجد تعديل";
+
+saveOrders();
+
+renderOrders();
 
 alert("✏️ تم إرسال طلب تعديل");
 
@@ -247,6 +294,8 @@ window.location.href =
 "/login.html";
 
 }
+
+renderOrders();
 
 </script>
 
