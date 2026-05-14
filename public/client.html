@@ -5,18 +5,119 @@
 
 <meta charset="UTF-8">
 
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
 <title>
-CLIENT
+CLIENT PANEL
 </title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
 
 body{
 
 background:#020617;
 color:white;
-font-family:Arial;
-padding:40px;
+padding:20px;
+
+}
+
+.title{
+
+font-size:32px;
+font-weight:800;
+margin-bottom:25px;
+
+}
+
+.order{
+
+background:#0f172a;
+padding:25px;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.05);
+
+}
+
+.client{
+
+font-size:24px;
+font-weight:700;
+margin-bottom:15px;
+
+}
+
+.info{
+
+line-height:2.2;
+font-size:18px;
+color:#e2e8f0;
+
+}
+
+.status{
+
+margin-top:20px;
+background:#1d4ed8;
+padding:14px;
+border-radius:14px;
+text-align:center;
+font-size:18px;
+
+}
+
+.buttons{
+
+display:flex;
+gap:15px;
+margin-top:25px;
+
+}
+
+.buttons button{
+
+flex:1;
+padding:16px;
+border:none;
+border-radius:16px;
+color:white;
+font-size:16px;
+
+}
+
+.approve{
+
+background:#16a34a;
+
+}
+
+.edit{
+
+background:#dc2626;
+
+}
+
+.logout{
+
+margin-top:30px;
+width:100%;
+padding:16px;
+background:#dc2626;
+border:none;
+border-radius:16px;
+color:white;
+font-size:18px;
 
 }
 
@@ -26,13 +127,101 @@ padding:40px;
 
 <body>
 
-<h1>
-👤 صفحة العميل
-</h1>
+<div class="title">
+👤 لوحة العميل
+</div>
 
-<p>
-متابعة الطلبات والفواتير
-</p>
+<div class="order">
+
+<div class="client">
+شركة باب السيف
+</div>
+
+<div class="info">
+
+📐 التصميم:
+باب خارجي مودرن
+
+<br>
+
+📦 الشيتات:
+3 شيت ألمنيوم
+
+<br>
+
+📏 المقاس:
+300 × 100
+
+<br>
+
+💰 السعر:
+450 KD
+
+</div>
+
+<div class="status">
+بانتظار الاعتماد
+</div>
+
+<div class="buttons">
+
+<button
+class="approve"
+onclick="approveDesign()"
+>
+
+اعتماد التصميم
+
+</button>
+
+<button
+class="edit"
+onclick="requestEdit()"
+>
+
+طلب تعديل
+
+</button>
+
+</div>
+
+</div>
+
+<button
+class="logout"
+onclick="logout()"
+>
+
+تسجيل خروج
+
+</button>
+
+<script>
+
+function approveDesign(){
+
+alert(
+"✅ تم اعتماد التصميم"
+);
+
+}
+
+function requestEdit(){
+
+alert(
+"✏️ تم إرسال طلب التعديل"
+);
+
+}
+
+function logout(){
+
+window.location.href =
+"login.html";
+
+}
+
+</script>
 
 </body>
 </html>
