@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+DESIGNER PANEL
+</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+
+background:#020617;
+color:white;
+padding:20px;
+
+}
+
+.title{
+
+font-size:34px;
+font-weight:800;
+margin-bottom:25px;
+
+}
+
+.order{
+
+background:#0f172a;
+padding:25px;
+border-radius:22px;
+margin-bottom:20px;
+
+}
+
+.client{
+
+font-size:24px;
+font-weight:700;
+margin-bottom:15px;
+
+}
+
+.info{
+
+line-height:2.2;
+font-size:18px;
+color:#e2e8f0;
+
+}
+
+.upload{
+
+margin-top:20px;
+width:100%;
+padding:15px;
+background:#2563eb;
+border:none;
+border-radius:16px;
+color:white;
+font-size:16px;
+
+}
+
+.logout{
+
+margin-top:30px;
+width:100%;
+padding:16px;
+background:#dc2626;
+border:none;
+border-radius:16px;
+color:white;
+font-size:18px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="title">
+🎨 لوحة المصمم
+</div>
+
+<div class="order">
+
+<div class="client">
+شركة باب السيف
+</div>
+
+<div class="info">
+
+📐 التصميم المطلوب:
+باب مودرن CNC
+
+<br>
+
+📏 المقاس:
+300 × 100
+
+<br>
+
+📝 الملاحظات:
+إضافة زخرفة هندسية
+
+</div>
+
+<button
+class="upload"
+onclick="uploadDesign()"
+>
+
+📤 رفع التصميم
+
+</button>
+
+</div>
+
+<button
+class="logout"
+onclick="logout()"
+>
+
+تسجيل خروج
+
+</button>
+
+<script>
+
+function uploadDesign(){
+
+alert(
+"📁 سيتم رفع التصميم قريباً"
+);
+
+}
+
+function logout(){
+
+window.location.href =
+"login.html";
+
+}
+
+</script>
+
+</body>
+</html>
