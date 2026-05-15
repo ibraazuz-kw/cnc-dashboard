@@ -2,33 +2,132 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>لوحة العميل</title>
 
 <style>
 
-body{
+*{
 margin:0;
-padding:20px;
-background:#020826;
+padding:0;
+box-sizing:border-box;
 font-family:sans-serif;
+}
+
+body{
+background:#020826;
 color:white;
-direction:rtl;
+padding:20px;
 }
 
-.title{
-font-size:50px;
-font-weight:bold;
-text-align:center;
-margin-bottom:40px;
+/* HERO */
+
+.hero{
+position:relative;
+height:420px;
+border-radius:30px;
+overflow:hidden;
+margin-bottom:30px;
+background:url('https://images.unsplash.com/photo-1565043666747-69f6646db940?q=80&w=2070')
+center/cover;
 }
 
-.orders{
+.overlay{
+position:absolute;
+inset:0;
+background:linear-gradient(
+to left,
+rgba(2,8,38,.96),
+rgba(2,8,38,.35)
+);
+}
+
+.hero-content{
+position:absolute;
+top:50%;
+right:60px;
+transform:translateY(-50%);
+max-width:500px;
+z-index:2;
+}
+
+.hero-content h2{
+font-size:38px;
+margin-bottom:10px;
+}
+
+.hero-content h1{
+font-size:85px;
+font-weight:900;
+margin-bottom:15px;
+}
+
+.hero-content span{
+color:#d4a017;
+}
+
+.hero-content h3{
+font-size:38px;
+margin-bottom:20px;
+}
+
+.hero-content p{
+font-size:24px;
+line-height:1.8;
+color:#ddd;
+}
+
+/* STATUS */
+
+.status-box{
+background:#07153d;
+padding:30px;
+border-radius:30px;
+margin-bottom:30px;
+}
+
+.status-title{
+font-size:35px;
+margin-bottom:30px;
+}
+
+.steps{
 display:flex;
-flex-direction:column;
+justify-content:space-between;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.step{
+flex:1;
+min-width:180px;
+background:#0d1d4f;
+padding:25px;
+border-radius:25px;
+text-align:center;
+}
+
+.step.active{
+border:2px solid #d4a017;
+}
+
+.step h2{
+font-size:28px;
+margin-top:10px;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
 gap:25px;
+margin-bottom:30px;
 }
 
 .card{
@@ -37,50 +136,108 @@ padding:30px;
 border-radius:30px;
 }
 
-.status{
-display:inline-block;
-padding:15px 25px;
-background:#9c6508;
-border-radius:18px;
-font-size:22px;
+.card-title{
+font-size:32px;
 margin-bottom:25px;
 }
 
-.company{
-font-size:45px;
-font-weight:bold;
-margin-bottom:25px;
-}
+/* DESIGN PREVIEW */
 
-.info{
+.preview-box{
+height:400px;
+border:2px dashed #444;
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:center;
 font-size:28px;
-line-height:2;
-color:#ddd;
+color:#888;
+margin-bottom:25px;
 }
 
 .buttons{
 display:flex;
 gap:15px;
-margin-top:30px;
 }
 
 .btn{
 flex:1;
-padding:22px;
+padding:20px;
 border:none;
-border-radius:20px;
+border-radius:18px;
 font-size:24px;
 font-weight:bold;
-color:white;
 cursor:pointer;
+color:white;
 }
 
-.approve{
-background:#16a34a;
+.gold{
+background:#d4a017;
 }
 
-.edit{
-background:#dc2626;
+.blue{
+background:#2563eb;
+}
+
+/* DETAILS */
+
+.info{
+display:flex;
+justify-content:space-between;
+padding:18px 0;
+border-bottom:1px solid #1b2b5f;
+font-size:24px;
+}
+
+/* INVOICE */
+
+.invoice-total{
+font-size:55px;
+font-weight:bold;
+color:#22c55e;
+margin-top:20px;
+}
+
+.invoice-buttons{
+display:flex;
+gap:15px;
+margin-top:30px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.hero{
+height:500px;
+}
+
+.hero-content{
+right:25px;
+left:25px;
+max-width:none;
+}
+
+.hero-content h1{
+font-size:55px;
+}
+
+.hero-content h2{
+font-size:28px;
+}
+
+.hero-content h3{
+font-size:30px;
+}
+
+.hero-content p{
+font-size:20px;
+}
+
 }
 
 </style>
@@ -88,115 +245,188 @@ background:#dc2626;
 
 <body>
 
-<h1 class="title">
-👤 لوحة العميل
+<!-- HERO -->
+
+<div class="hero">
+
+<div class="overlay"></div>
+
+<div class="hero-content">
+
+<h2>
+مرحباً بك في
+</h2>
+
+<h1>
+PRO <span>DESIGN</span>
 </h1>
 
-<div class="orders" id="orders"></div>
+<h3>
+الدقة في كل تفصيلة
+</h3>
 
-<script>
+<p>
+نبدع في تنفيذ التصاميم باستخدام أحدث تقنيات
+الحفر بمكائن الـ CNC على الألمنيوم بأعلى جودة
+</p>
 
-let orders =
-JSON.parse(localStorage.getItem("orders")) || [];
+</div>
 
-const ordersContainer =
-document.getElementById("orders");
+</div>
 
-function renderOrders(){
+<!-- STATUS -->
 
-ordersContainer.innerHTML = "";
+<div class="status-box">
 
-orders.forEach((order,index)=>{
+<h2 class="status-title">
+حالة طلبك الحالية
+</h2>
 
-ordersContainer.innerHTML += `
+<div class="steps">
+
+<div class="step active">
+✏️
+<h2>قيد التصميم</h2>
+</div>
+
+<div class="step">
+⚙️
+<h2>قيد التنفيذ</h2>
+</div>
+
+<div class="step">
+🏭
+<h2>في التصنيع</h2>
+</div>
+
+<div class="step">
+✅
+<h2>تم التسليم</h2>
+</div>
+
+</div>
+
+</div>
+
+<!-- MAIN GRID -->
+
+<div class="grid">
+
+<!-- DESIGN -->
 
 <div class="card">
 
-<div class="status">
-${order.status}
-</div>
+<h2 class="card-title">
+معاينة التصميم
+</h2>
 
-<div class="company">
-${order.company}
-</div>
+<div class="preview-box">
 
-<div class="info">
-📐 التصميم: ${order.design}
-</div>
+📐 التصميم يظهر هنا
 
-<div class="info">
-📦 الشيتات: ${order.sheets}
-</div>
-
-<div class="info">
-📏 المقاس: ${order.size}
-</div>
-
-<div class="info">
-💰 السعر: KD ${order.price}
 </div>
 
 <div class="buttons">
 
-<button class="btn approve"
-onclick="approveOrder(${index})">
-
-اعتماد التصميم
-
+<button class="btn gold">
+تحميل ملف PDF
 </button>
 
-<button class="btn edit"
-onclick="editOrder(${index})">
-
-طلب تعديل
-
+<button class="btn blue">
+فتح في نافذة جديدة
 </button>
 
 </div>
 
 </div>
 
-`;
+<!-- DETAILS -->
 
-});
+<div class="card">
 
-}
+<h2 class="card-title">
+تفاصيل الطلب
+</h2>
 
-function approveOrder(index){
+<div class="info">
+<span>اسم الشركة</span>
+<span>PRO DESIGN</span>
+</div>
 
-orders[index].status =
-"قيد التصميم";
+<div class="info">
+<span>التصميم</span>
+<span>باب خارجي</span>
+</div>
 
-localStorage.setItem(
-"orders",
-JSON.stringify(orders)
-);
+<div class="info">
+<span>المادة</span>
+<span>ألمنيوم</span>
+</div>
 
-renderOrders();
+<div class="info">
+<span>الكمية</span>
+<span>5</span>
+</div>
 
-alert("✅ تم اعتماد التصميم");
+<div class="info">
+<span>السعر</span>
+<span>KD 450</span>
+</div>
 
-}
+<div class="info">
+<span>تاريخ الطلب</span>
+<span>22 / 05 / 2025</span>
+</div>
 
-function editOrder(index){
+<div class="info">
+<span>رقم الطلب</span>
+<span>ORD-2025-0001</span>
+</div>
 
-orders[index].status =
-"يوجد تعديل";
+</div>
 
-localStorage.setItem(
-"orders",
-JSON.stringify(orders)
-);
+</div>
 
-renderOrders();
+<!-- INVOICE -->
 
-alert("✏️ تم طلب تعديل");
+<div class="card">
 
-}
+<h2 class="card-title">
+الفاتورة
+</h2>
 
-renderOrders();
+<div class="info">
+<span>رقم الفاتورة</span>
+<span>INV-2025-0001</span>
+</div>
 
-</script>
+<div class="info">
+<span>تاريخ الفاتورة</span>
+<span>22 / 05 / 2025</span>
+</div>
+
+<div class="info">
+<span>إجمالي السعر</span>
+<span>KD 450</span>
+</div>
+
+<div class="invoice-total">
+KD 450
+</div>
+
+<div class="invoice-buttons">
+
+<button class="btn gold">
+نسخ الفاتورة
+</button>
+
+<button class="btn blue">
+تحميل الفاتورة PDF
+</button>
+
+</div>
+
+</div>
 
 </body>
 </html>
