@@ -2,8 +2,11 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>لوحة المصنع</title>
 
@@ -58,6 +61,15 @@ line-height:2;
 color:#ddd;
 }
 
+.preview{
+margin-top:20px;
+background:#0d1d4f;
+padding:15px;
+border-radius:15px;
+font-size:20px;
+color:#8de1ff;
+}
+
 .buttons{
 display:flex;
 gap:15px;
@@ -73,6 +85,10 @@ font-size:24px;
 font-weight:bold;
 color:white;
 cursor:pointer;
+}
+
+.download{
+background:#2563eb;
 }
 
 .done{
@@ -109,6 +125,24 @@ order.status === "قيد التصنيع"
 
 );
 
+if(factoryOrders.length === 0){
+
+ordersContainer.innerHTML = `
+
+<div class="card">
+
+<div class="company">
+لا توجد طلبات حالياً
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
 factoryOrders.forEach((order,index)=>{
 
 ordersContainer.innerHTML += `
@@ -124,23 +158,46 @@ ${order.company}
 </div>
 
 <div class="info">
-📐 التصميم: ${order.design}
+📐 التصميم:
+${order.design}
 </div>
 
 <div class="info">
-📦 الشيتات: ${order.sheets}
+📦 الشيتات:
+${order.sheets}
 </div>
 
 <div class="info">
-📏 المقاس: ${order.size}
+📏 المقاس:
+${order.size}
 </div>
+
+${order.fileName ? `
+
+<div class="preview">
+
+📎 الملف المرفوع:
+${order.fileName}
+
+</div>
+
+` : ""}
 
 <div class="buttons">
 
-<button class="btn done"
+<button
+class="btn download"
+onclick="downloadFile(${index})">
+
+📥 تحميل الملف
+
+</button>
+
+<button
+class="btn done"
 onclick="finishOrder(${index})">
 
-تم التسليم
+✅ تم التسليم
 
 </button>
 
@@ -151,6 +208,14 @@ onclick="finishOrder(${index})">
 `;
 
 });
+
+}
+
+function downloadFile(index){
+
+alert(
+"📥 سيتم تحميل الملف قريباً"
+);
 
 }
 
@@ -169,7 +234,7 @@ factoryOrders[index];
 const realIndex =
 orders.findIndex(o =>
 
-o.id === targetOrder.id
+o.company === targetOrder.company
 
 );
 
@@ -183,7 +248,9 @@ JSON.stringify(orders)
 
 renderOrders();
 
-alert("✅ تم تسليم الطلب");
+alert(
+"✅ تم تسليم الطلب"
+);
 
 }
 
