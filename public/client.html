@@ -34,8 +34,8 @@ border-radius:30px;
 overflow:hidden;
 margin-bottom:30px;
 
-background:url('https://images.unsplash.com/photo-1565793298595-6a879b1d9492?q=80&w=2070')
-center/cover;
+background:url('cnc-bg.jpg')
+center/cover no-repeat;
 }
 
 .overlay{
@@ -145,7 +145,7 @@ font-size:34px;
 margin-bottom:25px;
 }
 
-/* DESIGN */
+/* PREVIEW */
 
 .preview-box{
 height:420px;
@@ -158,7 +158,16 @@ font-size:30px;
 color:#888;
 margin-bottom:25px;
 background:#020b2e;
+overflow:hidden;
 }
+
+.preview-box img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+/* BUTTONS */
 
 .buttons{
 display:flex;
@@ -178,6 +187,7 @@ color:white;
 
 .gold{
 background:#d4a017;
+color:black;
 }
 
 .blue{
@@ -329,19 +339,19 @@ PRO <span>DESIGN</span>
 معاينة التصميم
 </h2>
 
-<div class="preview-box">
+<div class="preview-box" id="previewBox">
 
-📐 التصميم يظهر هنا
+📐 لا يوجد تصميم مرفوع
 
 </div>
 
 <div class="buttons">
 
-<button class="btn gold">
-تحميل ملف PDF
+<button class="btn gold" id="downloadBtn">
+تحميل PDF
 </button>
 
-<button class="btn blue">
+<button class="btn blue" id="openBtn">
 فتح التصميم
 </button>
 
@@ -425,17 +435,187 @@ KD 450
 
 <div class="invoice-buttons">
 
-<button class="btn gold">
+<button class="btn gold" id="copyInvoiceBtn">
 نسخ الفاتورة
 </button>
 
-<button class="btn blue">
-تحميل الفاتورة PDF
+<button class="btn blue" id="downloadInvoiceBtn">
+تحميل الفاتورة
 </button>
 
 </div>
 
 </div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+/* =========================
+   تحميل التصميم
+========================= */
+
+const previewBox =
+document.getElementById("previewBox");
+
+const savedFile =
+localStorage.getItem("designFile");
+
+const savedFileName =
+localStorage.getItem("designFileName");
+
+if(savedFile){
+
+if(
+savedFileName &&
+(
+savedFileName.endsWith(".png") ||
+savedFileName.endsWith(".jpg") ||
+savedFileName.endsWith(".jpeg") ||
+savedFileName.endsWith(".webp")
+)
+){
+
+previewBox.innerHTML = `
+<img src="${savedFile}">
+`;
+
+}else{
+
+previewBox.innerHTML = `
+<div style="
+font-size:30px;
+text-align:center;
+line-height:2;
+">
+📄<br>
+${savedFileName}
+</div>
+`;
+
+}
+
+}
+
+/* =========================
+   حالة الطلب
+========================= */
+
+const savedStatus =
+localStorage.getItem("orderStatus");
+
+if(savedStatus){
+
+document.querySelector(
+".step.active h2"
+).innerText = savedStatus;
+
+}
+
+/* =========================
+   فتح التصميم
+========================= */
+
+document.getElementById(
+"openBtn"
+).addEventListener("click", function(){
+
+if(savedFile){
+
+window.open(savedFile);
+
+}else{
+
+alert("⚠ لا يوجد تصميم");
+
+}
+
+});
+
+/* =========================
+   تحميل PDF
+========================= */
+
+document.getElementById(
+"downloadBtn"
+).addEventListener("click", function(){
+
+if(savedFile){
+
+const a =
+document.createElement("a");
+
+a.href = savedFile;
+
+a.download =
+savedFileName || "design.pdf";
+
+a.click();
+
+}else{
+
+alert("⚠ لا يوجد ملف");
+
+}
+
+});
+
+/* =========================
+   نسخ الفاتورة
+========================= */
+
+document.getElementById(
+"copyInvoiceBtn"
+).addEventListener("click", function(){
+
+const invoice = `
+رقم الطلب: ORD-2025-0001
+اسم الشركة: PRO DESIGN
+السعر: KD 450
+`;
+
+navigator.clipboard.writeText(invoice);
+
+alert("✅ تم نسخ الفاتورة");
+
+});
+
+/* =========================
+   تحميل الفاتورة
+========================= */
+
+document.getElementById(
+"downloadInvoiceBtn"
+).addEventListener("click", function(){
+
+const invoiceText = `
+فاتورة PRO DESIGN
+
+رقم الطلب:
+ORD-2025-0001
+
+السعر:
+KD 450
+`;
+
+const blob =
+new Blob([invoiceText],
+{type:"text/plain"});
+
+const a =
+document.createElement("a");
+
+a.href =
+URL.createObjectURL(blob);
+
+a.download =
+"invoice.txt";
+
+a.click();
+
+});
+
+</script>
 
 </body>
 </html>
