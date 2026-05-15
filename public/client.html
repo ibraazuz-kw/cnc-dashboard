@@ -33,17 +33,19 @@ height:420px;
 border-radius:30px;
 overflow:hidden;
 margin-bottom:30px;
-background:url('https://images.unsplash.com/photo-1565043666747-69f6646db940?q=80&w=2070')
+
+background:url('https://images.unsplash.com/photo-1565793298595-6a879b1d9492?q=80&w=2070')
 center/cover;
 }
 
 .overlay{
 position:absolute;
 inset:0;
+
 background:linear-gradient(
 to left,
 rgba(2,8,38,.96),
-rgba(2,8,38,.35)
+rgba(2,8,38,.45)
 );
 }
 
@@ -52,7 +54,7 @@ position:absolute;
 top:50%;
 right:60px;
 transform:translateY(-50%);
-max-width:500px;
+max-width:520px;
 z-index:2;
 }
 
@@ -62,7 +64,7 @@ margin-bottom:10px;
 }
 
 .hero-content h1{
-font-size:85px;
+font-size:90px;
 font-weight:900;
 margin-bottom:15px;
 }
@@ -72,13 +74,13 @@ color:#d4a017;
 }
 
 .hero-content h3{
-font-size:38px;
+font-size:42px;
 margin-bottom:20px;
 }
 
 .hero-content p{
 font-size:24px;
-line-height:1.8;
+line-height:1.9;
 color:#ddd;
 }
 
@@ -92,8 +94,9 @@ margin-bottom:30px;
 }
 
 .status-title{
-font-size:35px;
+font-size:42px;
 margin-bottom:30px;
+text-align:center;
 }
 
 .steps{
@@ -107,18 +110,19 @@ flex-wrap:wrap;
 flex:1;
 min-width:180px;
 background:#0d1d4f;
-padding:25px;
+padding:30px;
 border-radius:25px;
 text-align:center;
+border:2px solid transparent;
 }
 
 .step.active{
-border:2px solid #d4a017;
+border-color:#d4a017;
 }
 
 .step h2{
-font-size:28px;
-margin-top:10px;
+font-size:30px;
+margin-top:15px;
 }
 
 /* GRID */
@@ -137,22 +141,23 @@ border-radius:30px;
 }
 
 .card-title{
-font-size:32px;
+font-size:34px;
 margin-bottom:25px;
 }
 
-/* DESIGN PREVIEW */
+/* DESIGN */
 
 .preview-box{
-height:400px;
-border:2px dashed #444;
-border-radius:20px;
+height:420px;
+border:2px dashed #384b87;
+border-radius:25px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:28px;
+font-size:30px;
 color:#888;
 margin-bottom:25px;
+background:#020b2e;
 }
 
 .buttons{
@@ -179,23 +184,23 @@ background:#d4a017;
 background:#2563eb;
 }
 
-/* DETAILS */
+/* INFO */
 
 .info{
 display:flex;
 justify-content:space-between;
 padding:18px 0;
-border-bottom:1px solid #1b2b5f;
+border-bottom:1px solid #1c2d63;
 font-size:24px;
 }
 
 /* INVOICE */
 
 .invoice-total{
-font-size:55px;
+font-size:60px;
 font-weight:bold;
 color:#22c55e;
-margin-top:20px;
+margin-top:25px;
 }
 
 .invoice-buttons{
@@ -213,7 +218,7 @@ grid-template-columns:1fr;
 }
 
 .hero{
-height:500px;
+height:520px;
 }
 
 .hero-content{
@@ -223,19 +228,23 @@ max-width:none;
 }
 
 .hero-content h1{
-font-size:55px;
+font-size:60px;
 }
 
 .hero-content h2{
-font-size:28px;
-}
-
-.hero-content h3{
 font-size:30px;
 }
 
+.hero-content h3{
+font-size:34px;
+}
+
 .hero-content p{
-font-size:20px;
+font-size:21px;
+}
+
+.status-title{
+font-size:34px;
 }
 
 }
@@ -308,7 +317,7 @@ PRO <span>DESIGN</span>
 
 </div>
 
-<!-- MAIN GRID -->
+<!-- GRID -->
 
 <div class="grid">
 
@@ -333,7 +342,7 @@ PRO <span>DESIGN</span>
 </button>
 
 <button class="btn blue">
-فتح في نافذة جديدة
+فتح التصميم
 </button>
 
 </div>
@@ -355,7 +364,7 @@ PRO <span>DESIGN</span>
 
 <div class="info">
 <span>التصميم</span>
-<span>باب خارجي</span>
+<span>باب خارجي مودرن</span>
 </div>
 
 <div class="info">
