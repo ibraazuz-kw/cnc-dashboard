@@ -2,8 +2,11 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>لوحة المصمم</title>
 
@@ -75,8 +78,17 @@ color:white;
 cursor:pointer;
 }
 
-.finish{
+.upload{
 background:#d97706;
+}
+
+.preview{
+margin-top:20px;
+background:#0d1d4f;
+padding:15px;
+border-radius:15px;
+font-size:20px;
+color:#8de1ff;
 }
 
 </style>
@@ -109,6 +121,24 @@ order.status === "قيد التصميم"
 
 );
 
+if(designOrders.length === 0){
+
+ordersContainer.innerHTML = `
+
+<div class="card">
+
+<div class="company">
+لا توجد طلبات حالياً
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
 designOrders.forEach((order,index)=>{
 
 ordersContainer.innerHTML += `
@@ -124,27 +154,49 @@ ${order.company}
 </div>
 
 <div class="info">
-📐 التصميم: ${order.design}
+📐 التصميم:
+${order.design}
 </div>
 
 <div class="info">
-📦 الشيتات: ${order.sheets}
+📦 الشيتات:
+${order.sheets}
 </div>
 
 <div class="info">
-📏 المقاس: ${order.size}
+📏 المقاس:
+${order.size}
 </div>
+
+<input
+type="file"
+id="file${index}"
+style="display:none"
+onchange="uploadFile(event,${index})"
+/>
 
 <div class="buttons">
 
-<button class="btn finish"
-onclick="finishDesign(${index})">
+<button
+class="btn upload"
+onclick="document.getElementById('file${index}').click()">
 
-إنهاء التصميم
+📤 رفع التصميم
 
 </button>
 
 </div>
+
+${order.fileName ? `
+
+<div class="preview">
+
+📎 الملف:
+${order.fileName}
+
+</div>
+
+` : ""}
 
 </div>
 
@@ -154,24 +206,28 @@ onclick="finishDesign(${index})">
 
 }
 
-function finishDesign(index){
+function uploadFile(event,index){
+
+const file =
+event.target.files[0];
+
+if(!file) return;
 
 const designOrders =
-orders.filter(order =>
-
-order.status === "قيد التصميم"
-
+orders.filter(o =>
+o.status === "قيد التصميم"
 );
 
-const targetOrder =
+const target =
 designOrders[index];
 
 const realIndex =
 orders.findIndex(o =>
-
-o.id === targetOrder.id
-
+o.company === target.company
 );
+
+orders[realIndex].fileName =
+file.name;
 
 orders[realIndex].status =
 "قيد التصنيع";
@@ -181,9 +237,9 @@ localStorage.setItem(
 JSON.stringify(orders)
 );
 
-renderOrders();
+alert("✅ تم رفع التصميم وتحويله للمصنع");
 
-alert("✅ تم تحويل الطلب للمصنع");
+renderOrders();
 
 }
 
