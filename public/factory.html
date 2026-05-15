@@ -2,11 +2,8 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>لوحة المصنع</title>
 
@@ -16,160 +13,87 @@ body{
 margin:0;
 padding:20px;
 background:#020826;
-font-family:Tahoma;
+font-family:sans-serif;
 color:white;
+direction:rtl;
 }
 
 .title{
-
-font-size:55px;
-
+font-size:50px;
 font-weight:bold;
-
 text-align:center;
+margin-bottom:40px;
+}
 
-margin-top:20px;
-
-margin-bottom:50px;
-
+.orders{
+display:flex;
+flex-direction:column;
+gap:25px;
 }
 
 .card{
-
-background:#0b1736;
-
+background:#07153d;
+padding:30px;
 border-radius:30px;
-
-padding:35px;
-
-margin-bottom:35px;
-
-border:1px solid #1b2b52;
-
-}
-
-.company{
-
-font-size:45px;
-
-font-weight:bold;
-
-margin-bottom:35px;
-
-}
-
-.line{
-
-font-size:34px;
-
-margin-bottom:22px;
-
-line-height:1.8;
-
-word-break:break-word;
-
 }
 
 .status{
-
-background:#2563eb;
-
-padding:18px 28px;
-
-border-radius:18px;
-
 display:inline-block;
+padding:15px 25px;
+background:#d97706;
+border-radius:18px;
+font-size:22px;
+margin-bottom:25px;
+}
 
+.company{
+font-size:45px;
+font-weight:bold;
+margin-bottom:25px;
+}
+
+.info{
 font-size:28px;
-
-margin-bottom:40px;
-
+line-height:2;
+color:#ddd;
 }
 
 .buttons{
-
 display:flex;
-
-gap:20px;
-
+gap:15px;
 margin-top:30px;
-
 }
 
 .btn{
-
 flex:1;
-
-padding:24px;
-
+padding:22px;
 border:none;
-
 border-radius:20px;
-
-font-size:28px;
-
+font-size:24px;
 font-weight:bold;
-
 color:white;
-
 cursor:pointer;
-
-}
-
-.production{
-background:#e67e22;
 }
 
 .done{
-background:#16b34a;
-}
-
-.logout{
-
-width:100%;
-
-padding:25px;
-
-background:#e12626;
-
-border:none;
-
-border-radius:22px;
-
-font-size:34px;
-
-color:white;
-
-font-weight:bold;
-
-margin-top:40px;
-
-cursor:pointer;
-
+background:#16a34a;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="title">
+<h1 class="title">
 🏭 لوحة المصنع
-</div>
+</h1>
 
-<div id="orders"></div>
-
-<button class="logout"
-onclick="logout()">
-
-تسجيل خروج
-
-</button>
-
-<script src="data.js"></script>
+<div class="orders" id="orders"></div>
 
 <script>
+
+let orders =
+JSON.parse(localStorage.getItem("orders")) || [];
 
 const ordersContainer =
 document.getElementById("orders");
@@ -185,7 +109,7 @@ order.status === "قيد التصنيع"
 
 );
 
-factoryOrders.forEach(order => {
+factoryOrders.forEach((order,index)=>{
 
 ordersContainer.innerHTML += `
 
@@ -199,39 +123,24 @@ ${order.status}
 ${order.company}
 </div>
 
-<div class="line">
-📐 التصميم:
-${order.design}
+<div class="info">
+📐 التصميم: ${order.design}
 </div>
 
-<div class="line">
-📦 الشيتات:
-${order.sheets}
+<div class="info">
+📦 الشيتات: ${order.sheets}
 </div>
 
-<div class="line">
-📏 المقاس:
-${order.size}
-</div>
-
-<div class="line">
-💰 السعر:
-KD ${order.price}
+<div class="info">
+📏 المقاس: ${order.size}
 </div>
 
 <div class="buttons">
 
-<button class="btn production"
-onclick="startProduction(${order.id})">
-
-⚙️ بدء التصنيع
-
-</button>
-
 <button class="btn done"
-onclick="finishOrder(${order.id})">
+onclick="finishOrder(${index})">
 
-✅ تم التسليم
+تم التسليم
 
 </button>
 
@@ -245,36 +154,36 @@ onclick="finishOrder(${order.id})">
 
 }
 
-function startProduction(id){
+function finishOrder(index){
 
-alert(
-"⚙️ تم بدء التصنيع"
+const factoryOrders =
+orders.filter(order =>
+
+order.status === "قيد التصنيع"
+
 );
 
-}
+const targetOrder =
+factoryOrders[index];
 
-function finishOrder(id){
+const realIndex =
+orders.findIndex(o =>
 
-const order =
-orders.find(o => o.id === id);
+o.id === targetOrder.id
 
-order.status =
+);
+
+orders[realIndex].status =
 "تم التسليم";
 
-saveOrders();
+localStorage.setItem(
+"orders",
+JSON.stringify(orders)
+);
 
 renderOrders();
 
-alert(
-"✅ تم تسليم الطلب"
-);
-
-}
-
-function logout(){
-
-window.location.href =
-"/login.html";
+alert("✅ تم تسليم الطلب");
 
 }
 
