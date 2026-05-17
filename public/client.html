@@ -1,99 +1,82 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>العميل</title>
+
+<title>بوابة العميل</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cairo',sans-serif;
-}
-
 body{
-background:#f4f4f4;
+font-family:'Cairo',sans-serif;
+background:#f3f3f3;
 padding:20px;
 }
 
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.top{
-background:#071127;
+.header{
+background:#00133d;
 color:#fff;
-padding:25px;
-border-radius:18px;
-margin-bottom:20px;
+padding:30px;
 text-align:center;
+font-size:45px;
+font-weight:900;
+border-radius:30px;
+margin-bottom:25px;
 }
 
-.top h1{
-font-size:34px;
-}
-
-.box{
+.card{
 background:#fff;
-padding:25px;
-border-radius:18px;
-box-shadow:0 5px 15px rgba(0,0,0,.05);
+padding:35px;
+border-radius:30px;
 }
 
-.box h2{
+h2{
+font-size:42px;
+margin-bottom:25px;
+color:#00133d;
+}
+
+p{
+font-size:28px;
 margin-bottom:15px;
-color:#071127;
 }
 
 .btn{
 display:inline-block;
-background:#ff5a00;
+background:#ff6200;
 color:#fff;
-padding:14px 28px;
-border-radius:12px;
+padding:18px 35px;
+border-radius:20px;
 text-decoration:none;
+font-size:30px;
 font-weight:700;
-margin-top:15px;
-}
-
-.info{
-line-height:2.2;
-font-size:17px;
+margin-top:25px;
 }
 
 </style>
 </head>
+
 <body>
 
-<div class="container">
-
-<div class="top">
-<h1>بوابة العميل</h1>
+<div class="header">
+بوابة العميل
 </div>
 
-<div class="box">
+<div class="card">
 
 <h2>بيانات العميل</h2>
 
-<div class="info">
-اسم العميل : شركة باب السيف
-<br>
-رقم الهاتف : 96765547
-<br>
-الحالة : جاري التنفيذ
-</div>
+<p>اسم العميل : شركة باب السيف</p>
+<p>رقم الهاتف : 96765547</p>
+<p>الحالة : جاري التنفيذ</p>
 
-<a href="invoice.html" target="_blank" class="btn">
+<a href="invoice.html" class="btn">
 عرض الفاتورة
 </a>
-
-</div>
 
 </div>
 
