@@ -580,8 +580,7 @@ display:none;
 
 <div class="logo-side">
 
-<!-- LOGO -->
-<img src="/logo.png">
+<img src="file_00000000fd40720abbbe4a62d7158405.jpg">
 
 </div>
 
@@ -900,39 +899,27 @@ onclick="window.print()">
 
 <script>
 
-/* INVOICE DATA */
-
 function generateInvoiceData(){
 
-const today =
-new Date();
+const today = new Date();
 
-const year =
-today.getFullYear();
+const year = today.getFullYear();
 
 const invoice =
 'INV-' + year + '-' +
-Math.floor(
-1000 + Math.random()*9000
-);
+Math.floor(1000 + Math.random()*9000);
 
 const order =
 'ORD-' + year + '-' +
-Math.floor(
-1000 + Math.random()*9000
-);
+Math.floor(1000 + Math.random()*9000);
 
 const date =
 
-today.getDate()
-.toString()
-.padStart(2,'0')
+today.getDate().toString().padStart(2,'0')
 
 + ' / ' +
 
-(today.getMonth()+1)
-.toString()
-.padStart(2,'0')
+(today.getMonth()+1).toString().padStart(2,'0')
 
 + ' / ' +
 
@@ -940,43 +927,33 @@ today.getFullYear();
 
 document.getElementById(
 'invoiceNumber'
-).innerText =
-invoice;
+).innerText = invoice;
 
 document.getElementById(
 'orderNumber'
-).innerText =
-order;
+).innerText = order;
 
 document.getElementById(
 'invoiceDate'
-).innerText =
-date;
+).innerText = date;
 
 }
 
 generateInvoiceData();
 
-/* TOTAL */
-
 function calculateTotal(){
 
 const qty =
 parseFloat(
-document.getElementById(
-'qty'
-).innerText
+document.getElementById('qty').innerText
 ) || 0;
 
 const price =
 parseFloat(
-document.getElementById(
-'unitPrice'
-).innerText
+document.getElementById('unitPrice').innerText
 ) || 0;
 
-const total =
-qty * price;
+const total = qty * price;
 
 document.getElementById(
 'rowTotal'
