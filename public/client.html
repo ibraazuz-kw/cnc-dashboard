@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>العميل</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>لوحة العميل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
@@ -16,606 +13,89 @@ content="width=device-width, initial-scale=1.0">
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:sans-serif;
+font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#020826;
-color:white;
+background:#f4f4f4;
 padding:20px;
 }
 
-/* HERO */
-
-.hero{
-position:relative;
-height:420px;
-border-radius:30px;
-overflow:hidden;
-margin-bottom:30px;
-
-background:url('cnc-bg.jpg')
-center/cover no-repeat;
+.container{
+max-width:1000px;
+margin:auto;
 }
 
-.overlay{
-position:absolute;
-inset:0;
-
-background:linear-gradient(
-to left,
-rgba(2,8,38,.96),
-rgba(2,8,38,.45)
-);
-}
-
-.hero-content{
-position:absolute;
-top:50%;
-right:60px;
-transform:translateY(-50%);
-max-width:520px;
-z-index:2;
-}
-
-.hero-content h2{
-font-size:38px;
-margin-bottom:10px;
-}
-
-.hero-content h1{
-font-size:90px;
-font-weight:900;
-margin-bottom:15px;
-}
-
-.hero-content span{
-color:#d4a017;
-}
-
-.hero-content h3{
-font-size:42px;
+.top{
+background:#071127;
+color:#fff;
+padding:25px;
+border-radius:18px;
 margin-bottom:20px;
-}
-
-.hero-content p{
-font-size:24px;
-line-height:1.9;
-color:#ddd;
-}
-
-/* STATUS */
-
-.status-box{
-background:#07153d;
-padding:30px;
-border-radius:30px;
-margin-bottom:30px;
-}
-
-.status-title{
-font-size:42px;
-margin-bottom:30px;
 text-align:center;
 }
 
-.steps{
-display:flex;
-justify-content:space-between;
-gap:15px;
-flex-wrap:wrap;
-}
-
-.step{
-flex:1;
-min-width:180px;
-background:#0d1d4f;
-padding:30px;
-border-radius:25px;
-text-align:center;
-border:2px solid transparent;
-}
-
-.step.active{
-border-color:#d4a017;
-}
-
-.step h2{
-font-size:30px;
-margin-top:15px;
-}
-
-/* GRID */
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:25px;
-margin-bottom:30px;
-}
-
-.card{
-background:#07153d;
-padding:30px;
-border-radius:30px;
-}
-
-.card-title{
+.top h1{
 font-size:34px;
-margin-bottom:25px;
 }
 
-/* PREVIEW */
-
-.preview-box{
-height:420px;
-border:2px dashed #384b87;
-border-radius:25px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:30px;
-color:#888;
-margin-bottom:25px;
-background:#020b2e;
-overflow:hidden;
+.box{
+background:#fff;
+padding:25px;
+border-radius:18px;
+box-shadow:0 5px 15px rgba(0,0,0,.05);
 }
 
-.preview-box img{
-width:100%;
-height:100%;
-object-fit:contain;
-}
-
-/* BUTTONS */
-
-.buttons{
-display:flex;
-gap:15px;
+.box h2{
+margin-bottom:15px;
+color:#071127;
 }
 
 .btn{
-flex:1;
-padding:20px;
-border:none;
-border-radius:18px;
-font-size:24px;
-font-weight:bold;
-cursor:pointer;
-color:white;
+display:inline-block;
+background:#ff5a00;
+color:#fff;
+padding:14px 28px;
+border-radius:12px;
+text-decoration:none;
+font-weight:700;
+margin-top:15px;
 }
-
-.gold{
-background:#d4a017;
-color:black;
-}
-
-.blue{
-background:#2563eb;
-}
-
-/* INFO */
 
 .info{
-display:flex;
-justify-content:space-between;
-padding:18px 0;
-border-bottom:1px solid #1c2d63;
-font-size:24px;
-}
-
-/* INVOICE */
-
-.invoice-total{
-font-size:60px;
-font-weight:bold;
-color:#22c55e;
-margin-top:25px;
-}
-
-.invoice-buttons{
-display:flex;
-gap:15px;
-margin-top:30px;
-}
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.hero{
-height:520px;
-}
-
-.hero-content{
-right:25px;
-left:25px;
-max-width:none;
-}
-
-.hero-content h1{
-font-size:60px;
-}
-
-.hero-content h2{
-font-size:30px;
-}
-
-.hero-content h3{
-font-size:34px;
-}
-
-.hero-content p{
-font-size:21px;
-}
-
-.status-title{
-font-size:34px;
-}
-
+line-height:2.2;
+font-size:17px;
 }
 
 </style>
 </head>
-
 <body>
 
-<!-- HERO -->
+<div class="container">
 
-<div class="hero">
-
-<div class="overlay"></div>
-
-<div class="hero-content">
-
-<h2>
-مرحباً بك في
-</h2>
-
-<h1>
-PRO <span>DESIGN</span>
-</h1>
-
-<h3>
-الدقة في كل تفصيلة
-</h3>
-
-<p>
-نبدع في تنفيذ التصاميم باستخدام أحدث تقنيات
-الحفر بمكائن الـ CNC على الألمنيوم بأعلى جودة
-</p>
-
+<div class="top">
+<h1>بوابة العميل</h1>
 </div>
 
-</div>
+<div class="box">
 
-<!-- STATUS -->
-
-<div class="status-box">
-
-<h2 class="status-title">
-حالة طلبك الحالية
-</h2>
-
-<div class="steps">
-
-<div class="step active">
-✏️
-<h2>قيد التصميم</h2>
-</div>
-
-<div class="step">
-⚙️
-<h2>قيد التنفيذ</h2>
-</div>
-
-<div class="step">
-🏭
-<h2>في التصنيع</h2>
-</div>
-
-<div class="step">
-✅
-<h2>تم التسليم</h2>
-</div>
-
-</div>
-
-</div>
-
-<!-- GRID -->
-
-<div class="grid">
-
-<!-- DESIGN -->
-
-<div class="card">
-
-<h2 class="card-title">
-معاينة التصميم
-</h2>
-
-<div class="preview-box" id="previewBox">
-
-📐 لا يوجد تصميم مرفوع
-
-</div>
-
-<div class="buttons">
-
-<button class="btn gold" id="downloadBtn">
-تحميل PDF
-</button>
-
-<button class="btn blue" id="openBtn">
-فتح التصميم
-</button>
-
-</div>
-
-</div>
-
-<!-- DETAILS -->
-
-<div class="card">
-
-<h2 class="card-title">
-تفاصيل الطلب
-</h2>
+<h2>بيانات العميل</h2>
 
 <div class="info">
-<span>اسم الشركة</span>
-<span>PRO DESIGN</span>
+اسم العميل : شركة باب السيف
+<br>
+رقم الهاتف : 96765547
+<br>
+الحالة : جاري التنفيذ
 </div>
 
-<div class="info">
-<span>التصميم</span>
-<span>باب خارجي مودرن</span>
-</div>
-
-<div class="info">
-<span>المادة</span>
-<span>ألمنيوم</span>
-</div>
-
-<div class="info">
-<span>الكمية</span>
-<span>5</span>
-</div>
-
-<div class="info">
-<span>السعر</span>
-<span>KD 450</span>
-</div>
-
-<div class="info">
-<span>تاريخ الطلب</span>
-<span>22 / 05 / 2025</span>
-</div>
-
-<div class="info">
-<span>رقم الطلب</span>
-<span>ORD-2025-0001</span>
-</div>
+<a href="invoice.html" target="_blank" class="btn">
+عرض الفاتورة
+</a>
 
 </div>
 
 </div>
-
-<!-- INVOICE -->
-
-<div class="card">
-
-<h2 class="card-title">
-الفاتورة
-</h2>
-
-<div class="info">
-<span>رقم الفاتورة</span>
-<span>INV-2025-0001</span>
-</div>
-
-<div class="info">
-<span>تاريخ الفاتورة</span>
-<span>22 / 05 / 2025</span>
-</div>
-
-<div class="info">
-<span>إجمالي السعر</span>
-<span>KD 450</span>
-</div>
-
-<div class="invoice-total">
-KD 450
-</div>
-
-<div class="invoice-buttons">
-
-<button class="btn gold" id="copyInvoiceBtn">
-نسخ الفاتورة
-</button>
-
-<button class="btn blue" id="downloadInvoiceBtn">
-تحميل الفاتورة
-</button>
-
-</div>
-
-</div>
-
-<!-- JAVASCRIPT -->
-
-<script>
-
-/* =========================
-   تحميل التصميم
-========================= */
-
-const previewBox =
-document.getElementById("previewBox");
-
-const savedFile =
-localStorage.getItem("designFile");
-
-const savedFileName =
-localStorage.getItem("designFileName");
-
-if(savedFile){
-
-if(
-savedFileName &&
-(
-savedFileName.endsWith(".png") ||
-savedFileName.endsWith(".jpg") ||
-savedFileName.endsWith(".jpeg") ||
-savedFileName.endsWith(".webp")
-)
-){
-
-previewBox.innerHTML = `
-<img src="${savedFile}">
-`;
-
-}else{
-
-previewBox.innerHTML = `
-<div style="
-font-size:30px;
-text-align:center;
-line-height:2;
-">
-📄<br>
-${savedFileName}
-</div>
-`;
-
-}
-
-}
-
-/* =========================
-   حالة الطلب
-========================= */
-
-const savedStatus =
-localStorage.getItem("orderStatus");
-
-if(savedStatus){
-
-document.querySelector(
-".step.active h2"
-).innerText = savedStatus;
-
-}
-
-/* =========================
-   فتح التصميم
-========================= */
-
-document.getElementById(
-"openBtn"
-).addEventListener("click", function(){
-
-if(savedFile){
-
-window.open(savedFile);
-
-}else{
-
-alert("⚠ لا يوجد تصميم");
-
-}
-
-});
-
-/* =========================
-   تحميل PDF
-========================= */
-
-document.getElementById(
-"downloadBtn"
-).addEventListener("click", function(){
-
-if(savedFile){
-
-const a =
-document.createElement("a");
-
-a.href = savedFile;
-
-a.download =
-savedFileName || "design.pdf";
-
-a.click();
-
-}else{
-
-alert("⚠ لا يوجد ملف");
-
-}
-
-});
-
-/* =========================
-   نسخ الفاتورة
-========================= */
-
-document.getElementById(
-"copyInvoiceBtn"
-).addEventListener("click", function(){
-
-const invoice = `
-رقم الطلب: ORD-2025-0001
-اسم الشركة: PRO DESIGN
-السعر: KD 450
-`;
-
-navigator.clipboard.writeText(invoice);
-
-alert("✅ تم نسخ الفاتورة");
-
-});
-
-/* =========================
-   تحميل الفاتورة
-========================= */
-
-document.getElementById(
-"downloadInvoiceBtn"
-).addEventListener("click", function(){
-
-const invoiceText = `
-فاتورة PRO DESIGN
-
-رقم الطلب:
-ORD-2025-0001
-
-السعر:
-KD 450
-`;
-
-const blob =
-new Blob([invoiceText],
-{type:"text/plain"});
-
-const a =
-document.createElement("a");
-
-a.href =
-URL.createObjectURL(blob);
-
-a.download =
-"invoice.txt";
-
-a.click();
-
-});
-
-</script>
 
 </body>
 </html>
