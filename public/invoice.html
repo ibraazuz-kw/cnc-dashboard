@@ -20,38 +20,37 @@ font-family:'Cairo',sans-serif;
 
 body{
 background:#ececec;
-padding:15px;
+padding:10px;
 }
 
 .invoice{
 width:210mm;
-min-height:297mm;
+height:297mm;
 background:#fff;
 margin:auto;
 overflow:hidden;
 border-radius:18px;
 position:relative;
-padding-bottom:10px;
 }
 
 /* LOGO */
 
 .logo-box{
 text-align:center;
-padding-top:25px;
+padding-top:16px;
 }
 
 .logo-box img{
-width:140px;
+width:115px;
 object-fit:contain;
 }
 
 /* HEADER */
 
 .header{
-margin-top:20px;
+margin-top:12px;
 background:#071127;
-height:170px;
+height:120px;
 position:relative;
 display:flex;
 align-items:center;
@@ -64,62 +63,61 @@ overflow:hidden;
 .header::before{
 content:'';
 position:absolute;
-left:-40px;
+left:-35px;
 top:0;
-width:140px;
+width:120px;
 height:100%;
 background:#ff5a00;
 transform:skew(-20deg);
 }
 
 .header h1{
-font-size:64px;
+font-size:48px;
 font-weight:900;
-position:relative;
 z-index:2;
 }
 
 .header p{
-font-size:28px;
-letter-spacing:10px;
+font-size:22px;
+letter-spacing:7px;
 color:#ff6b00;
-position:relative;
 z-index:2;
 }
 
-/* TOP INFO */
+/* TOP SECTION */
 
 .top-section{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
-padding:20px;
+gap:10px;
+padding:14px 18px;
 }
 
 .card{
-border:1px solid #e2e2e2;
-border-radius:22px;
-padding:18px;
+border:1px solid #e5e5e5;
+border-radius:18px;
+padding:14px;
 }
 
 .card h2{
-font-size:28px;
+font-size:22px;
 font-weight:900;
-margin-bottom:15px;
+margin-bottom:10px;
 color:#071127;
 line-height:1.5;
+text-align:center;
 }
 
 .materials{
 display:flex;
 justify-content:center;
-gap:15px;
-margin-bottom:18px;
+gap:10px;
 flex-wrap:wrap;
+margin-bottom:12px;
 }
 
 .materials span{
-font-size:16px;
+font-size:14px;
 font-weight:700;
 position:relative;
 padding-left:10px;
@@ -128,7 +126,7 @@ padding-left:10px;
 .materials span::after{
 content:'';
 position:absolute;
-left:-8px;
+left:-5px;
 top:0;
 width:3px;
 height:100%;
@@ -136,8 +134,8 @@ background:#ff6b00;
 }
 
 .about{
-font-size:13px;
-line-height:2;
+font-size:11px;
+line-height:1.8;
 color:#555;
 text-align:center;
 }
@@ -148,9 +146,9 @@ border-collapse:collapse;
 }
 
 .info-table td{
-padding:12px 0;
+padding:10px 0;
 border-bottom:1px solid #eee;
-font-size:14px;
+font-size:13px;
 }
 
 .info-table td:first-child{
@@ -159,17 +157,17 @@ color:#111;
 width:40%;
 }
 
-/* ITEMS */
+/* TABLE */
 
 .items{
-padding:0 20px;
+padding:0 18px;
 }
 
 .items table{
 width:100%;
 border-collapse:collapse;
-overflow:hidden;
 border-radius:14px;
+overflow:hidden;
 }
 
 .items thead{
@@ -178,22 +176,22 @@ color:#fff;
 }
 
 .items th{
-padding:14px;
-font-size:14px;
+padding:10px;
+font-size:12px;
 }
 
 .items td{
-padding:14px;
+padding:10px;
 text-align:center;
 border-bottom:1px solid #eee;
-font-size:13px;
+font-size:11px;
 }
 
 .total-row{
 background:#ff5a00;
 color:#fff;
 font-weight:900;
-font-size:18px;
+font-size:16px;
 }
 
 /* BOTTOM */
@@ -201,43 +199,43 @@ font-size:18px;
 .bottom{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
-padding:20px;
+gap:10px;
+padding:14px 18px;
 }
 
 .notes,
 .payment{
 border:1px solid #e5e5e5;
-border-radius:18px;
-padding:18px;
+border-radius:16px;
+padding:14px;
 }
 
 .notes h3,
 .payment h3{
-color:#ff6b00;
-font-size:28px;
-margin-bottom:10px;
+font-size:22px;
+color:#ff5a00;
+margin-bottom:6px;
 }
 
 .notes ul{
 padding-right:18px;
-line-height:2.2;
-font-size:13px;
+line-height:1.8;
+font-size:11px;
 color:#333;
 }
 
 .payment p{
-font-size:16px;
-margin-top:10px;
+font-size:13px;
+margin-top:8px;
 }
 
 /* FOOTER */
 
 .footer{
 background:#071127;
-padding:12px 18px;
-margin:0 20px 20px;
-border-radius:0 0 16px 16px;
+margin:0 18px;
+padding:10px 15px;
+border-radius:0 0 14px 14px;
 color:#fff;
 }
 
@@ -245,9 +243,10 @@ color:#fff;
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:10px;
-flex-wrap:wrap;
-font-size:12px;
+font-size:11px;
+gap:8px;
+flex-wrap:nowrap;
+white-space:nowrap;
 }
 
 /* BUTTONS */
@@ -255,16 +254,15 @@ font-size:12px;
 .actions{
 display:flex;
 justify-content:center;
-gap:14px;
-padding-bottom:25px;
-margin-top:10px;
+gap:10px;
+padding:10px 0;
 }
 
 .btn{
-padding:14px 28px;
+padding:12px 24px;
 border:none;
 border-radius:14px;
-font-size:18px;
+font-size:16px;
 font-weight:700;
 color:#fff;
 cursor:pointer;
@@ -293,7 +291,7 @@ display:none;
 
 .invoice{
 width:100%;
-min-height:auto;
+height:100%;
 border-radius:0;
 }
 
@@ -383,7 +381,7 @@ border-radius:0;
 
 </div>
 
-<!-- ITEMS -->
+<!-- TABLE -->
 
 <div class="items">
 
