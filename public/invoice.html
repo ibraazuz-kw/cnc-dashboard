@@ -1,173 +1,349 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>فاتورة Pro Design</title>
+<title>فاتورة PRO DESIGN</title>
 
-<link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
 body{
-overflow:auto;
-display:block;
+background:#ececec;
 padding:30px;
 }
 
-.invoice-page{
-max-width:1100px;
+.invoice{
+
+max-width:1200px;
 margin:auto;
+background:#fff;
+border-radius:25px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+
 }
 
-.invoice-box{
-background:white;
-color:black;
-border-radius:30px;
-padding:40px;
-}
+/* HEADER */
 
-.invoice-top{
-display:flex;
-justify-content:space-between;
+.top{
+
+display:grid;
+grid-template-columns:1fr 1fr;
 align-items:center;
-margin-bottom:40px;
+
 }
 
-.logo{
-font-size:38px;
-font-weight:800;
-color:#2563eb;
+.logo-side{
+
+padding:40px;
+
+}
+
+.logo-side img{
+
+width:320px;
+max-width:100%;
+
 }
 
 .invoice-title{
-font-size:36px;
-font-weight:800;
+
+background:#0b1020;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+position:relative;
+overflow:hidden;
+
 }
 
-.info-grid{
+.invoice-title::before{
+
+content:'';
+position:absolute;
+left:-60px;
+top:0;
+width:120px;
+height:100%;
+background:#ff5b00;
+transform:skewX(-20deg);
+
+}
+
+.invoice-title h1{
+
+font-size:90px;
+color:#fff;
+position:relative;
+z-index:2;
+
+}
+
+.invoice-title p{
+
+font-size:40px;
+letter-spacing:8px;
+color:#ff5b00;
+position:relative;
+z-index:2;
+
+}
+
+/* MAIN */
+
+.content{
+
+padding:40px;
+
+}
+
+.main-grid{
+
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:20px;
-margin-bottom:35px;
+gap:35px;
+
 }
 
-.info-card{
-background:#f3f6fb;
-padding:22px;
+.section{
+
+background:#fff;
+border:1px solid #e5e7eb;
 border-radius:20px;
+padding:30px;
+
 }
 
-.info-card h3{
-margin-bottom:14px;
-font-size:20px;
+.section-title{
+
+font-size:38px;
+font-weight:800;
+margin-bottom:20px;
+color:#111827;
+
 }
 
-.info-card p{
+.materials{
+
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+margin-top:25px;
+font-size:28px;
+font-weight:700;
+color:#111827;
+
+}
+
+.materials span{
+
+border-left:2px solid #ff5b00;
+padding-left:20px;
+
+}
+
+.materials span:last-child{
+
+border:none;
+
+}
+
+.about{
+
 line-height:2;
+font-size:22px;
 color:#444;
+margin-top:25px;
+
 }
 
-.design-box{
-margin-bottom:35px;
-}
+/* INFO BOX */
 
-.design-box img{
-width:100%;
-max-height:450px;
-object-fit:contain;
-border-radius:22px;
-border:1px solid #ddd;
-background:#f8fafc;
-}
+.info-box{
 
-.invoice-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-}
-
-.invoice-table th{
-background:#2563eb;
-color:white;
-padding:16px;
-font-size:15px;
-}
-
-.invoice-table td{
-padding:16px;
-text-align:center;
-border-bottom:1px solid #ddd;
-font-size:15px;
-}
-
-.summary-box{
-margin-top:40px;
-width:360px;
-margin-right:auto;
-}
-
-.summary-line{
 display:flex;
 justify-content:space-between;
-padding:16px 0;
-border-bottom:1px solid #ddd;
-font-size:17px;
+align-items:center;
+padding:20px 0;
+border-bottom:1px solid #eee;
+font-size:24px;
+
 }
 
-.final-total{
-font-size:32px;
-font-weight:800;
-color:#10b981;
-}
+.info-box:last-child{
 
-.invoice-actions{
-display:flex;
-gap:15px;
-margin-top:35px;
-}
-
-.invoice-actions button{
-flex:1;
-padding:18px;
 border:none;
-border-radius:18px;
-font-size:17px;
+
+}
+
+.info-box strong{
+
+color:#111827;
+
+}
+
+/* TABLE */
+
+.table-wrapper{
+
+margin-top:40px;
+overflow:auto;
+
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+th{
+
+background:#0b1020;
+color:#fff;
+padding:18px;
+font-size:22px;
+
+}
+
+td{
+
+padding:18px;
+font-size:21px;
+border-bottom:1px solid #eee;
+text-align:center;
+
+}
+
+.total-row{
+
+background:#ff5b00;
+color:#fff;
+font-size:26px;
 font-weight:800;
-cursor:pointer;
-color:white;
+
 }
 
-.pdf-btn{
-background:#2563eb;
+/* NOTES */
+
+.notes{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:35px;
+
 }
 
-.print-btn{
-background:#10b981;
+.note-box{
+
+border:1px solid #ddd;
+border-radius:20px;
+padding:25px;
+
 }
+
+.note-box h2{
+
+color:#ff5b00;
+margin-bottom:15px;
+font-size:30px;
+
+}
+
+.note-box p{
+
+font-size:22px;
+line-height:2;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+background:#0b1020;
+padding:30px;
+margin-top:40px;
+color:#fff;
+
+}
+
+.footer-grid{
+
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+text-align:center;
+font-size:22px;
+
+}
+
+/* EDITABLE */
+
+[contenteditable="true"]{
+
+background:#fff7ed;
+padding:4px 10px;
+border-radius:8px;
+outline:none;
+
+}
+
+/* MOBILE */
 
 @media(max-width:900px){
 
-.info-grid{
+.top{
+
 grid-template-columns:1fr;
+
 }
 
-.invoice-top{
-flex-direction:column;
-align-items:flex-start;
-gap:20px;
+.main-grid{
+
+grid-template-columns:1fr;
+
 }
 
-.summary-box{
-width:100%;
+.notes{
+
+grid-template-columns:1fr;
+
+}
+
+.footer-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.invoice-title h1{
+
+font-size:60px;
+
+}
+
+.section-title{
+
+font-size:30px;
+
 }
 
 }
@@ -178,147 +354,334 @@ width:100%;
 
 <body>
 
-<div class="invoice-page">
+<div class="invoice">
 
-<div class="invoice-box" id="invoiceContent">
+<!-- HEADER -->
 
-<!-- Top -->
+<div class="top">
 
-<div class="invoice-top">
+<div class="logo-side">
 
-<div class="logo">
-🚀 PRO DESIGN
+<img src="logo.png">
+
 </div>
 
 <div class="invoice-title">
-فاتورة رسمية
-</div>
 
-</div>
+<h1>فاتورة</h1>
 
-<!-- Info -->
-
-<div class="info-grid">
-
-<div class="info-card">
-
-<h3>
-👤 بيانات العميل
-</h3>
-
-<p id="clientName"></p>
-
-<p id="projectName"></p>
-
-<p id="clientPhone"></p>
-
-</div>
-
-<div class="info-card">
-
-<h3>
-📋 بيانات الطلب
-</h3>
-
-<p id="invoiceNumber"></p>
-
-<p id="invoiceDate"></p>
-
-<p id="invoiceStatus"></p>
+<p>INVOICE</p>
 
 </div>
 
 </div>
 
-<!-- Design -->
+<!-- CONTENT -->
 
-<div class="design-box">
+<div class="content">
 
-<img id="projectImage">
+<div class="main-grid">
+
+<!-- LEFT -->
+
+<div class="section">
+
+<h2 class="section-title">
+
+قص وتفريز على المعادن
+
+</h2>
+
+<div class="materials">
+
+<span>الألمنيوم</span>
+
+<span>الكبوند</span>
+
+<span>استيل</span>
+
+<span>حديد</span>
 
 </div>
 
-<!-- Table -->
+<div class="about">
 
-<table class="invoice-table">
+نحن متخصصون في تنفيذ أعمال القص والحفر والتفريز باستخدام أحدث مكائن الـ CNC عالية الدقة، مع تقديم حلول احترافية لمعالجة الألمنيوم والكلادينج والاستيل والحديد.
+
+<br><br>
+
+ننفذ التصاميم والزخارف والثقوب الهندسية بدقة عالية وتشطيبات متقنة تلبي احتياجات المشاريع التجارية والمعمارية الحديثة، مع اهتمام كامل بأدق التفاصيل ومعايير الجودة.
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="section">
+
+<div class="info-box">
+
+<strong>رقم الفاتورة</strong>
+
+<span id="invoiceNumber"></span>
+
+</div>
+
+<div class="info-box">
+
+<strong>رقم الطلب</strong>
+
+<span id="orderNumber"></span>
+
+</div>
+
+<div class="info-box">
+
+<strong>تاريخ الفاتورة</strong>
+
+<span id="invoiceDate"></span>
+
+</div>
+
+<div class="info-box">
+
+<strong>اسم العميل</strong>
+
+<span contenteditable="true">
+
+شركة الإبداع للمقاولات
+
+</span>
+
+</div>
+
+<div class="info-box">
+
+<strong>رقم الهاتف</strong>
+
+<span contenteditable="true">
+
+96765547
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="table-wrapper">
+
+<table>
 
 <thead>
 
 <tr>
 
-<th>الوصف</th>
+<th>م</th>
+
+<th>تفاصيل العمل</th>
+
+<th>المادة</th>
+
+<th>السماكة</th>
+
 <th>الكمية</th>
+
 <th>سعر الوحدة</th>
+
 <th>الإجمالي</th>
 
 </tr>
 
 </thead>
 
-<tbody id="invoiceTable"></tbody>
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td contenteditable="true">
+
+تفريز وحفر على الألمنيوم
+
+</td>
+
+<td contenteditable="true">
+
+ألمنيوم
+
+</td>
+
+<td contenteditable="true">
+
+3 ملم
+
+</td>
+
+<td contenteditable="true" class="qty">
+
+2
+
+</td>
+
+<td contenteditable="true" class="price">
+
+90
+
+</td>
+
+<td class="total">
+
+180 KD
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td contenteditable="true">
+
+قص CNC
+
+</td>
+
+<td contenteditable="true">
+
+كبوند
+
+</td>
+
+<td contenteditable="true">
+
+4 ملم
+
+</td>
+
+<td contenteditable="true" class="qty">
+
+1
+
+</td>
+
+<td contenteditable="true" class="price">
+
+120
+
+</td>
+
+<td class="total">
+
+120 KD
+
+</td>
+
+</tr>
+
+<tr class="total-row">
+
+<td colspan="6">
+
+الإجمالي النهائي
+
+</td>
+
+<td id="grandTotal">
+
+300 KD
+
+</td>
+
+</tr>
+
+</tbody>
 
 </table>
 
-<!-- Summary -->
-
-<div class="summary-box">
-
-<div class="summary-line">
-<span>سعر الوحدات</span>
-<span id="itemsTotal"></span>
 </div>
 
-<div class="summary-line">
-<span>الإضافات</span>
-<span id="extraTotal"></span>
-</div>
+<!-- NOTES -->
 
-<div class="summary-line">
-<span>الخصم</span>
-<span id="discountTotal"></span>
-</div>
+<div class="notes">
 
-<div class="summary-line">
-<span class="final-total">
-الإجمالي
-</span>
+<div class="note-box">
 
-<span
-class="final-total"
-id="finalTotal"
->
+<h2>
 
-0 KD
+ملاحظات
 
-</span>
+</h2>
+
+<p>
+
+• تنفيذ الطلب حسب المواصفات المتفق عليها.
+
+<br>
+
+• يصدر الشيك باسم:
+شركة برو ديزاين لورش الألمنيوم.
+
+<br>
+
+• هذه الفاتورة صادرة إلكترونيًا ولا تحتاج توقيع.
+
+</p>
 
 </div>
 
+<div class="note-box">
+
+<h2>
+
+طريقة الدفع
+
+</h2>
+
+<p>
+
+تحويل بنكي أو شيك
+
+</p>
+
+</div>
+
 </div>
 
 </div>
 
-<!-- Actions -->
+<!-- FOOTER -->
 
-<div class="invoice-actions">
+<div class="footer">
 
-<button
-class="pdf-btn"
-onclick="downloadPDF()"
->
+<div class="footer-grid">
 
-📄 تحميل PDF
+<div>
 
-</button>
+الكويت - الري - مقابل ستاركو هاردوير
 
-<button
-class="print-btn"
-onclick="window.print()"
->
+</div>
 
-🖨 طباعة
+<div>
 
-</button>
+96765547
+
+</div>
+
+<div>
+
+pro.desingn.q8@gmail.com
+
+</div>
+
+</div>
 
 </div>
 
@@ -326,137 +689,104 @@ onclick="window.print()"
 
 <script>
 
-const params =
-new URLSearchParams(window.location.search);
+/* AUTO INVOICE */
 
-const id =
-Number(params.get("id"));
+function generateInvoiceData(){
 
-const orders =
-JSON.parse(localStorage.getItem("orders")) || [];
+const today = new Date();
+
+const year = today.getFullYear();
+
+const invoice =
+"INV-" + year + "-" +
+Math.floor(1000 + Math.random()*9000);
 
 const order =
-orders.find(o => o.id === id);
+"ORD-" + year + "-" +
+Math.floor(1000 + Math.random()*9000);
 
-/* =========================
-   Load Invoice
-========================= */
+const date =
+today.getDate().toString().padStart(2,'0')
++ " / " +
+(today.getMonth()+1).toString().padStart(2,'0')
++ " / " +
+today.getFullYear();
 
-if(order){
+document.getElementById(
+"invoiceNumber"
+).innerText = invoice;
 
-clientName.innerText =
-"العميل: " + order.clientName;
+document.getElementById(
+"orderNumber"
+).innerText = order;
 
-projectName.innerText =
-"المشروع: " + order.projectName;
-
-clientPhone.innerText =
-"واتساب: " + order.clientPhone;
-
-invoiceNumber.innerText =
-"رقم الفاتورة: INV-" + order.id;
-
-invoiceDate.innerText =
-"التاريخ: " + order.createdAt;
-
-invoiceStatus.innerText =
-"الحالة: " + order.projectStatus;
-
-projectImage.src =
-order.image;
-
-if(order.pricing){
-
-const pricing =
-order.pricing;
-
-invoiceTable.innerHTML += `
-
-<tr>
-
-<td>
-${order.projectName}
-</td>
-
-<td>
-${pricing.quantity}
-</td>
-
-<td>
-${pricing.unitPrice} KD
-</td>
-
-<td>
-${pricing.total} KD
-</td>
-
-</tr>
-
-`;
-
-itemsTotal.innerText =
-(
-pricing.unitPrice *
-pricing.quantity
-) + " KD";
-
-extraTotal.innerText =
-pricing.extraCost + " KD";
-
-discountTotal.innerText =
-pricing.discount + " KD";
-
-finalTotal.innerText =
-pricing.total + " KD";
+document.getElementById(
+"invoiceDate"
+).innerText = date;
 
 }
 
+generateInvoiceData();
+
+/* AUTO TOTAL */
+
+function calculateTotals(){
+
+const rows =
+document.querySelectorAll("tbody tr");
+
+let grand = 0;
+
+rows.forEach(row=>{
+
+const qty =
+row.querySelector(".qty");
+
+const price =
+row.querySelector(".price");
+
+const total =
+row.querySelector(".total");
+
+if(qty && price && total){
+
+const q =
+parseFloat(qty.innerText) || 0;
+
+const p =
+parseFloat(price.innerText) || 0;
+
+const result =
+q * p;
+
+total.innerText =
+result + " KD";
+
+grand += result;
+
 }
 
-/* =========================
-   PDF
-========================= */
-
-async function downloadPDF(){
-
-const element =
-document.getElementById("invoiceContent");
-
-const canvas =
-await html2canvas(element,{
-scale:2
 });
 
-const imgData =
-canvas.toDataURL("image/png");
-
-const { jsPDF } =
-window.jspdf;
-
-const pdf =
-new jsPDF("p","mm","a4");
-
-const width = 210;
-
-const height =
-(canvas.height * width)
-/
-canvas.width;
-
-pdf.addImage(
-imgData,
-"PNG",
-0,
-0,
-width,
-height
-);
-
-pdf.save(
-"ProDesignInvoice.pdf"
-);
+document.getElementById(
+"grandTotal"
+).innerText =
+grand + " KD";
 
 }
+
+document.querySelectorAll(
+".qty,.price"
+).forEach(el=>{
+
+el.addEventListener(
+"input",
+calculateTotals
+);
+
+});
+
+calculateTotals();
 
 </script>
 
