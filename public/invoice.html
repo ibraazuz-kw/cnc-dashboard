@@ -5,11 +5,15 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>فاتورة PRO DESIGN</title>
+<title>
+فاتورة PRO DESIGN
+</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -34,7 +38,8 @@ margin:auto;
 background:#fff;
 border-radius:25px;
 overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,.15);
+box-shadow:
+0 10px 30px rgba(0,0,0,.15);
 
 }
 
@@ -56,8 +61,8 @@ padding:35px;
 
 .logo-side img{
 
-width:280px;
-max-width:100%;
+width:220px;
+object-fit:contain;
 
 }
 
@@ -367,110 +372,189 @@ font-size:17px;
 
 }
 
-/* PRINT FIX */
+/* PERFECT PRINT */
 
 @media print {
+
+@page{
+
+size:A4;
+margin:8mm;
+
+}
 
 body{
 
 padding:0;
-background:white;
+background:#fff;
 
 }
 
 .invoice{
 
+width:100%;
 box-shadow:none;
 border-radius:0;
 
 }
 
-.content{
+.logo-side{
 
 padding:15px;
+
+}
+
+.logo-side img{
+
+width:160px;
+
+}
+
+.invoice-title{
+
+min-height:160px;
+
+}
+
+.invoice-title h1{
+
+font-size:38px;
+
+}
+
+.invoice-title p{
+
+font-size:18px;
+letter-spacing:4px;
+
+}
+
+.content{
+
+padding:10px;
+
+}
+
+.main-grid{
+
+gap:10px;
 
 }
 
 .section{
 
-padding:15px;
+padding:12px;
+border-radius:12px;
 
 }
 
 .section-title{
 
-font-size:24px;
-
-}
-
-.about{
-
-font-size:14px;
-line-height:1.6;
+font-size:20px;
+margin-bottom:10px;
 
 }
 
 .materials{
 
-font-size:16px;
-gap:8px;
+font-size:13px;
+gap:6px;
+margin-top:8px;
+
+}
+
+.materials span{
+
+padding-left:8px;
+
+}
+
+.about{
+
+font-size:11px;
+line-height:1.7;
+margin-top:10px;
 
 }
 
 .info-box{
 
-font-size:14px;
-padding:8px 0;
+font-size:11px;
+padding:6px 0;
+
+}
+
+.table-wrapper{
+
+margin-top:12px;
 
 }
 
 th{
 
-font-size:13px;
-padding:8px;
+font-size:11px;
+padding:7px;
 
 }
 
 td{
 
+font-size:10px;
+padding:7px;
+
+}
+
+.total-row{
+
 font-size:12px;
-padding:8px;
+
+}
+
+.notes{
+
+margin-top:12px;
+gap:10px;
+
+}
+
+.note-box{
+
+padding:12px;
+border-radius:12px;
+
+}
+
+.note-box h2{
+
+font-size:16px;
+margin-bottom:5px;
 
 }
 
 .note-box p{
 
-font-size:13px;
+font-size:10px;
+line-height:1.8;
+
+}
+
+.footer{
+
+padding:10px;
+margin-top:10px;
 
 }
 
 .footer-grid{
 
-font-size:12px;
+font-size:9px;
+gap:5px;
 
 }
 
 .buttons{
 
 display:none;
-
-}
-
-.logo-side img{
-
-width:180px;
-
-}
-
-.invoice-title h1{
-
-font-size:45px;
-
-}
-
-.invoice-title p{
-
-font-size:20px;
 
 }
 
@@ -496,9 +580,13 @@ font-size:20px;
 
 <div class="invoice-title">
 
-<h1>فاتورة</h1>
+<h1>
+فاتورة
+</h1>
 
-<p>INVOICE</p>
+<p>
+INVOICE
+</p>
 
 </div>
 
@@ -526,9 +614,9 @@ font-size:20px;
 
 <span>الكبوند</span>
 
-<span>استيل</span>
+<span>الاستيل</span>
 
-<span>حديد</span>
+<span>الحديد</span>
 
 </div>
 
@@ -550,7 +638,9 @@ font-size:20px;
 
 <div class="info-box">
 
-<strong>رقم الفاتورة</strong>
+<strong>
+رقم الفاتورة
+</strong>
 
 <span id="invoiceNumber"></span>
 
@@ -558,7 +648,9 @@ font-size:20px;
 
 <div class="info-box">
 
-<strong>رقم الطلب</strong>
+<strong>
+رقم الطلب
+</strong>
 
 <span id="orderNumber"></span>
 
@@ -566,7 +658,9 @@ font-size:20px;
 
 <div class="info-box">
 
-<strong>تاريخ الفاتورة</strong>
+<strong>
+تاريخ الفاتورة
+</strong>
 
 <span id="invoiceDate"></span>
 
@@ -574,9 +668,11 @@ font-size:20px;
 
 <div class="info-box">
 
-<strong>اسم العميل</strong>
+<strong>
+اسم العميل
+</strong>
 
-<span id="customerName">
+<span contenteditable="true">
 
 شركة باب السيف
 
@@ -586,7 +682,9 @@ font-size:20px;
 
 <div class="info-box">
 
-<strong>رقم الهاتف</strong>
+<strong>
+رقم الهاتف
+</strong>
 
 <span contenteditable="true">
 
@@ -610,19 +708,33 @@ font-size:20px;
 
 <tr>
 
-<th>م</th>
+<th>
+م
+</th>
 
-<th>تفاصيل العمل</th>
+<th>
+تفاصيل العمل
+</th>
 
-<th>المادة</th>
+<th>
+المادة
+</th>
 
-<th>السماكة</th>
+<th>
+السماكة
+</th>
 
-<th>الكمية</th>
+<th>
+الكمية
+</th>
 
-<th>سعر الوحدة</th>
+<th>
+سعر الوحدة
+</th>
 
-<th>الإجمالي</th>
+<th>
+الإجمالي
+</th>
 
 </tr>
 
@@ -632,7 +744,9 @@ font-size:20px;
 
 <tr>
 
-<td>1</td>
+<td>
+1
+</td>
 
 <td contenteditable="true">
 
@@ -640,7 +754,7 @@ font-size:20px;
 
 </td>
 
-<td id="material">
+<td contenteditable="true">
 
 ألمنيوم
 
@@ -906,4 +1020,5 @@ calculateTotal();
 </script>
 
 </body>
+
 </html>
