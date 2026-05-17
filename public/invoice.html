@@ -1,3 +1,8 @@
+<!-- ===================================== -->
+<!-- ضع هذا الكود كامل داخل invoice.html -->
+<!-- واحذف أي أكواد قديمة للفاتورة -->
+<!-- ===================================== -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -5,11 +10,15 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>فاتورة PRO DESIGN</title>
+<title>
+فاتورة PRO DESIGN
+</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -25,6 +34,8 @@ background:#ececec;
 padding:30px;
 }
 
+/* CONTAINER */
+
 .invoice{
 
 max-width:1200px;
@@ -32,7 +43,8 @@ margin:auto;
 background:#fff;
 border-radius:25px;
 overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,.15);
+box-shadow:
+0 10px 30px rgba(0,0,0,.15);
 
 }
 
@@ -172,7 +184,7 @@ margin-top:25px;
 
 }
 
-/* INFO BOX */
+/* INFO */
 
 .info-box{
 
@@ -188,12 +200,6 @@ font-size:24px;
 .info-box:last-child{
 
 border:none;
-
-}
-
-.info-box strong{
-
-color:#111827;
 
 }
 
@@ -295,6 +301,41 @@ font-size:22px;
 
 }
 
+/* BUTTONS */
+
+.buttons{
+
+display:flex;
+justify-content:center;
+gap:20px;
+padding:40px;
+
+}
+
+.btn{
+
+padding:18px 35px;
+border:none;
+border-radius:18px;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+
+}
+
+.print{
+
+background:#2563eb;
+
+}
+
+.download{
+
+background:#16a34a;
+
+}
+
 /* EDITABLE */
 
 [contenteditable="true"]{
@@ -311,39 +352,23 @@ outline:none;
 @media(max-width:900px){
 
 .top{
-
 grid-template-columns:1fr;
-
 }
 
 .main-grid{
-
 grid-template-columns:1fr;
-
 }
 
 .notes{
-
 grid-template-columns:1fr;
-
 }
 
 .footer-grid{
-
 grid-template-columns:1fr;
-
 }
 
 .invoice-title h1{
-
 font-size:60px;
-
-}
-
-.section-title{
-
-font-size:30px;
-
 }
 
 }
@@ -368,9 +393,13 @@ font-size:30px;
 
 <div class="invoice-title">
 
-<h1>فاتورة</h1>
+<h1>
+فاتورة
+</h1>
 
-<p>INVOICE</p>
+<p>
+INVOICE
+</p>
 
 </div>
 
@@ -382,7 +411,7 @@ font-size:30px;
 
 <div class="main-grid">
 
-<!-- LEFT -->
+<!-- ABOUT -->
 
 <div class="section">
 
@@ -416,13 +445,15 @@ font-size:30px;
 
 </div>
 
-<!-- RIGHT -->
+<!-- INFO -->
 
 <div class="section">
 
 <div class="info-box">
 
-<strong>رقم الفاتورة</strong>
+<strong>
+رقم الفاتورة
+</strong>
 
 <span id="invoiceNumber"></span>
 
@@ -430,7 +461,9 @@ font-size:30px;
 
 <div class="info-box">
 
-<strong>رقم الطلب</strong>
+<strong>
+رقم الطلب
+</strong>
 
 <span id="orderNumber"></span>
 
@@ -438,7 +471,9 @@ font-size:30px;
 
 <div class="info-box">
 
-<strong>تاريخ الفاتورة</strong>
+<strong>
+تاريخ الفاتورة
+</strong>
 
 <span id="invoiceDate"></span>
 
@@ -446,11 +481,13 @@ font-size:30px;
 
 <div class="info-box">
 
-<strong>اسم العميل</strong>
+<strong>
+اسم العميل
+</strong>
 
-<span contenteditable="true">
+<span id="customerName">
 
-شركة الإبداع للمقاولات
+شركة باب السيف
 
 </span>
 
@@ -458,7 +495,9 @@ font-size:30px;
 
 <div class="info-box">
 
-<strong>رقم الهاتف</strong>
+<strong>
+رقم الهاتف
+</strong>
 
 <span contenteditable="true">
 
@@ -482,19 +521,33 @@ font-size:30px;
 
 <tr>
 
-<th>م</th>
+<th>
+م
+</th>
 
-<th>تفاصيل العمل</th>
+<th>
+تفاصيل العمل
+</th>
 
-<th>المادة</th>
+<th>
+المادة
+</th>
 
-<th>السماكة</th>
+<th>
+السماكة
+</th>
 
-<th>الكمية</th>
+<th>
+الكمية
+</th>
 
-<th>سعر الوحدة</th>
+<th>
+سعر الوحدة
+</th>
 
-<th>الإجمالي</th>
+<th>
+الإجمالي
+</th>
 
 </tr>
 
@@ -504,15 +557,17 @@ font-size:30px;
 
 <tr>
 
-<td>1</td>
-
-<td contenteditable="true">
-
-تفريز وحفر على الألمنيوم
-
+<td>
+1
 </td>
 
 <td contenteditable="true">
+
+تفريز وحفر CNC
+
+</td>
+
+<td id="material">
 
 ألمنيوم
 
@@ -524,13 +579,17 @@ font-size:30px;
 
 </td>
 
-<td contenteditable="true" class="qty">
+<td contenteditable="true"
+class="qty"
+id="qty">
 
 2
 
 </td>
 
-<td contenteditable="true" class="price">
+<td contenteditable="true"
+class="price"
+id="unitPrice">
 
 90
 
@@ -539,48 +598,6 @@ font-size:30px;
 <td class="total">
 
 180 KD
-
-</td>
-
-</tr>
-
-<tr>
-
-<td>2</td>
-
-<td contenteditable="true">
-
-قص CNC
-
-</td>
-
-<td contenteditable="true">
-
-كبوند
-
-</td>
-
-<td contenteditable="true">
-
-4 ملم
-
-</td>
-
-<td contenteditable="true" class="qty">
-
-1
-
-</td>
-
-<td contenteditable="true" class="price">
-
-120
-
-</td>
-
-<td class="total">
-
-120 KD
 
 </td>
 
@@ -596,7 +613,7 @@ font-size:30px;
 
 <td id="grandTotal">
 
-300 KD
+180 KD
 
 </td>
 
@@ -615,9 +632,7 @@ font-size:30px;
 <div class="note-box">
 
 <h2>
-
 ملاحظات
-
 </h2>
 
 <p>
@@ -640,9 +655,7 @@ font-size:30px;
 <div class="note-box">
 
 <h2>
-
 طريقة الدفع
-
 </h2>
 
 <p>
@@ -664,131 +677,238 @@ font-size:30px;
 <div class="footer-grid">
 
 <div>
-
 الكويت - الري - مقابل ستاركو هاردوير
-
 </div>
 
 <div>
-
 96765547
-
 </div>
 
 <div>
-
 pro.desingn.q8@gmail.com
-
 </div>
 
 </div>
 
 </div>
 
+<!-- BUTTONS -->
+
+<div class="buttons">
+
+<button class="btn print"
+onclick="window.print()">
+
+🖨 طباعة
+
+</button>
+
+<button class="btn download"
+onclick="downloadInvoice()">
+
+⬇ تحميل الفاتورة
+
+</button>
+
 </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
 
 <script>
 
-/* AUTO INVOICE */
+/* =====================================
+   قراءة رقم الطلب من الرابط
+===================================== */
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const orderId =
+params.get('order');
+
+/* =====================================
+   بيانات الطلبات
+===================================== */
+
+const orders = {
+
+'ORD-2025-0001': {
+
+customer:'شركة باب السيف',
+
+material:'ألمنيوم',
+
+qty:2,
+
+price:90
+
+},
+
+'ORD-2025-0002': {
+
+customer:'شركة الروابط',
+
+material:'كبوند',
+
+qty:3,
+
+price:120
+
+}
+
+};
+
+/* =====================================
+   توليد بيانات الفاتورة
+===================================== */
 
 function generateInvoiceData(){
 
-const today = new Date();
+const today =
+new Date();
 
-const year = today.getFullYear();
+const year =
+today.getFullYear();
 
 const invoice =
-"INV-" + year + "-" +
-Math.floor(1000 + Math.random()*9000);
-
-const order =
-"ORD-" + year + "-" +
-Math.floor(1000 + Math.random()*9000);
+'INV-' + year + '-' +
+Math.floor(
+1000 + Math.random()*9000
+);
 
 const date =
-today.getDate().toString().padStart(2,'0')
-+ " / " +
-(today.getMonth()+1).toString().padStart(2,'0')
-+ " / " +
+
+today.getDate()
+.toString()
+.padStart(2,'0')
+
++ ' / ' +
+
+(today.getMonth()+1)
+.toString()
+.padStart(2,'0')
+
++ ' / ' +
+
 today.getFullYear();
 
 document.getElementById(
-"invoiceNumber"
-).innerText = invoice;
+'invoiceNumber'
+).innerText =
+invoice;
 
 document.getElementById(
-"orderNumber"
-).innerText = order;
+'orderNumber'
+).innerText =
+orderId || 'ORD-2025-0001';
 
 document.getElementById(
-"invoiceDate"
-).innerText = date;
+'invoiceDate'
+).innerText =
+date;
 
 }
 
 generateInvoiceData();
 
-/* AUTO TOTAL */
+/* =====================================
+   عرض بيانات الطلب
+===================================== */
+
+const order =
+orders[orderId];
+
+if(order){
+
+document.getElementById(
+'customerName'
+).innerText =
+order.customer;
+
+document.getElementById(
+'material'
+).innerText =
+order.material;
+
+document.getElementById(
+'qty'
+).innerText =
+order.qty;
+
+document.getElementById(
+'unitPrice'
+).innerText =
+order.price;
+
+}
+
+/* =====================================
+   حساب الأسعار
+===================================== */
 
 function calculateTotals(){
 
-const rows =
-document.querySelectorAll("tbody tr");
-
-let grand = 0;
-
-rows.forEach(row=>{
-
 const qty =
-row.querySelector(".qty");
+parseFloat(
+document.getElementById(
+'qty'
+).innerText
+) || 0;
 
 const price =
-row.querySelector(".price");
+parseFloat(
+document.getElementById(
+'unitPrice'
+).innerText
+) || 0;
 
 const total =
-row.querySelector(".total");
+qty * price;
 
-if(qty && price && total){
-
-const q =
-parseFloat(qty.innerText) || 0;
-
-const p =
-parseFloat(price.innerText) || 0;
-
-const result =
-q * p;
-
-total.innerText =
-result + " KD";
-
-grand += result;
-
-}
-
-});
+document.querySelector(
+'.total'
+).innerText =
+total + ' KD';
 
 document.getElementById(
-"grandTotal"
+'grandTotal'
 ).innerText =
-grand + " KD";
+total + ' KD';
 
 }
 
-document.querySelectorAll(
-".qty,.price"
-).forEach(el=>{
-
-el.addEventListener(
-"input",
+document.getElementById(
+'qty'
+).addEventListener(
+'input',
 calculateTotals
 );
 
-});
+document.getElementById(
+'unitPrice'
+).addEventListener(
+'input',
+calculateTotals
+);
 
 calculateTotals();
+
+/* =====================================
+   تحميل الفاتورة
+===================================== */
+
+function downloadInvoice(){
+
+window.print();
+
+}
 
 </script>
 
 </body>
+
 </html>
