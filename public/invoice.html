@@ -2,14 +2,12 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>فاتورة PRO DESIGN</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
@@ -21,446 +19,354 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#e5e7eb;
-padding:8px;
+background:#ececec;
+padding:15px;
 }
 
-/* A4 */
-
 .invoice{
-
 width:210mm;
-min-height:296mm;
-margin:auto;
+min-height:297mm;
 background:#fff;
+margin:auto;
 overflow:hidden;
 border-radius:18px;
-box-shadow:0 10px 30px rgba(0,0,0,.15);
+position:relative;
+padding-bottom:10px;
+}
 
+/* LOGO */
+
+.logo-box{
+text-align:center;
+padding-top:25px;
+}
+
+.logo-box img{
+width:140px;
+object-fit:contain;
 }
 
 /* HEADER */
 
-.top{
-
-display:grid;
-grid-template-columns:1fr 1fr;
-align-items:center;
-
-}
-
-.logo-side{
-
-padding:14px;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#fff;
-
-}
-
-.logo-side img{
-
-width:150px;
-object-fit:contain;
-
-}
-
-.invoice-title{
-
+.header{
+margin-top:20px;
 background:#071127;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
+height:170px;
 position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+color:#fff;
 overflow:hidden;
-min-height:145px;
-
 }
 
-.invoice-title::before{
-
+.header::before{
 content:'';
 position:absolute;
-left:-60px;
+left:-40px;
 top:0;
-width:110px;
+width:140px;
 height:100%;
-background:#ff5b00;
-transform:skewX(-20deg);
-
+background:#ff5a00;
+transform:skew(-20deg);
 }
 
-.invoice-title h1{
-
-font-size:46px;
-color:#fff;
+.header h1{
+font-size:64px;
+font-weight:900;
+position:relative;
 z-index:2;
-
 }
 
-.invoice-title p{
-
-font-size:22px;
-letter-spacing:5px;
-color:#ff5b00;
+.header p{
+font-size:28px;
+letter-spacing:10px;
+color:#ff6b00;
+position:relative;
 z-index:2;
-
 }
 
-/* CONTENT */
+/* TOP INFO */
 
-.content{
-
-padding:10px 14px;
-
-}
-
-.main-grid{
-
+.top-section{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
-
+gap:14px;
+padding:20px;
 }
 
-.section{
-
-border:1px solid #e5e7eb;
-border-radius:16px;
-padding:10px;
-
+.card{
+border:1px solid #e2e2e2;
+border-radius:22px;
+padding:18px;
 }
 
-.section-title{
-
-font-size:20px;
+.card h2{
+font-size:28px;
 font-weight:900;
-margin-bottom:8px;
-color:#111827;
-
+margin-bottom:15px;
+color:#071127;
+line-height:1.5;
 }
 
 .materials{
-
 display:flex;
+justify-content:center;
+gap:15px;
+margin-bottom:18px;
 flex-wrap:wrap;
-gap:7px;
-font-size:14px;
-font-weight:700;
-
 }
 
 .materials span{
-
-border-left:2px solid #ff5b00;
-padding-left:7px;
-
+font-size:16px;
+font-weight:700;
+position:relative;
+padding-left:10px;
 }
 
-.materials span:last-child{
-
-border:none;
-
+.materials span::after{
+content:'';
+position:absolute;
+left:-8px;
+top:0;
+width:3px;
+height:100%;
+background:#ff6b00;
 }
 
 .about{
-
-margin-top:8px;
-line-height:1.7;
-font-size:10px;
-color:#444;
-
+font-size:13px;
+line-height:2;
+color:#555;
+text-align:center;
 }
 
-/* INFO */
-
-.info-box{
-
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-border-bottom:1px solid #eee;
-font-size:12px;
-
-}
-
-.info-box:last-child{
-
-border:none;
-
-}
-
-/* TABLE */
-
-.table-wrapper{
-
-margin-top:10px;
-
-}
-
-table{
-
+.info-table{
 width:100%;
 border-collapse:collapse;
-
 }
 
-th{
+.info-table td{
+padding:12px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
 
+.info-table td:first-child{
+font-weight:700;
+color:#111;
+width:40%;
+}
+
+/* ITEMS */
+
+.items{
+padding:0 20px;
+}
+
+.items table{
+width:100%;
+border-collapse:collapse;
+overflow:hidden;
+border-radius:14px;
+}
+
+.items thead{
 background:#071127;
 color:#fff;
-padding:7px;
-font-size:11px;
-
 }
 
-td{
+.items th{
+padding:14px;
+font-size:14px;
+}
 
-padding:6px;
-font-size:10px;
-border-bottom:1px solid #eee;
+.items td{
+padding:14px;
 text-align:center;
-
+border-bottom:1px solid #eee;
+font-size:13px;
 }
 
 .total-row{
-
-background:#ff5b00;
+background:#ff5a00;
 color:#fff;
-font-weight:bold;
-
+font-weight:900;
+font-size:18px;
 }
 
-/* NOTES */
+/* BOTTOM */
 
-.notes{
-
+.bottom{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:14px;
+padding:20px;
+}
+
+.notes,
+.payment{
+border:1px solid #e5e5e5;
+border-radius:18px;
+padding:18px;
+}
+
+.notes h3,
+.payment h3{
+color:#ff6b00;
+font-size:28px;
+margin-bottom:10px;
+}
+
+.notes ul{
+padding-right:18px;
+line-height:2.2;
+font-size:13px;
+color:#333;
+}
+
+.payment p{
+font-size:16px;
 margin-top:10px;
-
-}
-
-.note-box{
-
-border:1px solid #ddd;
-border-radius:14px;
-padding:9px;
-
-}
-
-.note-box h2{
-
-font-size:15px;
-color:#ff5b00;
-margin-bottom:5px;
-
-}
-
-.note-box p{
-
-font-size:10px;
-line-height:1.7;
-
 }
 
 /* FOOTER */
 
 .footer{
-
 background:#071127;
-padding:6px;
-margin-top:4px;
+padding:12px 18px;
+margin:0 20px 20px;
+border-radius:0 0 16px 16px;
 color:#fff;
-
 }
 
-.footer-grid{
-
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-text-align:center;
-gap:6px;
-font-size:10px;
-
+.footer-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+font-size:12px;
 }
 
 /* BUTTONS */
 
-.buttons{
-
+.actions{
 display:flex;
 justify-content:center;
-gap:10px;
-padding:10px;
-
+gap:14px;
+padding-bottom:25px;
+margin-top:10px;
 }
 
 .btn{
-
-padding:9px 20px;
+padding:14px 28px;
 border:none;
-border-radius:10px;
-font-size:13px;
-font-weight:bold;
+border-radius:14px;
+font-size:18px;
+font-weight:700;
+color:#fff;
 cursor:pointer;
-color:white;
-
 }
 
 .print{
-
 background:#2563eb;
-
 }
 
-.download{
-
+.pdf{
 background:#16a34a;
-
-}
-
-/* EDITABLE */
-
-[contenteditable="true"]{
-
-background:#fff7ed;
-padding:2px 5px;
-border-radius:5px;
-outline:none;
-
-}
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-.invoice{
-
-width:100%;
-min-height:auto;
-
-}
-
-.top{
-
-grid-template-columns:1fr;
-
-}
-
-.notes{
-
-grid-template-columns:1fr;
-
-}
-
-.footer-grid{
-
-grid-template-columns:1fr;
-
-}
-
-table{
-
-min-width:650px;
-
-}
-
 }
 
 /* PRINT */
 
-@media print {
-
-@page{
-
-size:A4;
-margin:4mm;
-
-}
+@media print{
 
 body{
-
 background:#fff;
 padding:0;
+}
 
+.actions{
+display:none;
 }
 
 .invoice{
-
 width:100%;
-min-height:296mm;
-box-shadow:none;
+min-height:auto;
 border-radius:0;
-
-}
-
-.buttons{
-
-display:none;
-
 }
 
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="invoice">
 
+<!-- LOGO -->
+
+<div class="logo-box">
+<img src="file_00000000fd40720abbbe4a62d7158405.jpg">
+</div>
+
 <!-- HEADER -->
 
-<div class="top">
-
-<div class="logo-side">
-
-<img src="file_00000000fd40720abbbe4a62d7158405.jpg">
-
-</div>
-
-<div class="invoice-title">
-
+<div class="header">
 <h1>فاتورة</h1>
-
 <p>INVOICE</p>
+</div>
+
+<!-- TOP -->
+
+<div class="top-section">
+
+<div class="card">
+
+<table class="info-table">
+
+<tr>
+<td>رقم الفاتورة</td>
+<td id="invoiceNumber"></td>
+</tr>
+
+<tr>
+<td>رقم الطلب</td>
+<td id="orderNumber"></td>
+</tr>
+
+<tr>
+<td>تاريخ الفاتورة</td>
+<td id="invoiceDate"></td>
+</tr>
+
+<tr>
+<td>اسم العميل</td>
+<td>شركة باب السيف</td>
+</tr>
+
+<tr>
+<td>رقم الهاتف</td>
+<td>96765547</td>
+</tr>
+
+</table>
 
 </div>
 
-</div>
+<div class="card">
 
-<!-- CONTENT -->
-
-<div class="content">
-
-<div class="main-grid">
-
-<!-- ABOUT -->
-
-<div class="section">
-
-<h2 class="section-title">
-
+<h2>
 قص وتفريز على المعادن
-
 </h2>
 
 <div class="materials">
-
 <span>الألمنيوم</span>
-
-<span>الكبوند</span>
-
+<span>الكلادينج</span>
 <span>الاستيل</span>
-
 <span>الحديد</span>
-
 </div>
 
 <div class="about">
@@ -475,86 +381,24 @@ display:none;
 
 </div>
 
-<!-- INFO -->
-
-<div class="section">
-
-<div class="info-box">
-
-<strong>رقم الفاتورة</strong>
-
-<span id="invoiceNumber"></span>
-
 </div>
 
-<div class="info-box">
+<!-- ITEMS -->
 
-<strong>رقم الطلب</strong>
-
-<span id="orderNumber"></span>
-
-</div>
-
-<div class="info-box">
-
-<strong>تاريخ الفاتورة</strong>
-
-<span id="invoiceDate"></span>
-
-</div>
-
-<div class="info-box">
-
-<strong>اسم العميل</strong>
-
-<span contenteditable="true">
-
-شركة باب السيف
-
-</span>
-
-</div>
-
-<div class="info-box">
-
-<strong>رقم الهاتف</strong>
-
-<span contenteditable="true">
-
-96765547
-
-</span>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- TABLE -->
-
-<div class="table-wrapper">
+<div class="items">
 
 <table>
 
 <thead>
 
 <tr>
-
 <th>م</th>
-
 <th>تفاصيل العمل</th>
-
 <th>المادة</th>
-
 <th>السماكة</th>
-
 <th>الكمية</th>
-
 <th>سعر الوحدة</th>
-
 <th>الإجمالي</th>
-
 </tr>
 
 </thead>
@@ -562,61 +406,18 @@ display:none;
 <tbody>
 
 <tr>
-
 <td>1</td>
-
-<td contenteditable="true">
-
-تفريز وحفر CNC
-
-</td>
-
-<td contenteditable="true">
-
-ألمنيوم
-
-</td>
-
-<td contenteditable="true">
-
-3 ملم
-
-</td>
-
-<td contenteditable="true" id="qty">
-
-2
-
-</td>
-
-<td contenteditable="true" id="unitPrice">
-
-90
-
-</td>
-
-<td id="rowTotal">
-
-180 KD
-
-</td>
-
+<td>تفريز وحفر CNC</td>
+<td>ألمنيوم</td>
+<td>3 ملم</td>
+<td>2</td>
+<td>90</td>
+<td>KD 180</td>
 </tr>
 
 <tr class="total-row">
-
-<td colspan="6">
-
-الإجمالي النهائي
-
-</td>
-
-<td id="grandTotal">
-
-180 KD
-
-</td>
-
+<td colspan="6">الإجمالي النهائي</td>
+<td>KD 180</td>
 </tr>
 
 </tbody>
@@ -625,50 +426,27 @@ display:none;
 
 </div>
 
-<!-- NOTES -->
+<!-- BOTTOM -->
+
+<div class="bottom">
 
 <div class="notes">
 
-<div class="note-box">
+<h3>ملاحظات</h3>
 
-<h2>
-
-ملاحظات
-
-</h2>
-
-<p>
-
-• تنفيذ الطلب حسب المواصفات المتفق عليها.
-
-<br>
-
-• يصدر الشيك باسم:
-شركة برو ديزاين لورش الألمنيوم.
-
-<br>
-
-• هذه الفاتورة صادرة إلكترونيًا ولا تحتاج توقيع.
-
-</p>
+<ul>
+<li>تنفيذ الطلب حسب المواصفات المتفق عليها.</li>
+<li>يصدر الشيك باسم : شركة برو ديزاين لورش الألمنيوم.</li>
+<li>هذه الفاتورة صادرة إلكترونياً ولا تحتاج توقيع.</li>
+</ul>
 
 </div>
 
-<div class="note-box">
+<div class="payment">
 
-<h2>
+<h3>طريقة الدفع</h3>
 
-طريقة الدفع
-
-</h2>
-
-<p>
-
-تحويل بنكي أو شيك
-
-</p>
-
-</div>
+<p>تحويل بنكي أو شيك</p>
 
 </div>
 
@@ -678,25 +456,19 @@ display:none;
 
 <div class="footer">
 
-<div class="footer-grid">
+<div class="footer-row">
 
-<div>
-
+<span>
 الكويت - الري - مقابل ستاركو هاردوير
+</span>
 
-</div>
-
-<div>
-
+<span>
 96765547
+</span>
 
-</div>
-
-<div>
-
-pro.desingn.q8@gmail.com
-
-</div>
+<span>
+pro.design.q8@gmail.com
+</span>
 
 </div>
 
@@ -704,20 +476,14 @@ pro.desingn.q8@gmail.com
 
 <!-- BUTTONS -->
 
-<div class="buttons">
+<div class="actions">
 
-<button class="btn print"
-onclick="window.print()">
-
+<button class="btn print" onclick="window.print()">
 🖨 طباعة
-
 </button>
 
-<button class="btn download"
-onclick="window.print()">
-
+<button class="btn pdf" onclick="window.print()">
 ⬇ حفظ PDF
-
 </button>
 
 </div>
@@ -726,92 +492,23 @@ onclick="window.print()">
 
 <script>
 
-function generateInvoiceData(){
+const year = new Date().getFullYear();
 
-const today = new Date();
+const invoiceRandom = Math.floor(1000 + Math.random() * 9000);
+const orderRandom = Math.floor(1000 + Math.random() * 9000);
 
-const year = today.getFullYear();
+document.getElementById("invoiceNumber").innerHTML =
+`INV-${year}-${invoiceRandom}`;
 
-const invoice =
-'INV-' + year + '-' +
-Math.floor(1000 + Math.random()*9000);
+document.getElementById("orderNumber").innerHTML =
+`ORD-${year}-${orderRandom}`;
 
-const order =
-'ORD-' + year + '-' +
-Math.floor(1000 + Math.random()*9000);
+const d = new Date();
 
-const date =
-
-today.getDate().toString().padStart(2,'0')
-
-+ ' / ' +
-
-(today.getMonth()+1).toString().padStart(2,'0')
-
-+ ' / ' +
-
-today.getFullYear();
-
-document.getElementById(
-'invoiceNumber'
-).innerText = invoice;
-
-document.getElementById(
-'orderNumber'
-).innerText = order;
-
-document.getElementById(
-'invoiceDate'
-).innerText = date;
-
-}
-
-generateInvoiceData();
-
-function calculateTotal(){
-
-const qty =
-parseFloat(
-document.getElementById('qty').innerText
-) || 0;
-
-const price =
-parseFloat(
-document.getElementById('unitPrice').innerText
-) || 0;
-
-const total = qty * price;
-
-document.getElementById(
-'rowTotal'
-).innerText =
-total + ' KD';
-
-document.getElementById(
-'grandTotal'
-).innerText =
-total + ' KD';
-
-}
-
-document.getElementById(
-'qty'
-).addEventListener(
-'input',
-calculateTotal
-);
-
-document.getElementById(
-'unitPrice'
-).addEventListener(
-'input',
-calculateTotal
-);
-
-calculateTotal();
+document.getElementById("invoiceDate").innerHTML =
+`${d.getFullYear()} / ${String(d.getMonth()+1).padStart(2,'0')} / ${String(d.getDate()).padStart(2,'0')}`;
 
 </script>
 
 </body>
-
 </html>
