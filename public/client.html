@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
@@ -12,49 +13,71 @@
 <style>
 
 body{
-font-family:'Cairo',sans-serif;
 background:#f3f3f3;
 padding:20px;
+font-family:'Cairo',sans-serif;
 }
 
 .header{
 background:#00133d;
 color:#fff;
 padding:30px;
-text-align:center;
-font-size:45px;
-font-weight:900;
 border-radius:30px;
+text-align:center;
+font-size:42px;
+font-weight:900;
 margin-bottom:25px;
 }
 
 .card{
 background:#fff;
-padding:35px;
+padding:30px;
 border-radius:30px;
 }
 
 h2{
-font-size:42px;
-margin-bottom:25px;
+font-size:38px;
+margin-bottom:20px;
 color:#00133d;
 }
 
 p{
-font-size:28px;
+font-size:26px;
 margin-bottom:15px;
 }
 
-.btn{
+.status{
 display:inline-block;
-background:#ff6200;
+padding:10px 20px;
+background:#16a34a;
 color:#fff;
-padding:18px 35px;
-border-radius:20px;
-text-decoration:none;
-font-size:30px;
-font-weight:700;
+border-radius:15px;
+font-size:22px;
+margin-top:10px;
+}
+
+.btns{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
 margin-top:25px;
+}
+
+.btn{
+padding:15px 30px;
+border-radius:15px;
+text-decoration:none;
+color:#fff;
+font-size:22px;
+font-weight:700;
+}
+
+.invoice{
+background:#ff6200;
+}
+
+.design{
+background:#00133d;
 }
 
 </style>
@@ -71,12 +94,26 @@ margin-top:25px;
 <h2>بيانات العميل</h2>
 
 <p>اسم العميل : شركة باب السيف</p>
-<p>رقم الهاتف : 96765547</p>
-<p>الحالة : جاري التنفيذ</p>
 
-<a href="invoice.html" class="btn">
+<p>رقم الهاتف : 96765547</p>
+
+<p>المشروع : CNC ألمنيوم</p>
+
+<div class="status">
+جاري التنفيذ
+</div>
+
+<div class="btns">
+
+<a href="invoice.html" class="btn invoice">
 عرض الفاتورة
 </a>
+
+<a href="designer.html" class="btn design">
+عرض التصميم
+</a>
+
+</div>
 
 </div>
 
