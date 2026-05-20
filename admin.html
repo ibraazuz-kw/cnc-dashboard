@@ -1,47 +1,155 @@
+<!-- ========================= -->
+<!-- admin.html -->
+<!-- صفحة الإدارة -->
+<!-- ========================= -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
-body{background:#0b0f14;color:#fff;font-family:Arial;padding:15px}
-.card{background:#111b27;padding:12px;border-radius:14px;margin-bottom:10px}
-button{padding:8px;background:#2f7bff;color:#fff;border:none;border-radius:8px}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#efefef;
+padding:20px;
+}
+
+.header{
+background:#001446;
+color:#fff;
+padding:35px;
+text-align:center;
+font-size:42px;
+font-weight:900;
+border-radius:30px;
+margin-bottom:30px;
+}
+
+.card{
+background:#fff;
+padding:40px;
+border-radius:30px;
+margin-bottom:30px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.title{
+font-size:45px;
+font-weight:900;
+color:#001446;
+margin-bottom:20px;
+}
+
+.text{
+font-size:26px;
+line-height:2;
+}
+
+.btn{
+display:inline-block;
+background:#ff6600;
+color:#fff;
+padding:18px 45px;
+border-radius:20px;
+font-size:26px;
+font-weight:700;
+margin-top:20px;
+text-decoration:none;
+}
+
+@media(max-width:768px){
+
+.header{
+font-size:28px;
+}
+
+.title{
+font-size:34px;
+}
+
+.text{
+font-size:22px;
+}
+
+.btn{
+width:100%;
+text-align:center;
+}
+
+}
+
 </style>
 </head>
+
 <body>
 
-<h2>الطلبات</h2>
-<div id="orders"></div>
+<div class="header">
+لوحة إدارة PRO DESIGN
+</div>
 
-<script>
-async function load(){
- const res=await fetch("/api/orders");
- const data=await res.json();
- const box=document.getElementById("orders");
- box.innerHTML="";
+<div class="card">
+<div class="title">الفواتير</div>
 
- data.forEach(o=>{
-  box.innerHTML+=`
-  <div class="card">
-   <b>${o.material} - ${o.type}</b><br>
-   الحالة: ${o.status}<br>
-   <button onclick="set(${o.id})">تم</button>
-  </div>`;
- });
-}
+<div class="text">
+فتح صفحة الفاتورة والطباعة والحفظ PDF
+</div>
 
-async function set(id){
- await fetch("/api/status",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({id,status:"جاهز"})
- });
- load();
-}
+<a href="invoice.html" class="btn">
+فتح الفاتورة
+</a>
 
-load();
-</script>
+</div>
+
+<div class="card">
+<div class="title">العملاء</div>
+
+<div class="text">
+عرض بيانات العملاء والمشاريع
+</div>
+
+<a href="client.html" class="btn">
+صفحة العميل
+</a>
+
+</div>
+
+<div class="card">
+<div class="title">المصنع</div>
+
+<div class="text">
+متابعة التصنيع والطلبات
+</div>
+
+<a href="factory.html" class="btn">
+المصنع
+</a>
+
+</div>
+
+<div class="card">
+<div class="title">المصمم</div>
+
+<div class="text">
+متابعة التصاميم والاعتمادات
+</div>
+
+<a href="designer.html" class="btn">
+المصمم
+</a>
+
+</div>
 
 </body>
 </html>
