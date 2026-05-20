@@ -1,13 +1,16 @@
+<!-- ========================= -->
+<!-- admin.html -->
+<!-- صفحة الإدارة -->
+<!-- ========================= -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>لوحة الإدارة</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
 
@@ -19,94 +22,72 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f2f2f2;
+background:#efefef;
 padding:20px;
 }
 
 .header{
-background:#00133d;
+background:#001446;
 color:#fff;
-padding:30px;
-border-radius:30px;
+padding:35px;
 text-align:center;
-font-size:40px;
+font-size:42px;
 font-weight:900;
-margin-bottom:25px;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-margin-bottom:25px;
-}
-
-.stat{
-background:#fff;
-padding:20px;
-border-radius:25px;
-text-align:center;
-}
-
-.stat h2{
-font-size:40px;
-color:#ff6200;
-}
-
-.stat p{
-font-size:20px;
-color:#555;
-}
-
-.grid{
-display:grid;
-gap:20px;
+border-radius:30px;
+margin-bottom:30px;
 }
 
 .card{
 background:#fff;
-padding:30px;
+padding:40px;
 border-radius:30px;
+margin-bottom:30px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-.card h2{
-font-size:38px;
-color:#00133d;
-margin-bottom:15px;
+.title{
+font-size:45px;
+font-weight:900;
+color:#001446;
+margin-bottom:20px;
 }
 
-.card p{
-font-size:23px;
-margin-bottom:25px;
+.text{
+font-size:26px;
+line-height:2;
 }
 
 .btn{
 display:inline-block;
-background:#ff6200;
+background:#ff6600;
 color:#fff;
-padding:15px 30px;
-border-radius:18px;
-text-decoration:none;
-font-size:24px;
-font-weight:700;
-}
-
-.order{
-background:#fafafa;
-padding:20px;
+padding:18px 45px;
 border-radius:20px;
+font-size:26px;
+font-weight:700;
 margin-top:20px;
-border:2px solid #eee;
+text-decoration:none;
 }
 
-.status{
-display:inline-block;
-padding:8px 18px;
-border-radius:15px;
-font-size:18px;
-margin-top:10px;
-background:#00133d;
-color:#fff;
+@media(max-width:768px){
+
+.header{
+font-size:28px;
+}
+
+.title{
+font-size:34px;
+}
+
+.text{
+font-size:22px;
+}
+
+.btn{
+width:100%;
+text-align:center;
+}
+
 }
 
 </style>
@@ -118,85 +99,55 @@ color:#fff;
 لوحة إدارة PRO DESIGN
 </div>
 
-<div class="stats">
-
-<div class="stat">
-<h2>12</h2>
-<p>الطلبات</p>
-</div>
-
-<div class="stat">
-<h2>4</h2>
-<p>بانتظار الموافقة</p>
-</div>
-
-<div class="stat">
-<h2>5</h2>
-<p>تحت التصنيع</p>
-</div>
-
-<div class="stat">
-<h2>3</h2>
-<p>مكتمل</p>
-</div>
-
-</div>
-
-<div class="grid">
-
 <div class="card">
-<h2>الفواتير</h2>
-<p>إدارة وطباعة الفواتير</p>
+<div class="title">الفواتير</div>
 
-<a class="btn" href="invoice.html">
+<div class="text">
+فتح صفحة الفاتورة والطباعة والحفظ PDF
+</div>
+
+<a href="invoice.html" class="btn">
 فتح الفاتورة
 </a>
-</div>
-
-<div class="card">
-<h2>العملاء</h2>
-<p>إدارة العملاء والمشاريع</p>
-
-<a class="btn" href="client.html">
-العملاء
-</a>
-
-<div class="order">
-<h3>شركة باب السيف</h3>
-<div class="status">جاري التنفيذ</div>
-</div>
 
 </div>
 
 <div class="card">
-<h2>المصنع</h2>
-<p>متابعة القص والحفر والتجهيز</p>
+<div class="title">العملاء</div>
 
-<a class="btn" href="factory.html">
-قسم المصنع
-</a>
-
-<div class="order">
-<h3>قص CNC</h3>
-<div class="status">قيد التصنيع</div>
+<div class="text">
+عرض بيانات العملاء والمشاريع
 </div>
+
+<a href="client.html" class="btn">
+صفحة العميل
+</a>
 
 </div>
 
 <div class="card">
-<h2>المصمم</h2>
-<p>التصاميم والاعتمادات</p>
+<div class="title">المصنع</div>
 
-<a class="btn" href="designer.html">
-قسم المصمم
+<div class="text">
+متابعة التصنيع والطلبات
+</div>
+
+<a href="factory.html" class="btn">
+المصنع
 </a>
 
-<div class="order">
-<h3>تصميم واجهة</h3>
-<div class="status">بانتظار الاعتماد</div>
 </div>
 
+<div class="card">
+<div class="title">المصمم</div>
+
+<div class="text">
+متابعة التصاميم والاعتمادات
 </div>
+
+<a href="designer.html" class="btn">
+المصمم
+</a>
 
 </div>
 
