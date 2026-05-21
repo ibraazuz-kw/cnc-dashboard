@@ -1,372 +1,180 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
+<!-- ========================= -->
+<!-- إضافات الألبوم الذكريات -->
+<!-- ========================= -->
 
-<meta charset="UTF-8">
+<!-- 1) استبدل input الملف بهذا -->
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<input
+type="file"
+id="memoryFile"
+accept="image/*,video/*"
+multiple>
 
-<title>
-الألبوم السحري | ذكرياتنا
-</title>
+<!-- ========================= -->
+<!-- 2) استبدل قسم الألبوم بهذا -->
+<!-- ========================= -->
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+<div
+class="magic-book"
+id="album">
+
+</div>
+
+<!-- ========================= -->
+<!-- 3) أضف هذا داخل style -->
+<!-- ========================= -->
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+.magic-book{
 
-body{
-
-background:
-radial-gradient(circle at center,#3b2a1d,#120d08);
-
-min-height:100vh;
-overflow-x:hidden;
-font-family:'Cairo',sans-serif;
-color:#f5e6c8;
-padding:40px;
+display:flex;
+flex-wrap:wrap;
+gap:40px;
+justify-content:center;
 
 }
 
-/* دخان */
+/* صفحة كتاب */
 
-body::before{
+.book-page{
 
-content:'';
-position:fixed;
-inset:0;
+width:420px;
+min-height:600px;
 
-background:
-url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
-
-opacity:.2;
-pointer-events:none;
-
-}
-
-/* عنوان */
-
-.title{
-
-text-align:center;
-margin-bottom:50px;
-
-}
-
-.title h1{
-
-font-family:'Cinzel',serif;
-font-size:70px;
-color:#e0c08d;
-
-text-shadow:
-0 0 15px rgba(255,220,170,.5);
-
-margin-bottom:15px;
-
-}
-
-.title p{
-
-font-size:22px;
-opacity:.8;
-
-}
-
-/* الكتاب */
-
-.book{
-
-width:100%;
-max-width:1200px;
-margin:auto;
-position:relative;
-perspective:3000px;
-
-}
-
-/* الصفحة */
-
-.page{
-
-width:100%;
-min-height:700px;
 background:
 linear-gradient(
 to right,
-#4a3322,
-#7b5a3d 4%,
-#f0dfb8 10%,
-#f7e8c8 50%,
-#f0dfb8 90%,
-#7b5a3d 96%,
-#4a3322
+#4b311d,
+#f4e4bc 8%,
+#f8eac9 50%,
+#f4e4bc 92%,
+#4b311d
 );
 
-border-radius:20px;
+border-radius:15px;
+
+padding:25px;
 
 box-shadow:
-0 0 50px rgba(0,0,0,.8),
-inset 0 0 50px rgba(0,0,0,.2);
-
-padding:60px;
+0 15px 40px rgba(0,0,0,.5);
 
 position:relative;
 
 transform-style:preserve-3d;
 
-animation:openBook 2s ease;
+animation:
+flipPage 1s ease;
 
-}
-
-@keyframes openBook{
-
-from{
-transform:
-rotateY(-90deg);
-opacity:0;
-}
-
-to{
-transform:
-rotateY(0deg);
-opacity:1;
-}
-
-}
-
-/* زخارف */
-
-.corner{
-
-position:absolute;
-width:120px;
-height:120px;
-border:4px solid rgba(80,40,10,.4);
-
-}
-
-.top-left{
-
-top:20px;
-left:20px;
-border-right:none;
-border-bottom:none;
-
-}
-
-.top-right{
-
-top:20px;
-right:20px;
-border-left:none;
-border-bottom:none;
-
-}
-
-.bottom-left{
-
-bottom:20px;
-left:20px;
-border-right:none;
-border-top:none;
-
-}
-
-.bottom-right{
-
-bottom:20px;
-right:20px;
-border-left:none;
-border-top:none;
-
-}
-
-/* رفع */
-
-.upload-box{
-
-background:rgba(40,20,10,.15);
-
-border:2px dashed rgba(90,50,20,.5);
-
-padding:35px;
-border-radius:25px;
-
-margin-bottom:50px;
-
-backdrop-filter:blur(8px);
-
-}
-
-.upload-box h2{
-
-font-family:'Cinzel',serif;
-font-size:42px;
-margin-bottom:25px;
-text-align:center;
-
-color:#5a3417;
-
-}
-
-.upload-box input,
-.upload-box textarea{
-
-width:100%;
-padding:18px;
-margin-bottom:18px;
-
-border:none;
-border-radius:15px;
-
-background:#fff7e6;
-
-font-size:20px;
-
-}
-
-.upload-box textarea{
-
-height:160px;
-resize:none;
-
-}
-
-.upload-box button{
-
-width:100%;
-padding:18px;
-
-border:none;
-border-radius:15px;
-
-background:#5a3417;
-color:#fff;
-
-font-size:24px;
-font-weight:700;
+transition:.5s;
 
 cursor:pointer;
 
-transition:.3s;
+}
+
+.book-page:hover{
+
+transform:
+rotateY(-8deg)
+scale(1.02);
 
 }
 
-.upload-box button:hover{
+@keyframes flipPage{
 
-background:#7a4722;
+from{
 
-}
+transform:
+rotateY(-90deg);
 
-/* الألبوم */
-
-.album{
-
-display:grid;
-grid-template-columns:
-repeat(auto-fit,minmax(320px,1fr));
-
-gap:35px;
+opacity:0;
 
 }
 
-/* البطاقة */
+to{
 
-.memory{
+transform:
+rotateY(0);
+
+opacity:1;
+
+}
+
+}
+
+/* حواف الورق */
+
+.book-page::before{
+
+content:'';
+
+position:absolute;
+
+top:0;
+bottom:0;
+left:0;
+
+width:20px;
 
 background:
-rgba(255,248,230,.85);
+linear-gradient(
+to right,
+rgba(0,0,0,.3),
+transparent
+);
 
-padding:18px;
-
-border-radius:20px;
-
-box-shadow:
-0 10px 25px rgba(0,0,0,.25);
-
-transform:
-rotate(-1deg);
-
-transition:.4s;
-
-position:relative;
+border-radius:15px 0 0 15px;
 
 }
 
-.memory:nth-child(even){
+/* الصور */
 
-transform:
-rotate(1deg);
-
-}
-
-.memory:hover{
-
-transform:
-scale(1.04)
-rotate(0deg);
-
-}
-
-/* صورة */
-
-.memory img,
-.memory video{
+.book-page img,
+.book-page video{
 
 width:100%;
-height:280px;
+height:320px;
 object-fit:cover;
 
-border-radius:15px;
+border-radius:12px;
 
-border:6px solid #f6e7c5;
+border:8px solid #f8f0dc;
 
 box-shadow:
-0 5px 20px rgba(0,0,0,.2);
+0 5px 20px rgba(0,0,0,.3);
+
+margin-bottom:20px;
 
 }
 
 /* الكلام */
 
-.memory-content{
-
-padding:20px 10px;
-
-}
-
-.memory-content h3{
+.page-content h3{
 
 font-family:'Cinzel',serif;
 
-font-size:30px;
+font-size:32px;
 
-margin-bottom:12px;
+margin-bottom:15px;
 
-color:#4b2b14;
+color:#4a2a12;
 
 }
 
-.memory-content p{
+.page-content p{
 
 font-size:18px;
 line-height:2;
 
-color:#4b2b14;
+color:#4a2a12;
 
 }
 
 /* التاريخ */
 
-.date{
+.page-date{
 
-margin-top:15px;
+margin-top:18px;
 
 display:inline-block;
 
@@ -377,7 +185,7 @@ padding:8px 18px;
 
 border-radius:50px;
 
-font-size:15px;
+font-size:14px;
 
 }
 
@@ -389,277 +197,43 @@ margin-top:20px;
 
 width:100%;
 
-padding:14px;
+padding:15px;
 
 border:none;
+
 border-radius:15px;
 
 background:#8b1e1e;
+
 color:#fff;
 
 font-size:18px;
+
 font-weight:700;
 
 cursor:pointer;
 
 }
 
-/* موسيقى */
-
-.music-btn{
-
-position:fixed;
-
-left:25px;
-bottom:25px;
-
-width:75px;
-height:75px;
-
-border:none;
-border-radius:50%;
-
-background:#5a3417;
-
-color:#fff;
-
-font-size:30px;
-
-cursor:pointer;
-
-box-shadow:
-0 10px 25px rgba(0,0,0,.4);
-
-z-index:999;
-
-}
-
-/* الجوال */
-
-@media(max-width:768px){
-
-.page{
-
-padding:30px;
-
-}
-
-.title h1{
-
-font-size:45px;
-
-}
-
-.upload-box h2{
-
-font-size:28px;
-
-}
-
-.memory img,
-.memory video{
-
-height:220px;
-
-}
-
-}
-
 </style>
 
-</head>
-
-<body>
-
-<!-- موسيقى -->
+<!-- ========================= -->
+<!-- 4) استبدل كود الموسيقى -->
+<!-- ========================= -->
 
 <audio id="music" loop>
 
 <source
-src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=beautiful-piano-ambient-110624.mp3"
+src="https://cdn.pixabay.com/download/audio/2023/01/10/audio_d16737f4c8.mp3?filename=turkish-lounge-135842.mp3"
 type="audio/mpeg">
 
 </audio>
 
-<button
-class="music-btn"
-onclick="toggleMusic()">
-
-🎻
-
-</button>
-
-<!-- العنوان -->
-
-<div class="title">
-
-<h1>
-الألبوم السحري
-</h1>
-
-<p>
-ذكرياتنا القديمة المحفوظة بين صفحات الزمن ✨
-</p>
-
-</div>
-
-<!-- الكتاب -->
-
-<div class="book">
-
-<div class="page">
-
-<div class="corner top-left"></div>
-<div class="corner top-right"></div>
-<div class="corner bottom-left"></div>
-<div class="corner bottom-right"></div>
-
-<!-- رفع -->
-
-<div class="upload-box">
-
-<h2>
-إضافة ذكرى جديدة
-</h2>
-
-<input
-type="text"
-id="memoryTitle"
-placeholder="عنوان الذكرى">
-
-<textarea
-id="memoryText"
-placeholder="اكتب وصف الذكرى">
-</textarea>
-
-<input
-type="file"
-id="memoryFile"
-accept="image/*,video/*">
-
-<button
-onclick="addMemory()">
-
-إضافة الذكرى ✨
-
-</button>
-
-</div>
-
-<!-- الألبوم -->
-
-<div
-class="album"
-id="album">
-
-</div>
-
-</div>
-
-</div>
+<!-- ========================= -->
+<!-- 5) استبدل loadMemories بالكامل -->
+<!-- ========================= -->
 
 <script>
-
-/* موسيقى */
-
-const music =
-document.getElementById(
-'music'
-);
-
-function toggleMusic(){
-
-if(music.paused){
-
-music.play();
-
-}else{
-
-music.pause();
-
-}
-
-}
-
-window.addEventListener(
-'click',
-()=>{
-
-music.play();
-
-},
-{once:true}
-);
-
-/* تحميل */
-
-loadMemories();
-
-/* إضافة */
-
-function addMemory(){
-
-const title =
-document.getElementById(
-'memoryTitle'
-).value;
-
-const text =
-document.getElementById(
-'memoryText'
-).value;
-
-const file =
-document.getElementById(
-'memoryFile'
-).files[0];
-
-if(!title || !file){
-
-alert('أضف عنوان وملف');
-
-return;
-
-}
-
-const reader =
-new FileReader();
-
-reader.onload =
-function(e){
-
-const memory = {
-
-title:title,
-text:text,
-file:e.target.result,
-type:file.type
-
-};
-
-let memories =
-JSON.parse(
-localStorage.getItem(
-'magicMemories'
-)
-) || [];
-
-memories.unshift(memory);
-
-localStorage.setItem(
-'magicMemories',
-JSON.stringify(memories)
-);
-
-loadMemories();
-
-};
-
-reader.readAsDataURL(file);
-
-}
-
-/* عرض */
 
 function loadMemories(){
 
@@ -679,11 +253,11 @@ localStorage.getItem(
 
 memories.forEach((m,index)=>{
 
-const card =
+const page =
 document.createElement('div');
 
-card.className =
-'memory';
+page.className =
+'book-page';
 
 let media='';
 
@@ -705,22 +279,28 @@ media =
 
 }
 
-card.innerHTML = `
+page.innerHTML = `
 
 ${media}
 
-<div class="memory-content">
+<div class="page-content">
 
 <h3>
+
 ${m.title}
+
 </h3>
 
 <p>
+
 ${m.text}
+
 </p>
 
-<div class="date">
-✨ ذكرى محفوظة
+<div class="page-date">
+
+✨ ذكرى قديمة
+
 </div>
 
 <button
@@ -735,35 +315,10 @@ onclick="deleteMemory(${index})">
 
 `;
 
-album.appendChild(card);
+album.appendChild(page);
 
 });
 
 }
 
-/* حذف */
-
-function deleteMemory(index){
-
-let memories =
-JSON.parse(
-localStorage.getItem(
-'magicMemories'
-)
-) || [];
-
-memories.splice(index,1);
-
-localStorage.setItem(
-'magicMemories',
-JSON.stringify(memories)
-);
-
-loadMemories();
-
-}
-
 </script>
-
-</body>
-</html>
