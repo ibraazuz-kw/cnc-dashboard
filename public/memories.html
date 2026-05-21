@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 
 <meta charset="UTF-8">
@@ -9,11 +8,10 @@
 content="width=device-width, initial-scale=1.0">
 
 <title>
-ذكرياتنا | PRO DESIGN
+الألبوم السحري | ذكرياتنا
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -21,104 +19,200 @@ rel="stylesheet">
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#050b24;
-overflow-x:hidden;
-color:white;
-}
 
-/* خلفية */
-
-.bg{
-position:fixed;
-inset:0;
 background:
-radial-gradient(circle at top right,#ff660033,transparent 30%),
-radial-gradient(circle at bottom left,#ffffff10,transparent 30%),
-#050b24;
-z-index:-2;
+radial-gradient(circle at center,#3b2a1d,#120d08);
+
+min-height:100vh;
+overflow-x:hidden;
+font-family:'Cairo',sans-serif;
+color:#f5e6c8;
+padding:40px;
+
 }
 
-.stars{
+/* دخان */
+
+body::before{
+
+content:'';
 position:fixed;
 inset:0;
-background:url('https://www.transparenttextures.com/patterns/stardust.png');
-opacity:.15;
-z-index:-1;
-animation:moveBg 50s linear infinite;
+
+background:
+url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+
+opacity:.2;
+pointer-events:none;
+
 }
 
-@keyframes moveBg{
-from{transform:translateY(0);}
-to{transform:translateY(-500px);}
-}
+/* عنوان */
 
-/* البداية */
+.title{
 
-.hero{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
 text-align:center;
-padding:20px;
-position:relative;
+margin-bottom:50px;
+
 }
 
-.hero h1{
-font-size:75px;
-font-weight:900;
-line-height:1.3;
+.title h1{
+
+font-family:'Cinzel',serif;
+font-size:70px;
+color:#e0c08d;
+
+text-shadow:
+0 0 15px rgba(255,220,170,.5);
+
 margin-bottom:15px;
+
 }
 
-.hero h1 span{
-color:#ff6600;
-text-shadow:0 0 20px #ff6600;
-}
+.title p{
 
-.hero p{
-font-size:24px;
+font-size:22px;
 opacity:.8;
-max-width:700px;
-line-height:1.9;
+
 }
 
-.scroll{
+/* الكتاب */
+
+.book{
+
+width:100%;
+max-width:1200px;
+margin:auto;
+position:relative;
+perspective:3000px;
+
+}
+
+/* الصفحة */
+
+.page{
+
+width:100%;
+min-height:700px;
+background:
+linear-gradient(
+to right,
+#4a3322,
+#7b5a3d 4%,
+#f0dfb8 10%,
+#f7e8c8 50%,
+#f0dfb8 90%,
+#7b5a3d 96%,
+#4a3322
+);
+
+border-radius:20px;
+
+box-shadow:
+0 0 50px rgba(0,0,0,.8),
+inset 0 0 50px rgba(0,0,0,.2);
+
+padding:60px;
+
+position:relative;
+
+transform-style:preserve-3d;
+
+animation:openBook 2s ease;
+
+}
+
+@keyframes openBook{
+
+from{
+transform:
+rotateY(-90deg);
+opacity:0;
+}
+
+to{
+transform:
+rotateY(0deg);
+opacity:1;
+}
+
+}
+
+/* زخارف */
+
+.corner{
+
 position:absolute;
-bottom:30px;
-font-size:18px;
-opacity:.7;
-animation:updown 2s infinite;
+width:120px;
+height:120px;
+border:4px solid rgba(80,40,10,.4);
+
 }
 
-@keyframes updown{
-0%,100%{transform:translateY(0);}
-50%{transform:translateY(10px);}
+.top-left{
+
+top:20px;
+left:20px;
+border-right:none;
+border-bottom:none;
+
 }
 
-/* رفع الذكريات */
+.top-right{
+
+top:20px;
+right:20px;
+border-left:none;
+border-bottom:none;
+
+}
+
+.bottom-left{
+
+bottom:20px;
+left:20px;
+border-right:none;
+border-top:none;
+
+}
+
+.bottom-right{
+
+bottom:20px;
+right:20px;
+border-left:none;
+border-top:none;
+
+}
+
+/* رفع */
 
 .upload-box{
 
-width:92%;
-margin:40px auto;
-background:#0b163f;
+background:rgba(40,20,10,.15);
+
+border:2px dashed rgba(90,50,20,.5);
+
 padding:35px;
-border-radius:35px;
-box-shadow:0 10px 30px rgba(0,0,0,.3);
+border-radius:25px;
+
+margin-bottom:50px;
+
+backdrop-filter:blur(8px);
 
 }
 
 .upload-box h2{
 
-font-size:40px;
+font-family:'Cinzel',serif;
+font-size:42px;
 margin-bottom:25px;
 text-align:center;
+
+color:#5a3417;
 
 }
 
@@ -127,16 +221,20 @@ text-align:center;
 
 width:100%;
 padding:18px;
-margin-bottom:20px;
+margin-bottom:18px;
+
 border:none;
-border-radius:18px;
+border-radius:15px;
+
+background:#fff7e6;
+
 font-size:20px;
 
 }
 
 .upload-box textarea{
 
-height:150px;
+height:160px;
 resize:none;
 
 }
@@ -145,161 +243,224 @@ resize:none;
 
 width:100%;
 padding:18px;
+
 border:none;
-border-radius:18px;
-background:#ff6600;
+border-radius:15px;
+
+background:#5a3417;
 color:#fff;
+
 font-size:24px;
 font-weight:700;
+
 cursor:pointer;
 
+transition:.3s;
+
 }
 
-/* العنوان */
+.upload-box button:hover{
 
-.section-title{
-text-align:center;
-font-size:50px;
-margin:80px 0 40px;
-font-weight:900;
-}
+background:#7a4722;
 
-.section-title span{
-color:#ff6600;
 }
 
 /* الألبوم */
 
 .album{
-width:92%;
-margin:auto;
+
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:25px;
-padding-bottom:80px;
+grid-template-columns:
+repeat(auto-fit,minmax(320px,1fr));
+
+gap:35px;
+
 }
 
-.card{
-background:#0b163f;
-border-radius:30px;
-overflow:hidden;
+/* البطاقة */
+
+.memory{
+
+background:
+rgba(255,248,230,.85);
+
+padding:18px;
+
+border-radius:20px;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.25);
+
+transform:
+rotate(-1deg);
+
 transition:.4s;
-box-shadow:0 10px 30px rgba(0,0,0,.4);
+
+position:relative;
+
 }
 
-.card:hover{
-transform:translateY(-10px) scale(1.02);
+.memory:nth-child(even){
+
+transform:
+rotate(1deg);
+
 }
 
-.card img,
-.card video{
+.memory:hover{
+
+transform:
+scale(1.04)
+rotate(0deg);
+
+}
+
+/* صورة */
+
+.memory img,
+.memory video{
+
 width:100%;
-height:320px;
+height:280px;
 object-fit:cover;
-display:block;
+
+border-radius:15px;
+
+border:6px solid #f6e7c5;
+
+box-shadow:
+0 5px 20px rgba(0,0,0,.2);
+
 }
 
-.card-content{
-padding:20px;
+/* الكلام */
+
+.memory-content{
+
+padding:20px 10px;
+
 }
 
-.card-content h3{
+.memory-content h3{
+
+font-family:'Cinzel',serif;
+
 font-size:30px;
-margin-bottom:10px;
-font-weight:800;
+
+margin-bottom:12px;
+
+color:#4b2b14;
+
 }
 
-.card-content p{
-opacity:.8;
-line-height:1.8;
-font-size:17px;
-margin-bottom:15px;
+.memory-content p{
+
+font-size:18px;
+line-height:2;
+
+color:#4b2b14;
+
 }
+
+/* التاريخ */
 
 .date{
+
+margin-top:15px;
+
 display:inline-block;
-background:#ff6600;
+
+background:#5a3417;
+color:#fff;
+
 padding:8px 18px;
+
 border-radius:50px;
-font-size:14px;
-font-weight:bold;
+
+font-size:15px;
+
 }
+
+/* حذف */
 
 .delete-btn{
 
 margin-top:20px;
+
 width:100%;
-padding:15px;
+
+padding:14px;
+
 border:none;
-border-radius:18px;
-background:#dc2626;
+border-radius:15px;
+
+background:#8b1e1e;
 color:#fff;
-font-size:20px;
+
+font-size:18px;
 font-weight:700;
+
 cursor:pointer;
 
 }
 
-/* الموسيقى */
+/* موسيقى */
 
 .music-btn{
+
 position:fixed;
-left:20px;
-bottom:20px;
+
+left:25px;
+bottom:25px;
+
 width:75px;
 height:75px;
+
 border:none;
 border-radius:50%;
-background:#ff6600;
-color:white;
-font-size:32px;
-box-shadow:0 10px 25px rgba(255,102,0,.4);
-z-index:999;
+
+background:#5a3417;
+
+color:#fff;
+
+font-size:30px;
+
 cursor:pointer;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.4);
+
+z-index:999;
+
 }
 
-/* الفوتر */
-
-.footer{
-padding:50px 20px;
-text-align:center;
-background:#020817;
-margin-top:100px;
-}
-
-.footer h2{
-font-size:40px;
-margin-bottom:15px;
-}
-
-.footer p{
-opacity:.7;
-font-size:18px;
-}
-
-/* موبايل */
+/* الجوال */
 
 @media(max-width:768px){
 
-.hero h1{
+.page{
+
+padding:30px;
+
+}
+
+.title h1{
+
 font-size:45px;
-}
 
-.hero p{
-font-size:18px;
-}
-
-.section-title{
-font-size:35px;
-}
-
-.card img,
-.card video{
-height:250px;
 }
 
 .upload-box h2{
-font-size:30px;
+
+font-size:28px;
+
+}
+
+.memory img,
+.memory video{
+
+height:220px;
+
 }
 
 }
@@ -309,9 +470,6 @@ font-size:30px;
 </head>
 
 <body>
-
-<div class="bg"></div>
-<div class="stars"></div>
 
 <!-- موسيقى -->
 
@@ -323,51 +481,49 @@ type="audio/mpeg">
 
 </audio>
 
-<button class="music-btn"
+<button
+class="music-btn"
 onclick="toggleMusic()">
 
-🎵
+🎻
 
 </button>
 
-<!-- البداية -->
+<!-- العنوان -->
 
-<section class="hero">
+<div class="title">
 
 <h1>
-
-ذكرياتنا
-<span>الجميلة</span>
-
+الألبوم السحري
 </h1>
 
 <p>
-
-كل صورة هنا تحمل لحظة،
-وكل فيديو يحمل شعور،
-وهذا المكان بيبقى شاهد على أجمل أيامنا ✨
-
+ذكرياتنا القديمة المحفوظة بين صفحات الزمن ✨
 </p>
-
-<div class="scroll">
-
-⬇ اسحب للأسفل
 
 </div>
 
-</section>
+<!-- الكتاب -->
 
-<!-- رفع الذكريات -->
+<div class="book">
+
+<div class="page">
+
+<div class="corner top-left"></div>
+<div class="corner top-right"></div>
+<div class="corner bottom-left"></div>
+<div class="corner bottom-right"></div>
+
+<!-- رفع -->
 
 <div class="upload-box">
 
 <h2>
-
-إضافة ذكرى جديدة ✨
-
+إضافة ذكرى جديدة
 </h2>
 
-<input type="text"
+<input
+type="text"
 id="memoryTitle"
 placeholder="عنوان الذكرى">
 
@@ -376,58 +532,40 @@ id="memoryText"
 placeholder="اكتب وصف الذكرى">
 </textarea>
 
-<input type="file"
+<input
+type="file"
 id="memoryFile"
 accept="image/*,video/*">
 
-<button onclick="addMemory()">
+<button
+onclick="addMemory()">
 
-إضافة الذكرى
+إضافة الذكرى ✨
 
 </button>
 
 </div>
 
-<!-- عنوان -->
-
-<h2 class="section-title">
-
-أجمل
-<span>اللحظات</span>
-
-</h2>
-
 <!-- الألبوم -->
 
-<section class="album"
+<div
+class="album"
 id="album">
 
-</section>
+</div>
 
-<!-- الفوتر -->
+</div>
 
-<footer class="footer">
-
-<h2>
-
-PRO DESIGN
-
-</h2>
-
-<p>
-
-ذكرياتنا محفوظة هنا للأبد ✨
-
-</p>
-
-</footer>
+</div>
 
 <script>
 
-/* تشغيل الموسيقى */
+/* موسيقى */
 
 const music =
-document.getElementById("music");
+document.getElementById(
+'music'
+);
 
 function toggleMusic(){
 
@@ -443,8 +581,6 @@ music.pause();
 
 }
 
-/* تشغيل تلقائي بعد أول لمسة */
-
 window.addEventListener(
 'click',
 ()=>{
@@ -455,11 +591,11 @@ music.play();
 {once:true}
 );
 
-/* تحميل الذكريات */
+/* تحميل */
 
 loadMemories();
 
-/* إضافة ذكرى */
+/* إضافة */
 
 function addMemory(){
 
@@ -480,9 +616,7 @@ document.getElementById(
 
 if(!title || !file){
 
-alert(
-'أضف عنوان وملف'
-);
+alert('أضف عنوان وملف');
 
 return;
 
@@ -506,28 +640,16 @@ type:file.type
 let memories =
 JSON.parse(
 localStorage.getItem(
-'memories'
+'magicMemories'
 )
 ) || [];
 
 memories.unshift(memory);
 
 localStorage.setItem(
-'memories',
+'magicMemories',
 JSON.stringify(memories)
 );
-
-document.getElementById(
-'memoryTitle'
-).value = '';
-
-document.getElementById(
-'memoryText'
-).value = '';
-
-document.getElementById(
-'memoryFile'
-).value = '';
 
 loadMemories();
 
@@ -537,7 +659,7 @@ reader.readAsDataURL(file);
 
 }
 
-/* عرض الذكريات */
+/* عرض */
 
 function loadMemories(){
 
@@ -551,7 +673,7 @@ album.innerHTML = '';
 let memories =
 JSON.parse(
 localStorage.getItem(
-'memories'
+'magicMemories'
 )
 ) || [];
 
@@ -560,9 +682,10 @@ memories.forEach((m,index)=>{
 const card =
 document.createElement('div');
 
-card.className = 'card';
+card.className =
+'memory';
 
-let media = '';
+let media='';
 
 if(m.type.includes('video')){
 
@@ -586,24 +709,18 @@ card.innerHTML = `
 
 ${media}
 
-<div class="card-content">
+<div class="memory-content">
 
 <h3>
-
 ${m.title}
-
 </h3>
 
 <p>
-
 ${m.text}
-
 </p>
 
 <div class="date">
-
-✨ ذكرى جميلة
-
+✨ ذكرى محفوظة
 </div>
 
 <button
@@ -631,14 +748,14 @@ function deleteMemory(index){
 let memories =
 JSON.parse(
 localStorage.getItem(
-'memories'
+'magicMemories'
 )
 ) || [];
 
 memories.splice(index,1);
 
 localStorage.setItem(
-'memories',
+'magicMemories',
 JSON.stringify(memories)
 );
 
