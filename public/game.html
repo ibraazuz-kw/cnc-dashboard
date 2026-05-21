@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لعبة جمع العملات - PRO DESIGN</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Tahoma;
+}
+
+body{
+    background:#07153a;
+    overflow:hidden;
+    color:white;
+}
+
+.game-container{
+    width:100%;
+    height:100vh;
+    position:relative;
+}
+
+.top-bar{
+    position:absolute;
+    top:15px;
+    right:15px;
+    left:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:10;
+}
+
+.score-box,
+.time-box{
+    background:#ff6600;
+    padding:12px 20px;
+    border-radius:15px;
+    font-size:22px;
+    font-weight:bold;
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+.player{
+    width:80px;
+    height:80px;
+    background:#ff6600;
+    border-radius:20px;
+    position:absolute;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    box-shadow:0 0 20px rgba(255,102,0,.5);
+}
+
+.coin{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:gold;
+    position:absolute;
+    top:-60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    animation:fall linear forwards;
+    box-shadow:0 0 20px gold;
+}
+
+@keyframes fall{
+    to{
+        top:110vh;
+    }
+}
+
+.controls{
+    position:absolute;
+    bottom:10px;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+.btn{
+    width:90px;
+    height:90px;
+    border:none;
+    border-radius:25px;
+    background:#ff6600;
+    color:white;
+    font-size:38px;
+    font-weight:bold;
+    box-shadow:0 5px 15px rgba(0,0,0,.4);
+}
+
+.game-over{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.9);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index:100;
+}
+
+.game-over h1{
+    font-size:60px;
+    margin-bottom:20px;
+    color:#ff6600;
+}
+
+.game-over p{
+    font-size:35px;
+    margin-bottom:25px;
+}
+
+.restart-btn{
+    padding:18px 45px;
+    border:none;
+    background:#ff6600;
+    color:white;
+    border-radius:18px;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.logo{
+    position:absolute;
+    top:90px;
+    width:100%;
+    text-align:center;
+    font-size:38px;
+    font-weight:bold;
+    color:white;
+}
+
+.logo span{
+    color:#ff6600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+
+    <div class="top-bar">
+        <div class="score-box">
+            النقاط: <span id="score">0</span>
+        </div>
+
+        <div class="time-box">
+            الوقت: <span id="time">30</span>
+        </div>
+    </div>
+
+    <div class="logo">
+        PRO <span>DESIGN</span>
+    </div>
+
+    <div class="player" id="player">
+        🚀
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="moveLeft()">◀</button>
+        <button class="btn" onclick="moveRight()">▶</button>
+    </div>
+
+    <div class="game-over" id="gameOver">
+        <h1>انتهت اللعبة</h1>
+        <p>مجموعك: <span id="finalScore">0</span></p>
+
+        <button class="restart-btn" onclick="restartGame()">
+            إعادة اللعب
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+let score = 0;
+let time = 30;
+
+const player = document.getElementById("player");
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const gameOver = document.getElementById("gameOver");
+const finalScore = document.getElementById("finalScore");
+
+let playerX = window.innerWidth / 2 - 40;
+
+player.style.left = playerX + "px";
+
+function moveLeft(){
+    playerX -= 40;
+
+    if(playerX < 0){
+        playerX = 0;
+    }
+
+    player.style.left = playerX + "px";
+}
+
+function moveRight(){
+    playerX += 40;
+
+    if(playerX > window.innerWidth - 80){
+        playerX = window.innerWidth - 80;
+    }
+
+    player.style.left = playerX + "px";
+}
+
+function createCoin(){
+
+    if(time <= 0) return;
+
+    const coin = document.createElement("div");
+
+    coin.classList.add("coin");
+
+    coin.innerHTML = "🪙";
+
+    coin.style.left =
+        Math.random() * (window.innerWidth - 50) + "px";
+
+    coin.style.animationDuration =
+        (Math.random() * 2 + 3) + "s";
+
+    document.body.appendChild(coin);
+
+    const checkHit = setInterval(() => {
+
+        const coinRect = coin.getBoundingClientRect();
+        const playerRect = player.getBoundingClientRect();
+
+        if(
+            coinRect.bottom >= playerRect.top &&
+            coinRect.left < playerRect.right &&
+            coinRect.right > playerRect.left
+        ){
+
+            score++;
+
+            scoreEl.innerText = score;
+
+            coin.remove();
+
+            clearInterval(checkHit);
+        }
+
+        if(coinRect.top > window.innerHeight){
+            coin.remove();
+            clearInterval(checkHit);
+        }
+
+    },20);
+}
+
+setInterval(createCoin,700);
+
+const timer = setInterval(() => {
+
+    time--;
+
+    timeEl.innerText = time;
+
+    if(time <= 0){
+
+        clearInterval(timer);
+
+        gameOver.style.display = "flex";
+
+        finalScore.innerText = score;
+    }
+
+},1000);
+
+function restartGame(){
+
+    location.reload();
+}
+
+document.addEventListener("keydown", (e)=>{
+
+    if(e.key === "ArrowLeft"){
+        moveLeft();
+    }
+
+    if(e.key === "ArrowRight"){
+        moveRight();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
