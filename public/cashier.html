@@ -1,0 +1,142 @@
+<!-- cashier.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>كاشير Pro Design</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="cashier.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+<div class="logo">
+PRO DESIGN
+</div>
+
+<input type="text" id="search" placeholder="ابحث عن خدمة...">
+
+</header>
+
+<section class="categories">
+
+<button onclick="filterCategory('all')">الكل</button>
+
+<button onclick="filterCategory('cnc')">CNC</button>
+
+<button onclick="filterCategory('aluminum')">ألمنيوم</button>
+
+<button onclick="filterCategory('cladding')">كلادنج</button>
+
+<button onclick="filterCategory('doors')">أبواب</button>
+
+</section>
+
+<section class="products" id="products">
+
+<div class="product" data-category="cnc">
+
+<img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png">
+
+<h3>تفريز ألمنيوم ديكور</h3>
+
+<p>20 د.ك</p>
+
+<div class="qty">
+
+<button onclick="decrease(this)">-</button>
+
+<span>1</span>
+
+<button onclick="increase(this)">+</button>
+
+</div>
+
+<button class="add-btn"
+onclick="addToCart('تفريز ألمنيوم ديكور',20,this)">
+إضافة
+</button>
+
+</div>
+
+<div class="product" data-category="cladding">
+
+<img src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
+
+<h3>قص كلادنج</h3>
+
+<p>15 د.ك</p>
+
+<div class="qty">
+
+<button onclick="decrease(this)">-</button>
+
+<span>1</span>
+
+<button onclick="increase(this)">+</button>
+
+</div>
+
+<button class="add-btn"
+onclick="addToCart('قص كلادنج',15,this)">
+إضافة
+</button>
+
+</div>
+
+<div class="product" data-category="doors">
+
+<img src="https://cdn-icons-png.flaticon.com/512/619/619153.png">
+
+<h3>باب ألمنيوم</h3>
+
+<p>85 د.ك</p>
+
+<div class="qty">
+
+<button onclick="decrease(this)">-</button>
+
+<span>1</span>
+
+<button onclick="increase(this)">+</button>
+
+</div>
+
+<button class="add-btn"
+onclick="addToCart('باب ألمنيوم',85,this)">
+إضافة
+</button>
+
+</div>
+
+</section>
+
+<section class="cart">
+
+<h2>الفاتورة</h2>
+
+<div id="cart-items"></div>
+
+<div class="total">
+الإجمالي:
+<span id="total">0</span>
+د.ك
+</div>
+
+<button class="print-btn" onclick="printInvoice()">
+طباعة الفاتورة
+</button>
+
+</section>
+
+<script src="cashier.js"></script>
+
+</body>
+</html>
