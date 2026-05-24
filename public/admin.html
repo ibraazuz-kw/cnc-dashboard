@@ -2,211 +2,124 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-لوحة الإدارة
-</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap"
-rel="stylesheet">
+<title>لوحة الإدارة</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cairo',sans-serif;
-}
-
 body{
-background:#f1f1f1;
+font-family:Arial;
+background:#f2f2f2;
 padding:20px;
 }
 
 .header{
-
 background:#001446;
 color:#fff;
-
-padding:35px;
-
-border-radius:30px;
-
-font-size:42px;
-
-font-weight:900;
-
+padding:30px;
+font-size:40px;
+font-weight:bold;
+border-radius:25px;
 text-align:center;
-
-margin-bottom:30px;
-
+margin-bottom:20px;
 }
 
 .card{
-
 background:#fff;
-
-padding:35px;
-
-border-radius:30px;
-
-margin-bottom:30px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-
+padding:25px;
+border-radius:25px;
+margin-bottom:25px;
 }
 
 .title{
-
 font-size:35px;
-
-font-weight:900;
-
+font-weight:bold;
+margin-bottom:20px;
 color:#001446;
-
-margin-bottom:25px;
-
 }
 
 input,
-select,
-textarea{
+textarea,
+select{
 
 width:100%;
-
 padding:18px;
-
+margin-bottom:15px;
 border-radius:18px;
-
 border:1px solid #ccc;
-
-margin-bottom:18px;
-
 font-size:20px;
 
 }
 
-textarea{
-
-height:120px;
-
-resize:none;
-
-}
-
-.btn{
+button{
 
 width:100%;
-
 padding:18px;
-
 border:none;
-
 border-radius:18px;
-
 background:#ff6600;
-
 color:#fff;
-
-font-size:24px;
-
-font-weight:700;
-
-cursor:pointer;
+font-size:25px;
+font-weight:bold;
 
 }
 
 .project{
 
 background:#f7f7f7;
-
-padding:25px;
-
-border-radius:25px;
-
+padding:20px;
+border-radius:20px;
 margin-top:20px;
 
 }
 
 .project h2{
-
-font-size:30px;
-
-margin-bottom:15px;
-
 color:#001446;
-
+margin-bottom:10px;
 }
 
 .status{
 
 display:inline-block;
-
 padding:10px 20px;
-
-border-radius:15px;
-
-background:#16a34a;
-
+background:green;
 color:#fff;
-
-font-size:18px;
-
+border-radius:15px;
 margin-top:15px;
 
 }
 
-.actions{
+.row{
 
 display:flex;
-
 gap:10px;
-
 margin-top:20px;
 
-flex-wrap:wrap;
-
 }
 
-.small-btn{
+.small{
 
 flex:1;
-
 padding:15px;
-
-border:none;
-
-border-radius:15px;
-
 font-size:18px;
-
-font-weight:700;
-
-cursor:pointer;
-
-color:#fff;
 
 }
 
-.edit{
+.blue{
 background:#2563eb;
 }
 
-.delete{
+.red{
 background:#dc2626;
 }
 
-.send{
+.green{
 background:#16a34a;
 }
 
-.invoice{
+.orange{
 background:#ff6600;
 }
 
@@ -217,74 +130,37 @@ background:#ff6600;
 <body>
 
 <div class="header">
-
 لوحة إدارة PRO DESIGN
-
 </div>
 
 <div class="card">
 
 <div class="title">
-
 إضافة عميل جديد
-
 </div>
 
-<input
-type="text"
-id="company"
-placeholder="اسم الشركة">
+<input id="company" placeholder="اسم الشركة">
 
-<input
-type="text"
-id="username"
-placeholder="اسم المستخدم">
+<input id="username" placeholder="اسم المستخدم">
 
-<input
-type="password"
-id="password"
-placeholder="كلمة المرور">
+<input id="password" placeholder="كلمة المرور">
 
-<input
-type="text"
-id="phone"
-placeholder="رقم الهاتف">
+<input id="phone" placeholder="رقم الهاتف">
 
-<textarea
-id="details"
-placeholder="تفاصيل المشروع">
-</textarea>
+<textarea id="details" placeholder="تفاصيل المشروع"></textarea>
 
 <select id="status">
 
-<option>
-بانتظار التصميم
-</option>
-
-<option>
-قيد التصميم
-</option>
-
-<option>
-بانتظار الاعتماد
-</option>
-
-<option>
-قيد التصنيع
-</option>
-
-<option>
-تم التسليم
-</option>
+<option>بانتظار التصميم</option>
+<option>قيد التصميم</option>
+<option>بانتظار الاعتماد</option>
+<option>قيد التصنيع</option>
+<option>تم التسليم</option>
 
 </select>
 
-<button
-class="btn"
-onclick="addProject()">
-
+<button onclick="addProject()">
 إضافة المشروع
-
 </button>
 
 </div>
@@ -292,65 +168,40 @@ onclick="addProject()">
 <div class="card">
 
 <div class="title">
-
 المشاريع الحالية
-
 </div>
 
-<div id="projects">
-
-</div>
+<div id="projects"></div>
 
 </div>
 
 <script>
 
-/* تحميل */
-
 loadProjects();
-
-/* إضافة */
 
 function addProject(){
 
 const company =
-document.getElementById(
-'company'
-).value;
+document.getElementById("company").value;
 
 const username =
-document.getElementById(
-'username'
-).value;
+document.getElementById("username").value;
 
 const password =
-document.getElementById(
-'password'
-).value;
+document.getElementById("password").value;
 
 const phone =
-document.getElementById(
-'phone'
-).value;
+document.getElementById("phone").value;
 
 const details =
-document.getElementById(
-'details'
-).value;
+document.getElementById("details").value;
 
 const status =
-document.getElementById(
-'status'
-).value;
+document.getElementById("status").value;
 
-if(!company || !username || !password){
-
-alert(
-'أكمل البيانات'
-);
-
+if(company==""){
+alert("أدخل اسم الشركة");
 return;
-
 }
 
 const project = {
@@ -365,42 +216,32 @@ status
 };
 
 let projects =
-JSON.parse(
-localStorage.getItem(
-'projects'
-)
-) || [];
+JSON.parse(localStorage.getItem("projects"))
+|| [];
 
 projects.unshift(project);
 
 localStorage.setItem(
-'projects',
+"projects",
 JSON.stringify(projects)
 );
 
 loadProjects();
 
-clearForm();
+clearInputs();
 
 }
-
-/* عرض */
 
 function loadProjects(){
 
 const container =
-document.getElementById(
-'projects'
-);
+document.getElementById("projects");
 
-container.innerHTML='';
+container.innerHTML="";
 
 let projects =
-JSON.parse(
-localStorage.getItem(
-'projects'
-)
-) || [];
+JSON.parse(localStorage.getItem("projects"))
+|| [];
 
 projects.forEach((p,index)=>{
 
@@ -408,66 +249,48 @@ container.innerHTML += `
 
 <div class="project">
 
-<h2>
+<h2>${p.company}</h2>
 
-${p.company}
+<p>👤 ${p.username}</p>
 
-</h2>
+<p>📞 ${p.phone}</p>
 
-<div>
-
-👤 ${p.username}
-
-</div>
-
-<div>
-
-📞 ${p.phone}
-
-</div>
-
-<div>
-
-📝 ${p.details}
-
-</div>
+<p>📝 ${p.details}</p>
 
 <div class="status">
-
 ${p.status}
-
 </div>
 
-<div class="actions">
+<div class="row">
 
-<button
-class="small-btn send"
-onclick="sendToFactory(${index})">
-
-إرسال للمصنع
-
-</button>
-
-<button
-class="small-btn invoice">
-
-فاتورة
-
-</button>
-
-<button
-class="small-btn edit"
+<button class="small blue"
 onclick="editProject(${index})">
 
 تعديل
 
 </button>
 
-<button
-class="small-btn delete"
+<button class="small red"
 onclick="deleteProject(${index})">
 
 حذف
+
+</button>
+
+</div>
+
+<div class="row">
+
+<button class="small green"
+onclick="sendFactory(${index})">
+
+إرسال للمصنع
+
+</button>
+
+<button class="small orange">
+
+فاتورة
 
 </button>
 
@@ -481,21 +304,16 @@ onclick="deleteProject(${index})">
 
 }
 
-/* حذف */
-
 function deleteProject(index){
 
 let projects =
-JSON.parse(
-localStorage.getItem(
-'projects'
-)
-) || [];
+JSON.parse(localStorage.getItem("projects"))
+|| [];
 
 projects.splice(index,1);
 
 localStorage.setItem(
-'projects',
+"projects",
 JSON.stringify(projects)
 );
 
@@ -503,109 +321,67 @@ loadProjects();
 
 }
 
-/* تعديل */
-
 function editProject(index){
 
 let projects =
-JSON.parse(
-localStorage.getItem(
-'projects'
-)
-) || [];
+JSON.parse(localStorage.getItem("projects"))
+|| [];
 
-const p =
-projects[index];
+const p = projects[index];
 
-document.getElementById(
-'company'
-).value =
+document.getElementById("company").value =
 p.company;
 
-document.getElementById(
-'username'
-).value =
+document.getElementById("username").value =
 p.username;
 
-document.getElementById(
-'password'
-).value =
+document.getElementById("password").value =
 p.password;
 
-document.getElementById(
-'phone'
-).value =
+document.getElementById("phone").value =
 p.phone;
 
-document.getElementById(
-'details'
-).value =
+document.getElementById("details").value =
 p.details;
 
-document.getElementById(
-'status'
-).value =
+document.getElementById("status").value =
 p.status;
 
 deleteProject(index);
 
 }
 
-/* إرسال للمصنع */
-
-function sendToFactory(index){
+function sendFactory(index){
 
 let projects =
-JSON.parse(
-localStorage.getItem(
-'projects'
-)
-) || [];
+JSON.parse(localStorage.getItem("projects"))
+|| [];
 
 projects[index].status =
-'قيد التصنيع';
+"قيد التصنيع";
 
 localStorage.setItem(
-'projects',
+"projects",
 JSON.stringify(projects)
 );
 
 loadProjects();
 
-alert(
-'تم الإرسال للمصنع'
-);
+alert("تم الإرسال للمصنع");
 
 }
 
-/* تنظيف */
+function clearInputs(){
 
-function clearForm(){
-
-document.getElementById(
-'company'
-).value='';
-
-document.getElementById(
-'username'
-).value='';
-
-document.getElementById(
-'password'
-).value='';
-
-document.getElementById(
-'phone'
-).value='';
-
-document.getElementById(
-'details'
-).value='';
+document.getElementById("company").value="";
+document.getElementById("username").value="";
+document.getElementById("password").value="";
+document.getElementById("phone").value="";
+document.getElementById("details").value="";
 
 }
 
 </script>
 
 </body>
-
 </html>
