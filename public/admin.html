@@ -1,16 +1,19 @@
-<!-- ========================= -->
-<!-- admin.html -->
-<!-- صفحة الإدارة -->
-<!-- ========================= -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+لوحة الإدارة
+</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -22,134 +25,587 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#efefef;
+background:#f1f1f1;
 padding:20px;
 }
 
 .header{
+
 background:#001446;
 color:#fff;
+
 padding:35px;
-text-align:center;
-font-size:42px;
-font-weight:900;
+
 border-radius:30px;
+
+font-size:42px;
+
+font-weight:900;
+
+text-align:center;
+
 margin-bottom:30px;
+
 }
 
 .card{
+
 background:#fff;
-padding:40px;
+
+padding:35px;
+
 border-radius:30px;
+
 margin-bottom:30px;
+
 box-shadow:0 5px 15px rgba(0,0,0,.08);
+
 }
 
 .title{
-font-size:45px;
+
+font-size:35px;
+
 font-weight:900;
+
 color:#001446;
-margin-bottom:20px;
+
+margin-bottom:25px;
+
 }
 
-.text{
-font-size:26px;
-line-height:2;
-}
+input,
+select,
+textarea{
 
-.btn{
-display:inline-block;
-background:#ff6600;
-color:#fff;
-padding:18px 45px;
-border-radius:20px;
-font-size:26px;
-font-weight:700;
-margin-top:20px;
-text-decoration:none;
-}
-
-@media(max-width:768px){
-
-.header{
-font-size:28px;
-}
-
-.title{
-font-size:34px;
-}
-
-.text{
-font-size:22px;
-}
-
-.btn{
 width:100%;
-text-align:center;
+
+padding:18px;
+
+border-radius:18px;
+
+border:1px solid #ccc;
+
+margin-bottom:18px;
+
+font-size:20px;
+
 }
 
+textarea{
+
+height:120px;
+
+resize:none;
+
+}
+
+.btn{
+
+width:100%;
+
+padding:18px;
+
+border:none;
+
+border-radius:18px;
+
+background:#ff6600;
+
+color:#fff;
+
+font-size:24px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.project{
+
+background:#f7f7f7;
+
+padding:25px;
+
+border-radius:25px;
+
+margin-top:20px;
+
+}
+
+.project h2{
+
+font-size:30px;
+
+margin-bottom:15px;
+
+color:#001446;
+
+}
+
+.status{
+
+display:inline-block;
+
+padding:10px 20px;
+
+border-radius:15px;
+
+background:#16a34a;
+
+color:#fff;
+
+font-size:18px;
+
+margin-top:15px;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:10px;
+
+margin-top:20px;
+
+flex-wrap:wrap;
+
+}
+
+.small-btn{
+
+flex:1;
+
+padding:15px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:18px;
+
+font-weight:700;
+
+cursor:pointer;
+
+color:#fff;
+
+}
+
+.edit{
+background:#2563eb;
+}
+
+.delete{
+background:#dc2626;
+}
+
+.send{
+background:#16a34a;
+}
+
+.invoice{
+background:#ff6600;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="header">
+
 لوحة إدارة PRO DESIGN
-</div>
-
-<div class="card">
-<div class="title">الفواتير</div>
-
-<div class="text">
-فتح صفحة الفاتورة والطباعة والحفظ PDF
-</div>
-
-<a href="invoice.html" class="btn">
-فتح الفاتورة
-</a>
 
 </div>
 
 <div class="card">
-<div class="title">العملاء</div>
 
-<div class="text">
-عرض بيانات العملاء والمشاريع
+<div class="title">
+
+إضافة عميل جديد
+
 </div>
 
-<a href="client.html" class="btn">
-صفحة العميل
-</a>
+<input
+type="text"
+id="company"
+placeholder="اسم الشركة">
+
+<input
+type="text"
+id="username"
+placeholder="اسم المستخدم">
+
+<input
+type="password"
+id="password"
+placeholder="كلمة المرور">
+
+<input
+type="text"
+id="phone"
+placeholder="رقم الهاتف">
+
+<textarea
+id="details"
+placeholder="تفاصيل المشروع">
+</textarea>
+
+<select id="status">
+
+<option>
+بانتظار التصميم
+</option>
+
+<option>
+قيد التصميم
+</option>
+
+<option>
+بانتظار الاعتماد
+</option>
+
+<option>
+قيد التصنيع
+</option>
+
+<option>
+تم التسليم
+</option>
+
+</select>
+
+<button
+class="btn"
+onclick="addProject()">
+
+إضافة المشروع
+
+</button>
 
 </div>
 
 <div class="card">
-<div class="title">المصنع</div>
 
-<div class="text">
-متابعة التصنيع والطلبات
-</div>
+<div class="title">
 
-<a href="factory.html" class="btn">
-المصنع
-</a>
+المشاريع الحالية
 
 </div>
 
-<div class="card">
-<div class="title">المصمم</div>
-
-<div class="text">
-متابعة التصاميم والاعتمادات
-</div>
-
-<a href="designer.html" class="btn">
-المصمم
-</a>
+<div id="projects">
 
 </div>
+
+</div>
+
+<script>
+
+/* تحميل */
+
+loadProjects();
+
+/* إضافة */
+
+function addProject(){
+
+const company =
+document.getElementById(
+'company'
+).value;
+
+const username =
+document.getElementById(
+'username'
+).value;
+
+const password =
+document.getElementById(
+'password'
+).value;
+
+const phone =
+document.getElementById(
+'phone'
+).value;
+
+const details =
+document.getElementById(
+'details'
+).value;
+
+const status =
+document.getElementById(
+'status'
+).value;
+
+if(!company || !username || !password){
+
+alert(
+'أكمل البيانات'
+);
+
+return;
+
+}
+
+const project = {
+
+company,
+username,
+password,
+phone,
+details,
+status
+
+};
+
+let projects =
+JSON.parse(
+localStorage.getItem(
+'projects'
+)
+) || [];
+
+projects.unshift(project);
+
+localStorage.setItem(
+'projects',
+JSON.stringify(projects)
+);
+
+loadProjects();
+
+clearForm();
+
+}
+
+/* عرض */
+
+function loadProjects(){
+
+const container =
+document.getElementById(
+'projects'
+);
+
+container.innerHTML='';
+
+let projects =
+JSON.parse(
+localStorage.getItem(
+'projects'
+)
+) || [];
+
+projects.forEach((p,index)=>{
+
+container.innerHTML += `
+
+<div class="project">
+
+<h2>
+
+${p.company}
+
+</h2>
+
+<div>
+
+👤 ${p.username}
+
+</div>
+
+<div>
+
+📞 ${p.phone}
+
+</div>
+
+<div>
+
+📝 ${p.details}
+
+</div>
+
+<div class="status">
+
+${p.status}
+
+</div>
+
+<div class="actions">
+
+<button
+class="small-btn send"
+onclick="sendToFactory(${index})">
+
+إرسال للمصنع
+
+</button>
+
+<button
+class="small-btn invoice">
+
+فاتورة
+
+</button>
+
+<button
+class="small-btn edit"
+onclick="editProject(${index})">
+
+تعديل
+
+</button>
+
+<button
+class="small-btn delete"
+onclick="deleteProject(${index})">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* حذف */
+
+function deleteProject(index){
+
+let projects =
+JSON.parse(
+localStorage.getItem(
+'projects'
+)
+) || [];
+
+projects.splice(index,1);
+
+localStorage.setItem(
+'projects',
+JSON.stringify(projects)
+);
+
+loadProjects();
+
+}
+
+/* تعديل */
+
+function editProject(index){
+
+let projects =
+JSON.parse(
+localStorage.getItem(
+'projects'
+)
+) || [];
+
+const p =
+projects[index];
+
+document.getElementById(
+'company'
+).value =
+p.company;
+
+document.getElementById(
+'username'
+).value =
+p.username;
+
+document.getElementById(
+'password'
+).value =
+p.password;
+
+document.getElementById(
+'phone'
+).value =
+p.phone;
+
+document.getElementById(
+'details'
+).value =
+p.details;
+
+document.getElementById(
+'status'
+).value =
+p.status;
+
+deleteProject(index);
+
+}
+
+/* إرسال للمصنع */
+
+function sendToFactory(index){
+
+let projects =
+JSON.parse(
+localStorage.getItem(
+'projects'
+)
+) || [];
+
+projects[index].status =
+'قيد التصنيع';
+
+localStorage.setItem(
+'projects',
+JSON.stringify(projects)
+);
+
+loadProjects();
+
+alert(
+'تم الإرسال للمصنع'
+);
+
+}
+
+/* تنظيف */
+
+function clearForm(){
+
+document.getElementById(
+'company'
+).value='';
+
+document.getElementById(
+'username'
+).value='';
+
+document.getElementById(
+'password'
+).value='';
+
+document.getElementById(
+'phone'
+).value='';
+
+document.getElementById(
+'details'
+).value='';
+
+}
+
+</script>
 
 </body>
+
 </html>
