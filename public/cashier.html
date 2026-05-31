@@ -7,7 +7,7 @@
 
 <title>كاشير PRO DESIGN</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
@@ -20,147 +20,140 @@ font-family:'Cairo',sans-serif;
 
 body{
 background:#f3f3f3;
-}
-
-.topbar{
-background:#001a5c;
-padding:25px;
-text-align:center;
-}
-
-.logo{
-color:#ff6200;
-font-size:40px;
-font-weight:900;
-margin-bottom:15px;
-}
-
-#search{
-width:100%;
-padding:18px;
-border:none;
-border-radius:15px;
-font-size:20px;
-}
-
-.categories{
-display:flex;
-gap:10px;
-overflow:auto;
-padding:15px;
-background:white;
-}
-
-.categories button{
-border:none;
-background:#001a5c;
-color:white;
-padding:12px 20px;
-border-radius:12px;
-font-size:18px;
-cursor:pointer;
-white-space:nowrap;
-}
-
-.products{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-gap:20px;
 padding:20px;
 }
 
-.product{
-background:white;
+.container{
+max-width:1400px;
+margin:auto;
+}
+
+.header{
+background:#001b5e;
+color:#fff;
 padding:25px;
 border-radius:20px;
 text-align:center;
+font-size:36px;
+font-weight:900;
+margin-bottom:20px;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
 box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-.product h3{
-font-size:28px;
-margin-bottom:10px;
-}
-
-.product p{
-font-size:30px;
-font-weight:900;
-color:#ff6200;
+.title{
+font-size:24px;
+font-weight:700;
+color:#001b5e;
 margin-bottom:15px;
 }
 
-.qty{
-display:flex;
-justify-content:center;
-align-items:center;
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:10px;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #ddd;
+border-radius:10px;
+font-size:18px;
+}
+
+button{
+border:none;
+cursor:pointer;
+}
+
+.add-btn{
+background:#ff6600;
+color:#fff;
+padding:14px;
+width:100%;
+border-radius:12px;
+font-size:18px;
+font-weight:700;
+margin-top:15px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#001b5e;
+color:#fff;
+padding:12px;
+}
+
+td{
+padding:12px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.client-info{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:15px;
 margin-bottom:15px;
 }
 
-.qty button{
-width:50px;
-height:50px;
-border:none;
-background:#001a5c;
-color:white;
-font-size:25px;
-border-radius:12px;
-cursor:pointer;
-}
-
-.qty span{
-font-size:28px;
-font-weight:900;
-}
-
-.add-btn{
-width:100%;
-padding:15px;
-border:none;
-background:#ff6200;
-color:white;
-font-size:24px;
-font-weight:700;
-border-radius:15px;
-cursor:pointer;
-}
-
-.cart{
-background:white;
-padding:25px;
-margin:20px;
-border-radius:20px;
-}
-
-.cart h2{
-font-size:40px;
-margin-bottom:20px;
-}
-
-#cart-items div{
-padding:10px 0;
-font-size:22px;
-border-bottom:1px solid #eee;
-}
-
-.total{
-font-size:45px;
-font-weight:900;
-color:#001a5c;
+.total-box{
 margin-top:20px;
+background:#001b5e;
+color:#fff;
+padding:20px;
+border-radius:15px;
+font-size:30px;
+font-weight:900;
+text-align:center;
 }
 
 .print-btn{
-width:100%;
 margin-top:20px;
-padding:20px;
-border:none;
-background:#28a745;
+background:#22aa44;
 color:white;
-font-size:30px;
-font-weight:900;
+padding:15px;
+width:100%;
+font-size:22px;
+font-weight:700;
 border-radius:15px;
-cursor:pointer;
+}
+
+.footer{
+margin-top:15px;
+text-align:center;
+font-size:18px;
+color:#666;
+}
+
+@media print{
+
+body{
+padding:0;
+background:#fff;
+}
+
+.add-btn,
+.print-btn{
+display:none;
+}
+
+.card{
+box-shadow:none;
+}
+
 }
 
 </style>
@@ -169,176 +162,222 @@ cursor:pointer;
 
 <body>
 
-<header class="topbar">
+<div class="container">
 
-<div class="logo">
-PRO DESIGN
+<div class="header">
+PRO DESIGN - نظام الكاشير
 </div>
 
-<input type="text" id="search" placeholder="ابحث عن خدمة...">
+<div class="card">
 
-</header>
-
-<section class="categories">
-
-<button onclick="filterCategory('all')">الكل</button>
-<button onclick="filterCategory('cnc')">CNC</button>
-<button onclick="filterCategory('aluminum')">ألمنيوم</button>
-<button onclick="filterCategory('cladding')">كلادنج</button>
-
-</section>
-
-<section class="products">
-
-<div class="product" data-category="cnc">
-<h3>تفريز ألمنيوم ديكور</h3>
-<p>20 د.ك</p>
-
-<div class="qty">
-<button onclick="decrease(this)">-</button>
-<span>1</span>
-<button onclick="increase(this)">+</button>
+<div class="title">
+بيانات العميل
 </div>
 
-<button class="add-btn"
-onclick="addToCart('تفريز ألمنيوم ديكور',20,this)">
-إضافة
+<div class="client-info">
+
+<input
+type="text"
+id="customerName"
+placeholder="اسم العميل">
+
+<input
+type="text"
+id="customerPhone"
+placeholder="رقم الهاتف">
+
+<input
+type="text"
+id="orderNumber"
+placeholder="رقم الطلب">
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+إضافة خدمة جديدة
+</div>
+
+<div class="grid">
+
+<input
+type="text"
+id="service"
+placeholder="الخدمة">
+
+<input
+type="text"
+id="material"
+placeholder="المادة">
+
+<input
+type="text"
+id="thickness"
+placeholder="السماكة">
+
+<input
+type="number"
+id="qty"
+placeholder="الكمية">
+
+<input
+type="number"
+id="price"
+placeholder="سعر الوحدة">
+
+</div>
+
+<button
+class="add-btn"
+onclick="addItem()">
+
+إضافة للفاتورة
+
 </button>
+
 </div>
 
-<div class="product" data-category="aluminum">
-<h3>قص ألمنيوم</h3>
-<p>10 د.ك</p>
+<div class="card">
 
-<div class="qty">
-<button onclick="decrease(this)">-</button>
-<span>1</span>
-<button onclick="increase(this)">+</button>
+<div class="title">
+الفاتورة
 </div>
 
-<button class="add-btn"
-onclick="addToCart('قص ألمنيوم',10,this)">
-إضافة
-</button>
+<div id="clientData">
+
+<p><b>اسم العميل:</b> <span id="showCustomerName"></span></p>
+
+<p><b>رقم الهاتف:</b> <span id="showCustomerPhone"></span></p>
+
+<p><b>رقم الطلب:</b> <span id="showOrderNumber"></span></p>
+
 </div>
 
-<div class="product" data-category="aluminum">
-<h3>حفر ألمنيوم</h3>
-<p>15 د.ك</p>
+<table>
 
-<div class="qty">
-<button onclick="decrease(this)">-</button>
-<span>1</span>
-<button onclick="increase(this)">+</button>
-</div>
+<thead>
 
-<button class="add-btn"
-onclick="addToCart('حفر ألمنيوم',15,this)">
-إضافة
-</button>
-</div>
+<tr>
 
-<div class="product" data-category="cladding">
-<h3>قص كلادنج</h3>
-<p>15 د.ك</p>
+<th>م</th>
+<th>الخدمة</th>
+<th>المادة</th>
+<th>السماكة</th>
+<th>الكمية</th>
+<th>السعر</th>
+<th>الإجمالي</th>
 
-<div class="qty">
-<button onclick="decrease(this)">-</button>
-<span>1</span>
-<button onclick="increase(this)">+</button>
-</div>
+</tr>
 
-<button class="add-btn"
-onclick="addToCart('قص كلادنج',15,this)">
-إضافة
-</button>
-</div>
+</thead>
 
-<div class="product" data-category="cladding">
-<h3>حفر كلادنج</h3>
-<p>20 د.ك</p>
+<tbody id="invoiceRows">
+</tbody>
 
-<div class="qty">
-<button onclick="decrease(this)">-</button>
-<span>1</span>
-<button onclick="increase(this)">+</button>
-</div>
+</table>
 
-<button class="add-btn"
-onclick="addToCart('حفر كلادنج',20,this)">
-إضافة
-</button>
-</div>
+<div class="total-box">
 
-</section>
-
-<section class="cart">
-
-<h2>الفاتورة</h2>
-
-<div id="cart-items"></div>
-
-<div class="total">
-الإجمالي:
-<span id="total">0</span>
+الإجمالي النهائي:
+<span id="grandTotal">0.000</span>
 د.ك
+
 </div>
 
 <button class="print-btn" onclick="window.print()">
 طباعة الفاتورة
 </button>
 
-</section>
+<div class="footer">
+
+📍 الكويت – الري – مقابل سوبر ستيل
+<br>
+📞 96765547
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
-let total=0;
+let grandTotal = 0;
+let rowNumber = 1;
 
-function increase(btn){
-let span=btn.parentElement.querySelector("span");
-span.innerText=parseInt(span.innerText)+1;
+function addItem(){
+
+document.getElementById("showCustomerName").innerText =
+document.getElementById("customerName").value;
+
+document.getElementById("showCustomerPhone").innerText =
+document.getElementById("customerPhone").value;
+
+document.getElementById("showOrderNumber").innerText =
+document.getElementById("orderNumber").value;
+
+let service =
+document.getElementById("service").value;
+
+let material =
+document.getElementById("material").value;
+
+let thickness =
+document.getElementById("thickness").value;
+
+let qty =
+Number(document.getElementById("qty").value);
+
+let price =
+Number(document.getElementById("price").value);
+
+if(!service || qty <= 0 || price <= 0){
+
+alert("أدخل البيانات كاملة");
+
+return;
+
 }
 
-function decrease(btn){
-let span=btn.parentElement.querySelector("span");
-if(parseInt(span.innerText)>1){
-span.innerText=parseInt(span.innerText)-1;
-}
-}
+let total = qty * price;
 
-function addToCart(name,price,btn){
+grandTotal += total;
 
-let qty=parseInt(
-btn.parentElement.querySelector("span").innerText
-);
+document.getElementById("invoiceRows").innerHTML += `
 
-let itemTotal=qty*price;
+<tr>
 
-document.getElementById("cart-items").innerHTML+=
-`<div>${name} × ${qty} = ${itemTotal} د.ك</div>`;
+<td>${rowNumber}</td>
 
-total+=itemTotal;
+<td>${service}</td>
 
-document.getElementById("total").innerText=total;
-}
+<td>${material}</td>
 
-function filterCategory(cat){
+<td>${thickness}</td>
 
-let items=document.querySelectorAll(".product");
+<td>${qty}</td>
 
-items.forEach(item=>{
+<td>${price.toFixed(3)}</td>
 
-if(cat==="all"){
-item.style.display="block";
-}
-else{
-item.style.display=
-item.dataset.category===cat
-? "block"
-: "none";
-}
+<td>${total.toFixed(3)}</td>
 
-});
+</tr>
+
+`;
+
+document.getElementById("grandTotal").innerText =
+grandTotal.toFixed(3);
+
+rowNumber++;
+
+document.getElementById("service").value = "";
+document.getElementById("material").value = "";
+document.getElementById("thickness").value = "";
+document.getElementById("qty").value = "";
+document.getElementById("price").value = "";
 
 }
 
