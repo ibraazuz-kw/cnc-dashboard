@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PRO DESIGN - Invoice System</title>
+<title>PRO DESIGN - Invoice</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
@@ -43,13 +42,14 @@ padding:30px;
 }
 
 .logo-area h1{
-font-size:50px;
+font-size:70px;
 font-weight:900;
 color:#ff6600;
+line-height:1;
 }
 
 .logo-area p{
-font-size:22px;
+font-size:24px;
 color:#666;
 }
 
@@ -63,7 +63,6 @@ text-align:center;
 
 .invoice-title h2{
 font-size:50px;
-font-weight:900;
 }
 
 .invoice-title span{
@@ -96,6 +95,11 @@ margin-bottom:10px;
 border:1px solid #ddd;
 border-radius:10px;
 font-size:16px;
+}
+
+.info-box p{
+margin:10px 0;
+font-size:18px;
 }
 
 .service-box{
@@ -143,19 +147,30 @@ background:#00154f;
 color:#fff;
 }
 
+th{
+background:#00154f;
+color:#fff;
+font-size:18px;
+}
+
+td{
+font-size:17px;
+font-weight:600;
+}
+
 th,td{
-padding:12px;
+padding:14px;
 text-align:center;
-border:1px solid #eee;
+border:1px solid #ddd;
 }
 
 .total-box{
 margin:20px;
 background:#ff6600;
 color:#fff;
-padding:20px;
+padding:25px;
 border-radius:15px;
-font-size:28px;
+font-size:30px;
 font-weight:900;
 text-align:center;
 }
@@ -163,9 +178,10 @@ text-align:center;
 .footer{
 background:#00154f;
 color:#fff;
-padding:20px;
+padding:25px;
 text-align:center;
 line-height:2;
+font-size:18px;
 }
 
 .actions{
@@ -218,6 +234,24 @@ flex-direction:column;
 
 }
 
+@media print{
+
+body{
+background:#fff;
+padding:0;
+}
+
+.actions{
+display:none;
+}
+
+.invoice{
+box-shadow:none;
+border-radius:0;
+}
+
+}
+
 </style>
 </head>
 
@@ -259,9 +293,17 @@ flex-direction:column;
 
 <h3>بيانات الفاتورة</h3>
 
-<p>رقم الفاتورة: <span id="invoiceNo"></span></p>
+<p>رقم الفاتورة:
+<span id="invoiceNo"></span>
+</p>
 
-<p>التاريخ: <span id="todayDate"></span></p>
+<p>رقم الطلب:
+<span id="showOrderNo">---</span>
+</p>
+
+<p>التاريخ:
+<span id="todayDate"></span>
+</p>
 
 </div>
 
@@ -286,35 +328,30 @@ flex-direction:column;
 <button class="add-btn" onclick="addItem()">
 إضافة للخدمة
 </button>
+
 <table>
 
 <thead>
 
 <tr>
-
 <th>م</th>
 <th>تفاصيل العمل</th>
 <th>السماكة</th>
 <th>الكمية</th>
 <th>سعر الوحدة</th>
 <th>الإجمالي</th>
-
 </tr>
 
 </thead>
 
-<tbody id="invoiceRows">
-
-</tbody>
+<tbody id="invoiceRows"></tbody>
 
 </table>
 
 <div class="total-box">
-
 الإجمالي النهائي:
 <span id="grandTotal">0.000</span>
 د.ك
-
 </div>
 
 <div class="actions">
@@ -375,10 +412,12 @@ Number(document.getElementById("price").value);
 if(!service || qty<=0 || price<=0){
 
 alert("أدخل البيانات كاملة");
-
 return;
 
 }
+
+document.getElementById("showOrderNo").innerText =
+document.getElementById("orderNumber").value;
 
 const total = qty * price;
 
@@ -387,19 +426,12 @@ grandTotal += total;
 document.getElementById("invoiceRows").innerHTML += `
 
 <tr>
-
 <td>${rowNumber}</td>
-
 <td>${service}</td>
-
 <td>${thickness}</td>
-
 <td>${qty}</td>
-
 <td>${price.toFixed(3)}</td>
-
 <td>${total.toFixed(3)}</td>
-
 </tr>
 
 `;
@@ -421,20 +453,20 @@ function sendWhatsApp(){
 const customer =
 document.getElementById("customerName").value;
 
-const phone =
-document.getElementById("customerPhone").value;
-
 const total =
 document.getElementById("grandTotal").innerText;
+
+const orderNo =
+document.getElementById("orderNumber").value;
 
 const msg =
 `فاتورة PRO DESIGN
 العميل: ${customer}
-رقم الطلب: ${document.getElementById("orderNumber").value}
+رقم الطلب: ${orderNo}
 الإجمالي: ${total} د.ك`;
 
 window.open(
-`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
+`https://wa.me/?text=${encodeURIComponent(msg)}`,
 "_blank"
 );
 
