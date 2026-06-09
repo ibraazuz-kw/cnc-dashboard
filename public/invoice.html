@@ -1,106 +1,52 @@
-<!-- invoice.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>فاتورة Pro Design</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<title>فاتورة PRO DESIGN</title>
 
 <link rel="stylesheet" href="invoice.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 </head>
 
 <body>
 
-<div class="invoice" id="invoice">
+<div class="container">
 
-<div class="top-header">
+<h1>PRO DESIGN</h1>
 
-<div class="logo-area">
+<div class="box">
 
-<img src="https://i.imgur.com/W4KxH8E.png">
+<h2>بيانات العميل</h2>
 
-<div>
+<input id="customerName" placeholder="اسم العميل">
 
-<h1>Pro Design</h1>
+<input id="customerPhone" placeholder="رقم الهاتف">
 
-<p>Aluminum</p>
-
-</div>
+<input id="orderNumber" placeholder="رقم الطلب">
 
 </div>
 
-<div class="invoice-title">
+<div class="box">
 
-<h2>فاتورة</h2>
+<h2>إضافة خدمة</h2>
 
-<span>INVOICE</span>
+<input id="service" placeholder="تفاصيل العمل">
 
-</div>
+<input id="thickness" placeholder="السماكة">
 
-</div>
+<input id="qty" type="number" placeholder="الكمية">
 
-<div class="info-grid">
+<input id="price" type="number" placeholder="سعر الوحدة">
 
-<div class="info-box">
-
-<h3>بيانات الفاتورة</h3>
-
-<p>
-رقم الفاتورة:
-<span id="invoice-number">
-INV-2026-001
-</span>
-</p>
-
-<p>
-رقم الطلب:
-<span id="order-number">
-ORD-00125
-</span>
-</p>
-
-<p>
-التاريخ:
-<span id="date"></span>
-</p>
+<button onclick="addItem()">
+إضافة خدمة
+</button>
 
 </div>
-
-<div class="info-box">
-
-<h3>بيانات العميل</h3>
-
-<p>
-اسم العميل:
-<span id="client-name">
-شركة الإبداع
-</span>
-</p>
-
-<p>
-رقم الهاتف:
-<span id="client-phone">
-96765547
-</span>
-</p>
-
-</div>
-
-</div>
-
-<div class="services">
-
-<h3>تفاصيل الأعمال</h3>
 
 <table>
 
@@ -109,132 +55,41 @@ ORD-00125
 <tr>
 
 <th>م</th>
-
-<th>الخدمة</th>
-
-<th>المادة</th>
-
+<th>تفاصيل العمل</th>
 <th>السماكة</th>
-
 <th>الكمية</th>
-
+<th>سعر الوحدة</th>
 <th>الإجمالي</th>
 
 </tr>
 
 </thead>
 
-<tbody id="invoice-items">
-
-<tr>
-
-<td>1</td>
-
-<td>تفريز وحفر ألمنيوم</td>
-
-<td>ألمنيوم</td>
-
-<td>3 ملم</td>
-
-<td>1</td>
-
-<td>90 KD</td>
-
-</tr>
+<tbody id="invoiceRows">
 
 </tbody>
 
 </table>
 
-</div>
+<div class="total">
 
-<div class="bottom-grid">
+الإجمالي النهائي:
 
-<div class="total-box">
+<span id="grandTotal">
+0.000
+</span>
 
-<h3>الإجمالي</h3>
-
-<div class="line">
-
-<span>المجموع الفرعي</span>
-
-<span id="subtotal">90 KD</span>
+د.ك
 
 </div>
 
-<div class="line">
-
-<span>الخصم</span>
-
-<span id="discount">0 KD</span>
-
-</div>
-
-<div class="line final">
-
-<span>الإجمالي النهائي</span>
-
-<span id="grand-total">90 KD</span>
-
-</div>
-
-</div>
-
-<div class="notes-box">
-
-<h3>ملاحظات</h3>
-
-<ul>
-
-<li>
-تنفيذ الأعمال حسب المواصفات المتفق عليها.
-</li>
-
-<li>
-تصدر الفاتورة باسم شركة برو ديزاين.
-</li>
-
-<li>
-الفاتورة إلكترونية ولا تحتاج توقيع.
-</li>
-
-</ul>
-
-</div>
-
-</div>
-
-<div class="footer">
-
-<div>
-📍 الكويت - الري
-</div>
-
-<div>
-📞 96765547
-</div>
-
-<div>
-✉ pro.design.q8@gmail.com
-</div>
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button onclick="downloadPDF()">
-حفظ PDF
-</button>
+<div class="buttons">
 
 <button onclick="window.print()">
 طباعة
 </button>
 
-<button onclick="sendWhatsApp()">
-واتساب
-</button>
+</div>
 
 </div>
 
