@@ -1,57 +1,60 @@
-// invoice.js
+let grandTotal = 0;
+let rowNumber = 1;
 
-document.getElementById("date").innerText =
-new Date().toLocaleDateString("en-GB");
+function addItem(){
 
-function downloadPDF(){
+const service =
+document.getElementById("service").value;
 
-const element =
-document.getElementById("invoice");
+const thickness =
+document.getElementById("thickness").value;
 
-html2pdf()
-.set({
+const qty =
+Number(document.getElementById("qty").value);
 
-margin:0.5,
+const price =
+Number(document.getElementById("price").value);
 
-filename:'ProDesign-Invoice.pdf',
+if(!service || qty <= 0 || price <= 0){
 
-image:{
-type:'jpeg',
-quality:1
-},
+alert("أدخل البيانات كاملة");
 
-html2canvas:{
-scale:2
-},
-
-jsPDF:{
-unit:'in',
-format:'a4',
-orientation:'portrait'
-}
-
-})
-
-.from(element)
-
-.save();
+return;
 
 }
 
-function sendWhatsApp(){
+const total = qty * price;
 
-let phone = "96596765547";
+grandTotal += total;
 
-let message =
-`مرحباً،
-تم إصدار فاتورتكم من Pro Design ✅`;
+document.getElementById("invoiceRows").innerHTML += `
 
-window.open(
+<tr>
 
-`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+<td>${rowNumber}</td>
 
-'_blank'
+<td>${service}</td>
 
-);
+<td>${thickness}</td>
+
+<td>${qty}</td>
+
+<td>${price.toFixed(3)}</td>
+
+<td>${total.toFixed(3)}</td>
+
+</tr>
+
+`;
+
+document.getElementById("grandTotal").innerText =
+grandTotal.toFixed(3);
+
+rowNumber++;
+
+document.getElementById("service").value = "";
+document.getElementById("thickness").value = "";
+document.getElementById("qty").value = "";
+document.getElementById("price").value = "";
 
 }
