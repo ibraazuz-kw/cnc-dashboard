@@ -270,3 +270,365 @@ src="file_00000000fd40720abbbe4a62d7158405.jpg">
 <p>PRO DESIGN CNC SYSTEM</p>
 
 </div>
+<div class="info-grid">
+
+<div class="card">
+
+<h3>بيانات العميل</h3>
+
+<input id="customerName" placeholder="اسم العميل">
+
+<input id="customerPhone" placeholder="رقم الهاتف">
+
+<input id="orderNumber" placeholder="رقم الطلب">
+
+</div>
+
+<div class="card invoice-info">
+
+<div>
+رقم الفاتورة:
+<b id="invoiceNo"></b>
+</div>
+
+<div>
+التاريخ:
+<b id="todayDate"></b>
+</div>
+
+</div>
+
+</div>
+
+<div class="service-box">
+
+<h3>إضافة خدمة</h3>
+
+<div class="service-grid">
+
+<input id="service" placeholder="تفاصيل العمل">
+
+<input id="thickness" placeholder="السماكة">
+
+<input id="qty" type="number" placeholder="الكمية">
+
+<input id="price" type="number" placeholder="سعر الوحدة">
+
+</div>
+
+<button class="add-btn" onclick="addItem()">
+
+إضافة خدمة
+
+</button>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>م</th>
+
+<th>تفاصيل العمل</th>
+
+<th>السماكة</th>
+
+<th>الكمية</th>
+
+<th>سعر الوحدة</th>
+
+<th>الإجمالي</th>
+
+<th>حذف</th>
+
+</tr>
+
+</thead>
+
+<tbody id="invoiceRows">
+
+</tbody>
+
+</table>
+
+<div class="total-box">
+
+الإجمالي النهائي
+
+<br><br>
+
+<span id="grandTotal">
+
+0.000
+
+</span>
+
+د.ك
+
+</div>
+
+<div class="actions">
+
+<button
+class="print-btn"
+onclick="window.print()">
+
+طباعة / PDF
+
+</button>
+
+<button
+class="save-btn"
+onclick="saveInvoice()">
+
+حفظ الفاتورة
+
+</button>
+
+<button
+class="whatsapp-btn"
+onclick="sendWhatsApp()">
+
+واتساب
+
+</button>
+
+</div>
+
+<div class="footer">
+
+📍 الكويت - الري - مقابل سوبر ستيل
+
+<br>
+
+📞 96765547
+
+<br>
+
+📧 pro.design.q8@gmail.com
+
+</div>
+<script>
+
+let grandTotal = 0;
+let rowNumber = 1;
+
+/* رقم الفاتورة */
+document.getElementById("invoiceNo").innerText =
+"INV-" + Date.now();
+
+/* التاريخ */
+document.getElementById("todayDate").innerText =
+new Date().toLocaleDateString("en-GB");
+
+/* إضافة بند */
+
+function addItem(){
+
+const service =
+document.getElementById("service").value.trim();
+
+const thickness =
+document.getElementById("thickness").value.trim();
+
+const qty =
+Number(document.getElementById("qty").value);
+
+const price =
+Number(document.getElementById("price").value);
+
+if(
+service === "" ||
+qty <= 0 ||
+price <= 0
+){
+
+alert("أدخل البيانات كاملة");
+
+return;
+
+}
+
+const total = qty * price;
+
+grandTotal += total;
+
+const row = `
+
+<tr>
+
+<td>${rowNumber}</td>
+
+<td>${service}</td>
+
+<td>${thickness}</td>
+
+<td>${qty}</td>
+
+<td>${price.toFixed(3)}</td>
+
+<td>${total.toFixed(3)}</td>
+
+<td>
+<button
+class="delete-btn"
+onclick="deleteRow(this)">
+❌
+</button>
+</td>
+
+</tr>
+
+`;
+
+document
+.getElementById("invoiceRows")
+.insertAdjacentHTML("beforeend",row);
+
+document
+.getElementById("grandTotal")
+.innerText =
+grandTotal.toFixed(3);
+
+rowNumber++;
+
+document.getElementById("service").value="";
+document.getElementById("thickness").value="";
+document.getElementById("qty").value="";
+document.getElementById("price").value="";
+
+}
+
+/* حذف بند */
+
+function deleteRow(btn){
+
+const row =
+btn.parentNode.parentNode;
+
+const total =
+Number(row.cells[5].innerText);
+
+grandTotal -= total;
+
+document
+.getElementById("grandTotal")
+.innerText =
+grandTotal.toFixed(3);
+
+row.remove();
+
+}
+
+/* حفظ الفواتير */
+
+function saveInvoice(){
+
+const invoice = {
+
+invoiceNo:
+document.getElementById("invoiceNo").innerText,
+
+customer:
+document.getElementById("customerName").value,
+
+phone:
+document.getElementById("customerPhone").value,
+
+order:
+document.getElementById("orderNumber").value,
+
+total:
+grandTotal,
+
+date:
+new Date().toLocaleDateString()
+
+};
+
+let invoices =
+JSON.parse(
+localStorage.getItem("prodesignInvoices")
+) || [];
+
+invoices.push(invoice);
+
+localStorage.setItem(
+"prodesignInvoices",
+JSON.stringify(invoices)
+);
+
+alert("تم حفظ الفاتورة");
+
+}
+
+/* واتساب */
+
+function sendWhatsApp(){
+
+const customer =
+document.getElementById("customerName").value;
+
+const phone =
+document.getElementById("customerPhone").value;
+
+const total =
+document.getElementById("grandTotal").innerText;
+
+const order =
+document.getElementById("orderNumber").value;
+
+const msg =
+
+`PRO DESIGN
+
+العميل: ${customer}
+
+رقم الطلب: ${order}
+
+الإجمالي:
+${total} د.ك
+
+شكراً لتعاملكم معنا`;
+
+window.open(
+
+`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
+
+"_blank"
+
+);
+
+}
+
+/* Enter للتنقل */
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Enter"){
+
+const active =
+document.activeElement;
+
+if(active.id==="price"){
+
+addItem();
+
+}
+
+}
+
+});
+
+</script>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
