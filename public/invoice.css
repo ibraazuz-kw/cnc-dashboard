@@ -2,54 +2,129 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Cairo,sans-serif;
+font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f5f5f5;
+background:#ececec;
 padding:20px;
 }
 
-.container{
+.invoice-wrapper{
 max-width:1200px;
 margin:auto;
+background:#fff;
+border-radius:25px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:30px;
 background:white;
+}
+
+.company h1{
+font-size:42px;
+font-weight:900;
+color:#00154f;
+}
+
+.company p{
+font-size:20px;
+color:#777;
+}
+
+.invoice-title{
+background:#00154f;
+padding:25px 50px;
+border-radius:0 0 0 40px;
+text-align:center;
+}
+
+.invoice-title h2{
+color:white;
+font-size:48px;
+font-weight:900;
+}
+
+.invoice-title span{
+color:#ff6600;
+font-size:24px;
+font-weight:bold;
+}
+
+.top-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+padding:20px;
+}
+
+.card{
+border:2px solid #eee;
 padding:20px;
 border-radius:20px;
 }
 
-h1{
-text-align:center;
-color:#00154f;
-margin-bottom:20px;
-}
-
-.box{
-margin-bottom:20px;
-}
-
-.box h2{
-margin-bottom:10px;
+.card h3{
 color:#ff6600;
+margin-bottom:15px;
+font-size:24px;
 }
 
-input{
+.card input{
 width:100%;
-padding:15px;
-margin-bottom:10px;
+padding:14px;
+margin-bottom:12px;
 border:1px solid #ddd;
-border-radius:10px;
+border-radius:12px;
+font-size:16px;
 }
 
-button{
+.info-line{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+font-size:18px;
+}
+
+.service-box{
+padding:20px;
+}
+
+.service-box h3{
+color:#00154f;
+margin-bottom:15px;
+font-size:24px;
+}
+
+.service-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+}
+
+.service-grid input{
+padding:14px;
+border:1px solid #ddd;
+border-radius:12px;
+}
+
+.add-btn{
 width:100%;
-padding:15px;
+margin-top:15px;
+padding:16px;
 border:none;
+border-radius:15px;
 background:#ff6600;
 color:white;
-font-size:18px;
+font-size:20px;
 font-weight:bold;
-border-radius:10px;
+cursor:pointer;
 }
 
 table{
@@ -58,29 +133,98 @@ border-collapse:collapse;
 margin-top:20px;
 }
 
-th{
+thead{
 background:#00154f;
 color:white;
-padding:12px;
+}
+
+th{
+padding:15px;
+font-size:18px;
 }
 
 td{
-border:1px solid #ddd;
-padding:10px;
+padding:15px;
+border:1px solid #eee;
 text-align:center;
 }
 
-.total{
-margin-top:20px;
+.total-box{
+margin:25px;
 background:#ff6600;
 color:white;
-padding:20px;
+padding:25px;
+border-radius:20px;
+font-size:32px;
+font-weight:900;
 text-align:center;
-font-size:30px;
-font-weight:bold;
-border-radius:15px;
 }
 
-.buttons{
+.total-box span{
+margin:0 10px;
+}
+
+.actions{
+padding:0 25px 25px;
+}
+
+.print-btn{
+width:100%;
+padding:18px;
+border:none;
+border-radius:15px;
+background:#28a745;
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.footer{
+background:#00154f;
+color:white;
+text-align:center;
+padding:25px;
+font-size:18px;
+line-height:2;
 margin-top:20px;
+}
+
+@media(max-width:768px){
+
+.header{
+flex-direction:column;
+gap:20px;
+}
+
+.top-info{
+grid-template-columns:1fr;
+}
+
+.service-grid{
+grid-template-columns:1fr;
+}
+
+.invoice-title{
+width:100%;
+}
+
+}
+
+@media print{
+
+.no-print{
+display:none;
+}
+
+body{
+background:white;
+padding:0;
+}
+
+.invoice-wrapper{
+box-shadow:none;
+border-radius:0;
+}
+
 }
