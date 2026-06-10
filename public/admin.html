@@ -3,381 +3,285 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>لوحة الإدارة</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
 body{
-font-family:Arial;
-background:#f2f2f2;
+background:#f3f3f3;
 padding:20px;
 }
 
+.container{
+max-width:1400px;
+margin:auto;
+}
+
 .header{
-background:#001446;
-color:#fff;
-padding:30px;
-font-size:40px;
-font-weight:bold;
-border-radius:25px;
+background:#00154f;
+color:white;
+padding:25px;
+border-radius:20px;
 text-align:center;
 margin-bottom:20px;
 }
 
-.card{
-background:#fff;
-padding:25px;
-border-radius:25px;
-margin-bottom:25px;
-}
-
-.title{
-font-size:35px;
-font-weight:bold;
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
 margin-bottom:20px;
-color:#001446;
 }
 
-input,
-textarea,
-select{
-
-width:100%;
-padding:18px;
-margin-bottom:15px;
-border-radius:18px;
-border:1px solid #ccc;
-font-size:20px;
-
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-button{
+.card h2{
+font-size:35px;
+color:#ff6600;
+}
 
-width:100%;
-padding:18px;
-border:none;
-border-radius:18px;
-background:#ff6600;
-color:#fff;
-font-size:25px;
+.card p{
+font-size:18px;
 font-weight:bold;
-
+margin-top:10px;
 }
 
-.project{
-
-background:#f7f7f7;
+.table-box{
+background:white;
 padding:20px;
 border-radius:20px;
-margin-top:20px;
-
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-.project h2{
-color:#001446;
-margin-bottom:10px;
+table{
+width:100%;
+border-collapse:collapse;
 }
 
-.status{
-
-display:inline-block;
-padding:10px 20px;
-background:green;
-color:#fff;
-border-radius:15px;
-margin-top:15px;
-
+th{
+background:#00154f;
+color:white;
+padding:12px;
 }
 
-.row{
-
-display:flex;
-gap:10px;
-margin-top:20px;
-
+td{
+padding:12px;
+border:1px solid #eee;
+text-align:center;
 }
 
-.small{
+.open-btn{
+background:#ff6600;
+color:white;
+border:none;
+padding:8px 15px;
+border-radius:10px;
+cursor:pointer;
+}
 
-flex:1;
+.nav{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.nav button{
 padding:15px;
+border:none;
+border-radius:15px;
 font-size:18px;
-
+font-weight:bold;
+color:white;
+cursor:pointer;
 }
 
-.blue{
-background:#2563eb;
+.client{
+background:#1877f2;
 }
 
-.red{
-background:#dc2626;
+.designer{
+background:#7a42d1;
 }
 
-.green{
-background:#16a34a;
+.factory{
+background:#28a745;
 }
 
-.orange{
+.invoice{
 background:#ff6600;
 }
 
 </style>
-
 </head>
 
 <body>
 
+<div class="container">
+
 <div class="header">
-لوحة إدارة PRO DESIGN
+
+<h1>📊 لوحة إدارة PRO DESIGN</h1>
+
 </div>
 
-<div class="card">
+<div class="nav">
 
-<div class="title">
-إضافة عميل جديد
-</div>
+<button class="client"
+onclick="location.href='client.html'">
+العملاء
+</button>
 
-<input id="company" placeholder="اسم الشركة">
+<button class="designer"
+onclick="location.href='designer.html'">
+المصمم
+</button>
 
-<input id="username" placeholder="اسم المستخدم">
+<button class="factory"
+onclick="location.href='factory.html'">
+المصنع
+</button>
 
-<input id="password" placeholder="كلمة المرور">
-
-<input id="phone" placeholder="رقم الهاتف">
-
-<textarea id="details" placeholder="تفاصيل المشروع"></textarea>
-
-<select id="status">
-
-<option>بانتظار التصميم</option>
-<option>قيد التصميم</option>
-<option>بانتظار الاعتماد</option>
-<option>قيد التصنيع</option>
-<option>تم التسليم</option>
-
-</select>
-
-<button onclick="addProject()">
-إضافة المشروع
+<button class="invoice"
+onclick="location.href='invoice.html'">
+الفواتير
 </button>
 
 </div>
 
+<div class="cards">
+
 <div class="card">
-
-<div class="title">
-المشاريع الحالية
+<h2 id="ordersCount">0</h2>
+<p>إجمالي الطلبات</p>
 </div>
 
-<div id="projects"></div>
+<div class="card">
+<h2 id="designCount">0</h2>
+<p>قيد التصميم</p>
+</div>
+
+<div class="card">
+<h2 id="factoryCount">0</h2>
+<p>قيد التصنيع</p>
+</div>
+
+<div class="card">
+<h2 id="doneCount">0</h2>
+<p>جاهز للتسليم</p>
+</div>
 
 </div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+<th>رقم الطلب</th>
+<th>العميل</th>
+<th>الحالة</th>
+<th>فتح</th>
+</tr>
+
+</thead>
+
+<tbody id="ordersTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script src="data.js"></script>
 
 <script>
 
-loadProjects();
+let table='';
 
-function addProject(){
+let design=0;
+let factory=0;
+let done=0;
 
-const company =
-document.getElementById("company").value;
+orders.forEach(order=>{
 
-const username =
-document.getElementById("username").value;
+if(order.status==="قيد التصميم")
+design++;
 
-const password =
-document.getElementById("password").value;
+if(order.status==="قيد التصنيع")
+factory++;
 
-const phone =
-document.getElementById("phone").value;
+if(order.status==="جاهز للتسليم")
+done++;
 
-const details =
-document.getElementById("details").value;
+table+=`
 
-const status =
-document.getElementById("status").value;
+<tr>
 
-if(company==""){
-alert("أدخل اسم الشركة");
-return;
-}
+<td>${order.id}</td>
 
-const project = {
+<td>${order.company}</td>
 
-company,
-username,
-password,
-phone,
-details,
-status
+<td>${order.status}</td>
 
-};
+<td>
 
-let projects =
-JSON.parse(localStorage.getItem("projects"))
-|| [];
+<button
+class="open-btn"
+onclick="viewOrder(${order.id})">
 
-projects.unshift(project);
-
-localStorage.setItem(
-"projects",
-JSON.stringify(projects)
-);
-
-loadProjects();
-
-clearInputs();
-
-}
-
-function loadProjects(){
-
-const container =
-document.getElementById("projects");
-
-container.innerHTML="";
-
-let projects =
-JSON.parse(localStorage.getItem("projects"))
-|| [];
-
-projects.forEach((p,index)=>{
-
-container.innerHTML += `
-
-<div class="project">
-
-<h2>${p.company}</h2>
-
-<p>👤 ${p.username}</p>
-
-<p>📞 ${p.phone}</p>
-
-<p>📝 ${p.details}</p>
-
-<div class="status">
-${p.status}
-</div>
-
-<div class="row">
-
-<button class="small blue"
-onclick="editProject(${index})">
-
-تعديل
+فتح
 
 </button>
 
-<button class="small red"
-onclick="deleteProject(${index})">
+</td>
 
-حذف
-
-</button>
-
-</div>
-
-<div class="row">
-
-<button class="small green"
-onclick="sendFactory(${index})">
-
-إرسال للمصنع
-
-</button>
-
-<button class="small orange">
-
-فاتورة
-
-</button>
-
-</div>
-
-</div>
+</tr>
 
 `;
 
 });
 
-}
+document.getElementById("ordersTable").innerHTML=table;
 
-function deleteProject(index){
+document.getElementById("ordersCount").innerText=orders.length;
 
-let projects =
-JSON.parse(localStorage.getItem("projects"))
-|| [];
+document.getElementById("designCount").innerText=design;
 
-projects.splice(index,1);
+document.getElementById("factoryCount").innerText=factory;
 
-localStorage.setItem(
-"projects",
-JSON.stringify(projects)
-);
+document.getElementById("doneCount").innerText=done;
 
-loadProjects();
-
-}
-
-function editProject(index){
-
-let projects =
-JSON.parse(localStorage.getItem("projects"))
-|| [];
-
-const p = projects[index];
-
-document.getElementById("company").value =
-p.company;
-
-document.getElementById("username").value =
-p.username;
-
-document.getElementById("password").value =
-p.password;
-
-document.getElementById("phone").value =
-p.phone;
-
-document.getElementById("details").value =
-p.details;
-
-document.getElementById("status").value =
-p.status;
-
-deleteProject(index);
-
-}
-
-function sendFactory(index){
-
-let projects =
-JSON.parse(localStorage.getItem("projects"))
-|| [];
-
-projects[index].status =
-"قيد التصنيع";
+function viewOrder(id){
 
 localStorage.setItem(
-"projects",
-JSON.stringify(projects)
+"selectedOrder",
+id
 );
 
-loadProjects();
-
-alert("تم الإرسال للمصنع");
-
-}
-
-function clearInputs(){
-
-document.getElementById("company").value="";
-document.getElementById("username").value="";
-document.getElementById("password").value="";
-document.getElementById("phone").value="";
-document.getElementById("details").value="";
+alert("تم فتح الطلب رقم " + id);
 
 }
 
