@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PRO DESIGN ERP</title>
+<title>PRO DESIGN SYSTEM</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
@@ -20,229 +17,64 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f3f3f3;
-padding:20px;
-}
-
-.container{
-max-width:1400px;
-margin:auto;
-}
-
-.invoice{
-background:#fff;
-border-radius:25px;
-overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-.header{
-background:#00154f;
+background:#f5f5f5;
 padding:25px;
-text-align:center;
 }
 
 .logo{
-max-width:240px;
+text-align:center;
+margin-bottom:30px;
+}
+
+.logo img{
+max-width:220px;
 height:auto;
 }
 
-.title{
-padding:25px;
-text-align:center;
-}
-
-.title h1{
-font-size:45px;
-color:#00154f;
-font-weight:900;
-}
-
-.title p{
-font-size:22px;
-color:#ff6600;
-font-weight:bold;
-}
-
-.info-grid{
+.grid{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
-padding:20px;
 }
 
 .card{
 background:#fff;
-border:2px solid #eee;
-padding:20px;
-border-radius:20px;
+padding:35px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+text-decoration:none;
+color:#000;
+transition:.3s;
 }
 
-.card h3{
-margin-bottom:15px;
-color:#ff6600;
+.card:hover{
+transform:translateY(-5px);
 }
 
-.card input{
-width:100%;
-padding:14px;
-margin-bottom:10px;
-border:1px solid #ddd;
-border-radius:12px;
-font-size:16px;
-}
-
-.invoice-info{
-font-size:18px;
-line-height:2.5;
-}
-
-.service-box{
-padding:20px;
-}
-
-.service-box h3{
-color:#00154f;
-margin-bottom:15px;
-}
-
-.service-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-}
-
-.service-grid input{
-padding:14px;
-border:1px solid #ddd;
-border-radius:12px;
-}
-
-.add-btn{
-width:100%;
+.card h2{
 margin-top:15px;
-padding:16px;
-background:#ff6600;
-color:white;
-border:none;
-border-radius:15px;
-font-size:20px;
-font-weight:bold;
-cursor:pointer;
+font-size:28px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+.admin{
+border-top:8px solid #ff6600;
 }
 
-thead{
-background:#00154f;
-color:white;
+.client{
+border-top:8px solid #007bff;
 }
 
-th{
-padding:14px;
-font-size:18px;
+.factory{
+border-top:8px solid #28a745;
 }
 
-td{
-padding:12px;
-border:1px solid #eee;
-text-align:center;
+.designer{
+border-top:8px solid #6f42c1;
 }
 
-.delete-btn{
-background:red;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-}
-
-.total-box{
-margin:25px;
-background:#ff6600;
-color:white;
-padding:25px;
-border-radius:20px;
-text-align:center;
-font-size:34px;
-font-weight:900;
-}
-
-.actions{
-display:flex;
-gap:10px;
-padding:0 25px 25px;
-}
-
-.actions button{
-flex:1;
-padding:16px;
-border:none;
-border-radius:15px;
-font-size:18px;
-font-weight:bold;
-color:white;
-cursor:pointer;
-}
-
-.print-btn{
-background:#28a745;
-}
-
-.save-btn{
-background:#00154f;
-}
-
-.whatsapp-btn{
-background:#25D366;
-}
-
-.footer{
-background:#00154f;
-color:white;
-padding:20px;
-text-align:center;
-line-height:2;
-font-size:18px;
-}
-
-@media(max-width:768px){
-
-.info-grid{
-grid-template-columns:1fr;
-}
-
-.service-grid{
-grid-template-columns:1fr;
-}
-
-.actions{
-flex-direction:column;
-}
-
-}
-
-@media print{
-
-.actions,
-.service-box{
-display:none;
-}
-
-body{
-background:white;
-padding:0;
-}
-
-.invoice{
-box-shadow:none;
-}
-
+.icon{
+font-size:60px;
 }
 
 </style>
@@ -251,384 +83,35 @@ box-shadow:none;
 
 <body>
 
-<div class="container">
+<div class="logo">
 
-<div class="invoice">
-
-<div class="header">
-
-<img
-class="logo"
-src="file_00000000fd40720abbbe4a62d7158405.jpg">
+<img src="file_00000000fd40720abbbe4a62d7158405.jpg" alt="Pro Design">
 
 </div>
 
-<div class="title">
-
-<h1>فاتورة</h1>
-
-<p>PRO DESIGN CNC SYSTEM</p>
-
-</div>
-<div class="info-grid">
-
-<div class="card">
-
-<h3>بيانات العميل</h3>
-
-<input id="customerName" placeholder="اسم العميل">
-
-<input id="customerPhone" placeholder="رقم الهاتف">
-
-<input id="orderNumber" placeholder="رقم الطلب">
-
-</div>
-
-<div class="card invoice-info">
-
-<div>
-رقم الفاتورة:
-<b id="invoiceNo"></b>
-</div>
-
-<div>
-التاريخ:
-<b id="todayDate"></b>
-</div>
-
-</div>
-
-</div>
-
-<div class="service-box">
-
-<h3>إضافة خدمة</h3>
-
-<div class="service-grid">
-
-<input id="service" placeholder="تفاصيل العمل">
-
-<input id="thickness" placeholder="السماكة">
-
-<input id="qty" type="number" placeholder="الكمية">
-
-<input id="price" type="number" placeholder="سعر الوحدة">
-
-</div>
-
-<button class="add-btn" onclick="addItem()">
-
-إضافة خدمة
-
-</button>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>م</th>
-
-<th>تفاصيل العمل</th>
-
-<th>السماكة</th>
-
-<th>الكمية</th>
-
-<th>سعر الوحدة</th>
-
-<th>الإجمالي</th>
-
-<th>حذف</th>
-
-</tr>
-
-</thead>
-
-<tbody id="invoiceRows">
-
-</tbody>
-
-</table>
-
-<div class="total-box">
-
-الإجمالي النهائي
-
-<br><br>
-
-<span id="grandTotal">
-
-0.000
-
-</span>
-
-د.ك
-
-</div>
-
-<div class="actions">
-
-<button
-class="print-btn"
-onclick="window.print()">
-
-طباعة / PDF
-
-</button>
-
-<button
-class="save-btn"
-onclick="saveInvoice()">
-
-حفظ الفاتورة
-
-</button>
-
-<button
-class="whatsapp-btn"
-onclick="sendWhatsApp()">
-
-واتساب
-
-</button>
-
-</div>
-
-<div class="footer">
-
-📍 الكويت - الري - مقابل سوبر ستيل
-
-<br>
-
-📞 96765547
-
-<br>
-
-📧 pro.design.q8@gmail.com
-
-</div>
-<script>
-
-let grandTotal = 0;
-let rowNumber = 1;
-
-/* رقم الفاتورة */
-document.getElementById("invoiceNo").innerText =
-"INV-" + Date.now();
-
-/* التاريخ */
-document.getElementById("todayDate").innerText =
-new Date().toLocaleDateString("en-GB");
-
-/* إضافة بند */
-
-function addItem(){
-
-const service =
-document.getElementById("service").value.trim();
-
-const thickness =
-document.getElementById("thickness").value.trim();
-
-const qty =
-Number(document.getElementById("qty").value);
-
-const price =
-Number(document.getElementById("price").value);
-
-if(
-service === "" ||
-qty <= 0 ||
-price <= 0
-){
-
-alert("أدخل البيانات كاملة");
-
-return;
-
-}
-
-const total = qty * price;
-
-grandTotal += total;
-
-const row = `
-
-<tr>
-
-<td>${rowNumber}</td>
-
-<td>${service}</td>
-
-<td>${thickness}</td>
-
-<td>${qty}</td>
-
-<td>${price.toFixed(3)}</td>
-
-<td>${total.toFixed(3)}</td>
-
-<td>
-<button
-class="delete-btn"
-onclick="deleteRow(this)">
-❌
-</button>
-</td>
-
-</tr>
-
-`;
-
-document
-.getElementById("invoiceRows")
-.insertAdjacentHTML("beforeend",row);
-
-document
-.getElementById("grandTotal")
-.innerText =
-grandTotal.toFixed(3);
-
-rowNumber++;
-
-document.getElementById("service").value="";
-document.getElementById("thickness").value="";
-document.getElementById("qty").value="";
-document.getElementById("price").value="";
-
-}
-
-/* حذف بند */
-
-function deleteRow(btn){
-
-const row =
-btn.parentNode.parentNode;
-
-const total =
-Number(row.cells[5].innerText);
-
-grandTotal -= total;
-
-document
-.getElementById("grandTotal")
-.innerText =
-grandTotal.toFixed(3);
-
-row.remove();
-
-}
-
-/* حفظ الفواتير */
-
-function saveInvoice(){
-
-const invoice = {
-
-invoiceNo:
-document.getElementById("invoiceNo").innerText,
-
-customer:
-document.getElementById("customerName").value,
-
-phone:
-document.getElementById("customerPhone").value,
-
-order:
-document.getElementById("orderNumber").value,
-
-total:
-grandTotal,
-
-date:
-new Date().toLocaleDateString()
-
-};
-
-let invoices =
-JSON.parse(
-localStorage.getItem("prodesignInvoices")
-) || [];
-
-invoices.push(invoice);
-
-localStorage.setItem(
-"prodesignInvoices",
-JSON.stringify(invoices)
-);
-
-alert("تم حفظ الفاتورة");
-
-}
-
-/* واتساب */
-
-function sendWhatsApp(){
-
-const customer =
-document.getElementById("customerName").value;
-
-const phone =
-document.getElementById("customerPhone").value;
-
-const total =
-document.getElementById("grandTotal").innerText;
-
-const order =
-document.getElementById("orderNumber").value;
-
-const msg =
-
-`PRO DESIGN
-
-العميل: ${customer}
-
-رقم الطلب: ${order}
-
-الإجمالي:
-${total} د.ك
-
-شكراً لتعاملكم معنا`;
-
-window.open(
-
-`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
-
-"_blank"
-
-);
-
-}
-
-/* Enter للتنقل */
-
-document.addEventListener("keydown",(e)=>{
-
-if(e.key==="Enter"){
-
-const active =
-document.activeElement;
-
-if(active.id==="price"){
-
-addItem();
-
-}
-
-}
-
-});
-
-</script>
-
-</div>
+<div class="grid">
+
+<a href="invoice.html" class="card admin">
+<div class="icon">📊</div>
+<h2>الإدارة</h2>
+</a>
+
+<a href="client.html" class="card client">
+<div class="icon">👤</div>
+<h2>العميل</h2>
+</a>
+
+<a href="factory.html" class="card factory">
+<div class="icon">🏭</div>
+<h2>المصنع</h2>
+</a>
+
+<a href="designer.html" class="card designer">
+<div class="icon">🎨</div>
+<h2>المصمم</h2>
+</a>
 
 </div>
 
 </body>
-
 </html>
