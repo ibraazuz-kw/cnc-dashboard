@@ -1,18 +1,14 @@
-<!-- ========================= -->
-<!-- client.html -->
-<!-- صفحة العميل -->
-<!-- ========================= -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>العميل</title>
+<title>طلب تشغيل جديد</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
 
@@ -24,156 +20,172 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#efefef;
+background:#f5f5f5;
 padding:20px;
 }
 
-.header{
-background:#001446;
-color:#fff;
-padding:35px;
-border-radius:30px;
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.logo{
 text-align:center;
-font-size:45px;
-font-weight:900;
-margin-bottom:30px;
+margin-bottom:20px;
 }
 
-.card{
-background:#fff;
-padding:40px;
-border-radius:30px;
-margin-bottom:30px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
+.logo img{
+max-width:220px;
 }
 
-.title{
-font-size:45px;
-font-weight:900;
-color:#001446;
-margin-bottom:30px;
-}
-
-.text{
-font-size:30px;
-line-height:2.2;
-}
-
-.status{
-display:inline-block;
-background:#1faa45;
-color:#fff;
-padding:15px 35px;
-border-radius:15px;
-font-size:24px;
-margin-top:25px;
-}
-
-.btn{
-display:block;
-background:#ff6600;
-color:#fff;
-padding:20px;
-border-radius:20px;
-font-size:30px;
-font-weight:700;
+h1{
 text-align:center;
-margin-top:20px;
-text-decoration:none;
+color:#007bff;
+margin-bottom:20px;
 }
 
-.btn-blue{
-background:#001446;
+input,
+select,
+textarea{
+width:100%;
+padding:15px;
+margin-bottom:12px;
+border:1px solid #ddd;
+border-radius:12px;
+font-size:16px;
 }
 
 textarea{
+height:120px;
+resize:none;
+}
+
+button{
 width:100%;
-height:180px;
-padding:20px;
-font-size:22px;
-border-radius:20px;
-border:1px solid #ccc;
-margin-top:20px;
-}
-
-.upload{
-margin-top:25px;
-padding:30px;
-border:2px dashed #bbb;
-border-radius:20px;
-text-align:center;
-font-size:24px;
-}
-
-input{
-margin-top:20px;
+padding:16px;
+border:none;
+border-radius:15px;
+background:#007bff;
+color:white;
 font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="header">
-بوابة العميل
+<div class="container">
+
+<div class="logo">
+<img src="file_00000000fd40720abbbe4a62d7158405.jpg">
 </div>
 
-<div class="card">
+<h1>طلب تشغيل جديد</h1>
 
-<div class="title">
-بيانات العميل
-</div>
+<input id="company" placeholder="اسم الشركة">
 
-<div class="text">
-اسم العميل : شركة باب السيف
-</div>
+<input id="person" placeholder="اسم المسؤول">
 
-<div class="text">
-رقم الهاتف : 96765547
-</div>
+<input id="phone" placeholder="رقم الهاتف">
 
-<div class="text">
-المشروع : CNC ألمنيوم
-</div>
+<select id="material">
 
-<div class="status">
-جاري التنفيذ
-</div>
+<option>ألمنيوم</option>
 
-<a href="invoice.html" class="btn">
-عرض الفاتورة
-</a>
+<option>ستانلس</option>
 
-<a href="designer.html" class="btn btn-blue">
-عرض التصميم
-</a>
+<option>حديد</option>
 
-</div>
+<option>ألكوبوند</option>
 
-<div class="card">
+<option>خشب</option>
 
-<div class="title">
-طلب تعديل
-</div>
+</select>
 
-<textarea placeholder="اكتب الملاحظات أو التعديلات المطلوبة"></textarea>
+<input id="thickness" placeholder="السماكة">
 
-<div class="upload">
-
-رفع صورة أو ملف
-
-<br><br>
+<input id="qty" placeholder="الكمية">
 
 <input type="file">
 
+<textarea id="notes" placeholder="ملاحظات الطلب"></textarea>
+
+<button onclick="sendOrder()">
+
+إرسال طلب التشغيل
+
+</button>
+
 </div>
 
-<a href="#" class="btn">
-إرسال التعديل
-</a>
+<script>
 
-</div>
+function sendOrder(){
+
+const company =
+document.getElementById("company").value;
+
+const person =
+document.getElementById("person").value;
+
+const phone =
+document.getElementById("phone").value;
+
+const material =
+document.getElementById("material").value;
+
+const thickness =
+document.getElementById("thickness").value;
+
+const qty =
+document.getElementById("qty").value;
+
+const notes =
+document.getElementById("notes").value;
+
+const msg =
+
+`طلب تشغيل جديد
+
+الشركة: ${company}
+
+المسؤول: ${person}
+
+الهاتف: ${phone}
+
+المادة: ${material}
+
+السماكة: ${thickness}
+
+الكمية: ${qty}
+
+الملاحظات:
+${notes}`;
+
+window.open(
+
+`https://wa.me/96596765547?text=${encodeURIComponent(msg)}`,
+
+"_blank"
+
+);
+
+}
+
+</script>
 
 </body>
+
 </html>
