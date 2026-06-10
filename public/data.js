@@ -1,56 +1,66 @@
 let orders = JSON.parse(
 localStorage.getItem("orders")
-) || [
-
-{
-id:1001,
-
-date:"15 / 5 / 2026",
-
-company:"PRO DESIGN",
-
-design:"باب خارجي مودرن",
-
-sheets:"3 شيت ألمنيوم",
-
-size:"300 × 100",
-
-price:"450",
-
-status:"بانتظار الاعتماد"
-
-},
-
-{
-id:1002,
-
-date:"15 / 5 / 2026",
-
-company:"PRO DESIGN",
-
-design:"بوابة CNC",
-
-sheets:"5 شيتات",
-
-size:"400 × 220",
-
-price:"780",
-
-status:"قيد التصنيع"
-
-}
-
-];
-
-/* =========================
-   Save Orders
-========================= */
+) || [];
 
 function saveOrders(){
-
 localStorage.setItem(
 "orders",
 JSON.stringify(orders)
 );
+}
+
+function createOrder(order){
+
+order.id = Date.now();
+
+order.date = new Date().toLocaleDateString("en-GB");
+
+order.status = "جديد";
+
+orders.push(order);
+
+saveOrders();
+
+}
+
+function getOrders(){
+
+return orders;
+
+}
+
+function updateStatus(id,newStatus){
+
+orders = orders.map(order=>{
+
+if(order.id == id){
+
+order.status = newStatus;
+
+}
+
+return order;
+
+});
+
+saveOrders();
+
+}
+
+function getOrder(id){
+
+return orders.find(
+x => x.id == id
+);
+
+}
+
+function deleteOrder(id){
+
+orders = orders.filter(
+x => x.id != id
+);
+
+saveOrders();
 
 }
