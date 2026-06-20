@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>العملاء</title>
+</head>
+
+<body>
+
+<h1>إضافة عميل</h1>
+
+<input id="name" placeholder="اسم العميل">
+
+<input id="phone" placeholder="الهاتف">
+
+<button onclick="addCustomer()">
+حفظ
+</button>
+
+<script src="data.js"></script>
+
+<script>
+
+function addCustomer(){
+
+customers.push({
+
+id:Date.now(),
+
+name:
+document.getElementById("name").value,
+
+phone:
+document.getElementById("phone").value
+
+});
+
+saveCustomers();
+
+alert("تم حفظ العميل");
+
+location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
