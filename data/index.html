@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAB AL SAIF ERP</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Cairo,sans-serif}
+body{background:#f5f5f5}
+.header{
+background:#00154F;
+color:#fff;
+padding:25px;
+text-align:center;
+}
+.grid{
+max-width:1200px;
+margin:30px auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+.card{
+background:#fff;
+padding:30px;
+border-radius:20px;
+text-align:center;
+cursor:pointer;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+transition:.3s;
+}
+.card:hover{
+transform:translateY(-5px);
+}
+.card h2{
+color:#00154F;
+}
+.card p{
+color:#ff6600;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>BAB AL SAIF ERP</h1>
+<p>نظام إدارة المشاريع والمبيعات</p>
+</div>
+
+<div class="grid">
+
+<div class="card" onclick="location.href='dashboard.html'">
+<h2>📊</h2>
+<p>لوحة التحكم</p>
+</div>
+
+<div class="card" onclick="location.href='customers.html'">
+<h2>👥</h2>
+<p>العملاء</p>
+</div>
+
+<div class="card" onclick="location.href='projects.html'">
+<h2>📂</h2>
+<p>المشاريع</p>
+</div>
+
+<div class="card" onclick="location.href='quotes.html'">
+<h2>🧾</h2>
+<p>عروض الأسعار</p>
+</div>
+
+<div class="card" onclick="location.href='payments.html'">
+<h2>💰</h2>
+<p>الدفعات</p>
+</div>
+
+<div class="card" onclick="location.href='production.html'">
+<h2>🏭</h2>
+<p>التشغيل</p>
+</div>
+
+</div>
+
+</body>
+</html>
